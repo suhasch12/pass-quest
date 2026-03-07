@@ -57,6 +57,7 @@ button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 
 /* ─── Dark theme tokens ────────────────────────────────────── */
 [data-theme="dark"]{
+  --quiz-header-rgb:15,17,23;
   --navy:#a8c4ff;
   --navy2:#c0d4ff;
   --gold:#fbbf24;
@@ -78,6 +79,7 @@ button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 
 @media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){ 
+    --quiz-header-rgb:15,17,23;
     --navy:#a8c4ff;--navy2:#c0d4ff;--gold:#fbbf24;--gold2:#fcd34d;
     --bg:#0f1117;--sur:#1a1d27;--sur2:#22253a;--bdr:#2e3148;--bdr2:#333654;
     --tx:#e8eaf6;--mu:#9196b0;--lite:#5c6080;
@@ -393,6 +395,7 @@ h1.page-title em{
   background:var(--sur);border:1.5px solid var(--bdr2);
   border-radius:var(--rlg);padding:28px;
   box-shadow:var(--shlg);margin-bottom:16px;
+  color:var(--tx);
 }
 .q-category-badge{
   display:inline-flex;align-items:center;gap:5px;
@@ -472,7 +475,7 @@ h1.page-title em{
 /* Fixed bottom bar */
 .q-bottom{
   position:fixed;bottom:0;left:0;right:0;z-index:70;
-  background:rgba(246,243,238,.95);backdrop-filter:blur(14px);
+  background:rgba(var(--quiz-header-rgb,246,243,238),.96);backdrop-filter:blur(14px);
   border-top:1.5px solid var(--bdr2);
   padding:12px 24px;
   padding-bottom:max(12px,env(safe-area-inset-bottom));
@@ -587,6 +590,41 @@ h1.page-title em{
   padding:14px 24px;border-top:1.5px solid var(--bdr2);
   display:flex;gap:8px;
 }
+
+/* ─── Question index nav ─────────────────────────────────── */
+.q-index-bar{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:10px 16px;background:var(--sur2);border-bottom:1.5px solid var(--bdr2);
+}
+.q-index-btn{
+  width:30px;height:30px;border-radius:8px;
+  border:1.5px solid var(--bdr2);background:var(--sur);
+  font-size:.72rem;font-weight:700;color:var(--mu);
+  cursor:pointer;transition:all .12s;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.q-index-btn:hover{border-color:var(--navy);color:var(--navy)}
+.q-index-btn.qi-current{background:var(--navy);color:#fff;border-color:var(--navy)}
+.q-index-btn.qi-answered{background:var(--okb);border-color:var(--ok);color:var(--ok)}
+.q-index-btn.qi-flagged::after{
+  content:'⚑';position:absolute;top:-5px;right:-4px;
+  font-size:.55rem;color:#f59e0b;
+}
+.q-index-btn.qi-current.qi-answered{background:var(--navy);color:#fff}
+.q-index-spacer{flex:1}
+.q-flag-btn{
+  padding:5px 10px;border-radius:8px;border:1.5px solid var(--bdr2);
+  background:var(--sur);font-size:.72rem;font-weight:600;color:var(--mu);
+  cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:4px;
+}
+.q-flag-btn.flagged{border-color:#f59e0b;background:#fef3c7;color:#92400e}
+[data-theme="dark"] .q-flag-btn.flagged{background:#451a03;color:#fbbf24}
+.q-skip-btn{
+  padding:5px 10px;border-radius:8px;border:1.5px solid var(--bdr2);
+  background:var(--sur);font-size:.72rem;font-weight:600;color:var(--mu);
+  cursor:pointer;transition:all .12s;
+}
+.q-skip-btn:hover{border-color:var(--navy);color:var(--navy)}
 
 /* ─── Spinner ────────────────────────────────────────────── */
 .spin{
@@ -1424,6 +1462,9 @@ h1.page-title em{
     <div class="dot-row" id="dot-row"></div>
   </div>
 
+  <!-- question index bar -->
+  <div class="q-index-bar" id="q-index-bar" style="display:none"></div>
+
   <!-- question area -->
   <div class="q-wrap" id="q-wrap">
     <div style="display:flex;justify-content:center;padding:60px 0">
@@ -1438,6 +1479,8 @@ h1.page-title em{
       <button class="btn btn-ghost btn-sm" id="btn-why" onclick="fetchWhy()" style="display:none">🔍 Why wrong?</button>
       <button class="btn btn-ghost btn-sm" id="btn-worked" onclick="fetchWorked()" style="display:none">✏️ Worked example</button>
       <div style="flex:1"></div>
+      <button class="q-flag-btn" id="btn-flag" onclick="toggleFlag()" style="display:none" title="Flag for review" aria-label="Flag question">⚑ Flag</button>
+      <button class="q-skip-btn" id="btn-skip" onclick="skipQ()" style="display:none" title="Skip question" aria-label="Skip question">Skip</button>
       <button class="btn btn-ghost btn-sm" id="btn-lesson" onclick="fetchLesson()" style="display:none">📚 Deep dive</button>
       <button class="btn btn-navy btn-sm" id="btn-next" onclick="nextQ()" style="display:none">Next →</button>
       <button class="btn btn-navy btn-sm" id="btn-results" onclick="showResults()" style="display:none">See Results →</button>
@@ -1478,6 +1521,18 @@ h1.page-title em{
   <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
     <button class="btn btn-navy" onclick="startQuiz(lastTopic, lastDesc, lastNum)" style="flex:1">Retry same topic</button>
     <button class="btn btn-ghost" onclick="goHome()" style="flex:1">Choose new topic</button>
+  </div>
+
+  <!-- Donate CTA — shown every 3rd quiz completion -->
+  <div id="res-donate-cta" style="display:none;background:linear-gradient(135deg,#be123c,#9f1239);border-radius:var(--r);padding:18px 20px;margin-bottom:20px;text-align:center">
+    <div style="font-size:1.4rem;margin-bottom:6px">&#9829;</div>
+    <div style="font-weight:700;color:#fff;font-size:.95rem;margin-bottom:4px">Enjoying Genius Quest?</div>
+    <div style="color:rgba(255,255,255,.8);font-size:.78rem;margin-bottom:12px">It&#39;s free and ad-free — a coffee keeps the AI running for everyone.</div>
+    <a href="https://ko-fi.com/P5P61VKVJP" target="_blank" rel="noopener"
+       onclick="trackEvent('donate_click',{source:'results_page'})"
+       style="display:inline-flex;align-items:center;gap:6px;padding:9px 20px;background:#fff;color:#9f1239;border-radius:20px;font-weight:700;font-size:.82rem;text-decoration:none;">
+      &#9749; Buy me a coffee
+    </a>
   </div>
 
   <!-- Leaderboard submit strip -->
@@ -2189,6 +2244,87 @@ function answer(chosen) {
   renderQuestion(state.idx);
 }
 
+// ═══════════════════════════════════════════════════════════
+// QUESTION INDEX, FLAG, SKIP
+// ═══════════════════════════════════════════════════════════
+function renderIndexBar() {
+  var bar = document.getElementById('q-index-bar');
+  if (!bar || !state.questions || state.questions.length < 2) {
+    if (bar) bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = 'flex';
+  var html = '';
+  for (var i = 0; i < state.questions.length; i++) {
+    var cls = 'q-index-btn';
+    if (i === state.idx) cls += ' qi-current';
+    if (state.answers[i]) cls += ' qi-answered';
+    if ((state._flagged || {})[i]) cls += ' qi-flagged';
+    html += '<button class="' + cls + '" onclick="jumpToQ(' + i + ')" '
+      + 'aria-label="Question ' + (i+1) + '" title="Question ' + (i+1) + '">'
+      + (i+1) + '</button>';
+  }
+  bar.innerHTML = html;
+}
+
+function jumpToQ(i) {
+  if (i < 0 || i >= state.questions.length) return;
+  state.idx = i;
+  renderQuestion(i);
+}
+
+function toggleFlag() {
+  if (!state._flagged) state._flagged = {};
+  state._flagged[state.idx] = !state._flagged[state.idx];
+  var btn = document.getElementById('btn-flag');
+  if (btn) {
+    btn.classList.toggle('flagged', !!state._flagged[state.idx]);
+    btn.innerHTML = state._flagged[state.idx] ? '⚑ Flagged' : '⚑ Flag';
+  }
+  renderIndexBar();
+}
+
+function skipQ() {
+  if (!state.answers[state.idx]) {
+    state.answers[state.idx] = { chosen: null, correct: false, skipped: true };
+  }
+  if (state.idx < state.questions.length - 1) {
+    nextQ();
+  } else {
+    showResults();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// KEYBOARD NAVIGATION — press A/B/C/D or 1/2/3/4 to answer
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('keydown', function(e) {
+  // Don't intercept if user is typing in an input/textarea
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  var page = document.querySelector('.page.on');
+  if (!page || page.id !== 'quiz-page') return;
+  if (state.answers[state.idx]) return; // already answered
+
+  var keyMap = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
+  var key = e.key.toLowerCase();
+  if (key in keyMap) {
+    var opts = window._qopts || [];
+    var oi = keyMap[key];
+    if (oi < opts.length) {
+      e.preventDefault();
+      answerByIndex(oi);
+    }
+  }
+  // Enter/Space = Next when answered
+  if ((e.key === 'Enter' || e.key === ' ') && state.answers[state.idx]) {
+    e.preventDefault();
+    var btnNext = document.getElementById('btn-next');
+    var btnRes = document.getElementById('btn-results');
+    if (btnNext && btnNext.style.display !== 'none') nextQ();
+    else if (btnRes && btnRes.style.display !== 'none') showResults();
+  }
+});
+
 // Multi-answer checkbox toggle
 function toggleMultiOpt(oi) {
   if (!state._multiPending) state._multiPending = [];
@@ -2423,7 +2559,13 @@ function showResults() {
   try {
     var tot = state.questions.length;
     var cor = Object.values(state.answers).filter(function(a){ return a.correct; }).length;
-    trackEvent('test_complete', { topic: state.topic, tier: state.tier, score: cor, total: tot, pct: tot ? Math.round(cor/tot*100) : 0 });
+    var pct = tot ? Math.round(cor/tot*100) : 0;
+    trackEvent('test_complete', { topic: state.topic, tier: state.tier, score: cor, total: tot, pct: pct });
+    // Show donate CTA on every 3rd completed quiz (not intrusive)
+    var completedCount = parseInt(localStorage.getItem('gq_completed') || '0') + 1;
+    localStorage.setItem('gq_completed', completedCount);
+    var donateCta = document.getElementById('res-donate-cta');
+    if (donateCta) donateCta.style.display = (completedCount % 3 === 0) ? 'block' : 'none';
   } catch(_) {}
   const total = state.questions.length;
   const score = Object.values(state.answers).filter(a => a.correct).length;
