@@ -24,19 +24,19 @@ button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   --gold:#c8912a;
   --gold2:#e5a832;
 
-  /* surface */
+  /* surface — light */
   --bg:#f6f3ee;
   --sur:#ffffff;
   --sur2:#faf8f4;
   --bdr:#e0d8cc;
   --bdr2:#ede8df;
 
-  /* text */
+  /* text — light */
   --tx:#1a1a2e;
   --mu:#6b6878;
   --lite:#9d99a8;
 
-  /* topic accent vars (overridden per card) */
+  /* topic accent */
   --tc:#2563eb; --tcb:#dbeafe;
 
   /* feedback */
@@ -49,10 +49,44 @@ button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   --t3:#7e22ce; --t3b:#f3e8ff;
   --t4:#9f1239; --t4b:#ffe4e6;
 
-  /* spacing & shape */
+  /* spacing */
   --r:13px; --rlg:20px;
   --sh:0 1px 3px rgba(23,37,63,.07),0 4px 14px rgba(23,37,63,.07);
   --shlg:0 8px 40px rgba(23,37,63,.14);
+}
+
+/* ─── Dark theme tokens ────────────────────────────────────── */
+[data-theme="dark"]{
+  --navy:#a8c4ff;
+  --navy2:#c0d4ff;
+  --gold:#fbbf24;
+  --gold2:#fcd34d;
+  --bg:#0f1117;
+  --sur:#1a1d27;
+  --sur2:#22253a;
+  --bdr:#2e3148;
+  --bdr2:#333654;
+  --tx:#e8eaf6;
+  --mu:#9196b0;
+  --lite:#5c6080;
+  --tc:#60a5fa; --tcb:#1e3a5f;
+  --ok:#4ade80; --okb:#052e16; --okbdr:#166534;
+  --bad:#f87171; --badb:#450a0a; --badbdr:#7f1d1d;
+  --sh:0 1px 3px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
+  --shlg:0 8px 40px rgba(0,0,0,.5);
+}
+
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){ 
+    --navy:#a8c4ff;--navy2:#c0d4ff;--gold:#fbbf24;--gold2:#fcd34d;
+    --bg:#0f1117;--sur:#1a1d27;--sur2:#22253a;--bdr:#2e3148;--bdr2:#333654;
+    --tx:#e8eaf6;--mu:#9196b0;--lite:#5c6080;
+    --tc:#60a5fa;--tcb:#1e3a5f;
+    --ok:#4ade80;--okb:#052e16;--okbdr:#166534;
+    --bad:#f87171;--badb:#450a0a;--badbdr:#7f1d1d;
+    --sh:0 1px 3px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
+    --shlg:0 8px 40px rgba(0,0,0,.5);
+  }
 }
 
 html{ scroll-behavior:smooth }
@@ -103,6 +137,23 @@ body::before{
 }
 .nav-tab:hover,.nav-tab.on{color:var(--navy);background:rgba(23,37,63,.07);font-weight:600}
 .nav-right{ display:flex;align-items:center;gap:8px }
+.theme-toggle{
+  width:32px;height:32px;border-radius:50%;
+  border:1.5px solid var(--bdr2);background:var(--sur2);
+  color:var(--mu);cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.theme-toggle:hover{border-color:var(--navy);color:var(--navy);background:var(--sur)}
+.btn-donate{
+  padding:6px 12px;border-radius:20px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#be123c,#9f1239);color:#fff;
+  font-size:.73rem;font-weight:700;letter-spacing:.03em;
+  display:flex;align-items:center;gap:4px;
+  transition:all .18s;flex-shrink:0;white-space:nowrap;
+}
+.btn-donate:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(159,18,57,.35)}
+@media(max-width:480px){.btn-donate{display:none}}
 .nav-tier-pill{
   display:flex;align-items:center;gap:6px;
   padding:5px 12px;border-radius:100px;
@@ -387,6 +438,14 @@ h1.page-title em{
 .opt-text{flex:1;line-height:1.4}
 .opt-tick{font-weight:700;font-size:.9rem;flex-shrink:0;margin-left:auto}
 @media(max-width:540px){.mcq-grid{grid-template-columns:1fr}}
+.multi-hint{
+  font-size:.75rem;font-weight:700;color:var(--tc);
+  padding:6px 10px;background:var(--tcb);border-radius:8px;
+  margin-bottom:10px;display:inline-block;
+}
+.opt-check.sel{border-color:var(--tc)!important;background:var(--tcb)!important}
+.opt-checkbox{background:var(--navy);color:#fff}
+.opt-check.sel .opt-checkbox{background:var(--tc);color:#fff}
 
 /* feedback strip under question */
 .feedback-box{
@@ -835,6 +894,24 @@ h1.page-title em{
 }
 .study-footer p{font-size:.75rem;color:var(--mu)}
 
+/* ─── Feedback FAB ──────────────────────────────────────── */
+.feedback-fab{
+  position:fixed;bottom:80px;right:18px;z-index:80;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--navy);color:#fff;border:none;
+  font-size:1.1rem;cursor:pointer;
+  box-shadow:0 4px 16px rgba(23,37,63,.3);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.feedback-fab:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(23,37,63,.4)}
+.star-btn{
+  font-size:1.4rem;background:none;border:none;cursor:pointer;
+  color:var(--bdr2);transition:color .15s;padding:2px;
+}
+.star-btn.on{color:#f59e0b}
+.star-btn:hover{color:#f59e0b}
+
 /* ─── Worked example panel ───────────────────────────────── */
 .worked-panel{
   background:linear-gradient(135deg,#fffbeb,#fef3c7);
@@ -868,8 +945,14 @@ h1.page-title em{
       <button class="nav-tab" id="tab-all" onclick="showPage('allsubjects')">All Subjects</button>
     </div>
     <div class="nav-right">
+      <button class="theme-toggle" id="theme-toggle" onclick="cycleTheme()" title="Toggle theme" aria-label="Toggle colour theme">
+        <span id="theme-icon">&#9788;</span>
+      </button>
+      <button class="btn-donate" onclick="openDonate()" aria-label="Support us">
+        &#9829; Support
+      </button>
       <button class="nav-tier-pill" id="nav-tier-pill" onclick="openTierModal()">
-        <span id="nav-tier-icon">⚡</span>
+        <span id="nav-tier-icon">&#9889;</span>
         <span id="nav-tier-name">Challenger</span>
       </button>
     </div>
@@ -1516,6 +1599,30 @@ const TIER_ICONS = { Explorer:'🌱', Challenger:'⚡', Olympian:'🔥', Champio
 // ═══════════════════════════════════════════════════════════
 // PAGE ROUTING
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// BUILT-IN ANALYTICS & ERROR TRACKING  (no external account)
+// Events stored in Upstash KV via /api/analytics
+// View at: GET /api/analytics?key=YOUR_ANALYTICS_ADMIN_KEY
+// ═══════════════════════════════════════════════════════════
+function trackEvent(name, props) {
+  try {
+    fetch('/api/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: name, props: props || {}, ts: Date.now() }),
+      keepalive: true
+    }).catch(function(){});
+  } catch(_) {}
+}
+
+// Capture unhandled JS errors silently → /api/analytics
+window.addEventListener('error', function(e) {
+  trackEvent('js_error', { msg: e.message, src: (e.filename||'').split('/').pop(), line: e.lineno });
+});
+window.addEventListener('unhandledrejection', function(e) {
+  trackEvent('js_error', { msg: String(e.reason).slice(0, 200) });
+});
+
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
   document.getElementById(name + '-page').classList.add('on');
@@ -1523,6 +1630,7 @@ function showPage(name) {
   if (name === 'home') document.getElementById('tab-maths').classList.add('on');
   if (name === 'allsubjects') document.getElementById('tab-all').classList.add('on');
   if (name === 'lituk') document.getElementById('tab-lituk').classList.add('on');
+  trackEvent('page_view', { page: name });
   window.scrollTo(0, 0);
 }
 
@@ -1704,6 +1812,7 @@ function selectTimer(el, mode) {
 function confirmStartQuiz(numQ) {
   state.numQ = numQ;
   lastNum = numQ;
+  trackEvent('test_start', { topic: state.topic, tier: state.tier, numQ: numQ });
   // Clear any previous timer
   if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
   renderLoading();
@@ -1926,28 +2035,68 @@ function renderQuestion(idx) {
   const allShort = window._qopts.length === 4 && window._qopts.every(function(o){ return (o||'').length <= 42; });
   const gridClass = 'mcq-grid' + (allShort ? '' : ' single-col');
 
+  // Multi-answer support
+  const isMulti = !!(q.multiple_correct) || !!(q.correct_options && q.correct_options.length > 1);
+  const correctSet = isMulti
+    ? new Set((q.correct_options || []).map(s => s.trim().toLowerCase()))
+    : null;
+
   function makeOptBtn(opt, oi, letters) {
-    let cls = 'opt';
-    if (isAnswered) {
-      if (opt === correct) cls += ' cor';
-      else if (opt === chosen && opt !== correct) cls += ' wrg';
-      else cls += ' dim';
-    }
     const letter = letters[oi] || String(oi+1);
-    const tick = isAnswered && opt === correct ? ' <span class="opt-tick">&#10003;</span>'
-               : (isAnswered && opt === chosen && opt !== correct ? ' <span class="opt-tick">&#10007;</span>' : '');
-    return '<button class="' + cls + '" ' + (isAnswered ? 'disabled' : '')
-      + ' onclick="answerByIndex(' + oi + ')">'
-      + '<span class="opt-letter">' + letter + '</span>'
-      + '<span class="opt-text">' + escHtml(opt) + '</span>'
-      + tick + '</button>';
+    if (isMulti) {
+      // Checkbox-style multi-select
+      const isInCorrect = correctSet.has(opt.trim().toLowerCase());
+      let cls = 'opt opt-check';
+      let tick = '';
+      if (isAnswered) {
+        const chosenSet = new Set((state.answers[idx].chosen || []).map(s => s.trim().toLowerCase()));
+        const wasChosen = chosenSet.has(opt.trim().toLowerCase());
+        if (isInCorrect) { cls += ' cor'; tick = ' <span class="opt-tick">&#10003;</span>'; }
+        else if (wasChosen) { cls += ' wrg'; tick = ' <span class="opt-tick">&#10007;</span>'; }
+        else { cls += ' dim'; }
+      } else {
+        // Check if already selected in pending state
+        const pending = state._multiPending || [];
+        if (pending.includes(oi)) cls += ' sel';
+      }
+      const role = 'checkbox';
+      const checked = isAnswered
+        ? (correctSet.has(opt.trim().toLowerCase()) ? 'true' : 'false')
+        : ((state._multiPending || []).includes(oi) ? 'true' : 'false');
+      return '<button class="' + cls + '" role="' + role + '" aria-checked="' + checked + '" '
+        + (isAnswered ? 'disabled' : '') + ' onclick="toggleMultiOpt(' + oi + ')" tabindex="0">'
+        + '<span class="opt-letter opt-checkbox">' + (((state._multiPending||[]).includes(oi) && !isAnswered) ? '&#10003;' : letter) + '</span>'
+        + '<span class="opt-text">' + escHtml(opt) + '</span>'
+        + tick + '</button>';
+    } else {
+      // Single-answer radio style
+      let cls = 'opt';
+      let tick = '';
+      if (isAnswered) {
+        if (opt === correct) { cls += ' cor'; tick = ' <span class="opt-tick">&#10003;</span>'; }
+        else if (opt === chosen && opt !== correct) { cls += ' wrg'; tick = ' <span class="opt-tick">&#10007;</span>'; }
+        else { cls += ' dim'; }
+      }
+      return '<button class="' + cls + '" role="radio" aria-checked="' + (opt === chosen ? 'true' : 'false') + '" '
+        + (isAnswered ? 'disabled' : '') + ' onclick="answerByIndex(' + oi + ')" tabindex="0">'
+        + '<span class="opt-letter">' + letter + '</span>'
+        + '<span class="opt-text">' + escHtml(opt) + '</span>'
+        + tick + '</button>';
+    }
   }
 
   let optionsHtml = '';
   if (isMCQ) {
-    optionsHtml = '<div class="' + gridClass + '">'
+    const multiHint = isMulti
+      ? '<div class="multi-hint" role="note">&#9745; Select all that apply</div>'
+      : '';
+    const submitBtn = (isMulti && !isAnswered)
+      ? '<button class="btn btn-navy" style="margin-top:12px;width:100%" onclick="submitMulti()">Confirm Answers</button>'
+      : '';
+    optionsHtml = multiHint
+      + '<div class="' + gridClass + '" role="group" aria-label="' + (isMulti ? 'Multiple choice — select all correct' : 'Single choice') + '">'
       + q.options.map((opt, oi) => makeOptBtn(opt, oi, ['A','B','C','D'])).join('')
-      + '</div>';
+      + '</div>' + submitBtn;
   } else if (isTF) {
     const tfOpts = window._qopts;
     optionsHtml = '<div class="mcq-grid single-col">'
@@ -2034,9 +2183,128 @@ function answerByIndex(oi) {
 
 function answer(chosen) {
   const q = state.questions[state.idx];
-  const correct = chosen.trim().toLowerCase() === q.correct_answer.trim().toLowerCase();
+  const correct = chosen.trim().toLowerCase() === (q.correct_answer||'').trim().toLowerCase();
   state.answers[state.idx] = { chosen, correct };
+  state._multiPending = [];
   renderQuestion(state.idx);
+}
+
+// Multi-answer checkbox toggle
+function toggleMultiOpt(oi) {
+  if (!state._multiPending) state._multiPending = [];
+  const idx = state._multiPending.indexOf(oi);
+  if (idx === -1) state._multiPending.push(oi);
+  else state._multiPending.splice(idx, 1);
+  renderQuestion(state.idx);
+}
+
+// Submit multi-answer selection
+function submitMulti() {
+  const q = state.questions[state.idx];
+  const pending = state._multiPending || [];
+  const opts = window._qopts || [];
+  const chosenTexts = pending.map(i => opts[i]).filter(Boolean);
+  const correctSet = new Set((q.correct_options || []).map(s => s.trim().toLowerCase()));
+  const chosenSet = new Set(chosenTexts.map(s => s.trim().toLowerCase()));
+  // Correct only if chosen set exactly matches correct set
+  const correct = correctSet.size === chosenSet.size && [...correctSet].every(v => chosenSet.has(v));
+  state.answers[state.idx] = { chosen: chosenTexts, correct };
+  state._multiPending = [];
+  renderQuestion(state.idx);
+}
+
+// ═══════════════════════════════════════════════════════════
+// THEME MANAGEMENT
+// ═══════════════════════════════════════════════════════════
+const THEME_ICONS = { light: '&#9788;', dark: '&#9790;', system: '&#9728;' };
+let _themeMode = localStorage.getItem('theme_preference') || 'system';
+
+function applyTheme(mode) {
+  _themeMode = mode;
+  localStorage.setItem('theme_preference', mode);
+  const html = document.documentElement;
+  if (mode === 'dark') html.setAttribute('data-theme', 'dark');
+  else if (mode === 'light') html.setAttribute('data-theme', 'light');
+  else html.removeAttribute('data-theme');
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.innerHTML = THEME_ICONS[mode] || THEME_ICONS.system;
+  // Update meta theme-color
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme:dark)').matches);
+    meta.setAttribute('content', isDark ? '#0f1117' : '#f6f3ee');
+  }
+}
+
+function cycleTheme() {
+  const order = ['system', 'light', 'dark'];
+  const next = order[(order.indexOf(_themeMode) + 1) % order.length];
+  applyTheme(next);
+}
+
+// ═══════════════════════════════════════════════════════════
+// DONATE
+// ═══════════════════════════════════════════════════════════
+
+function openDonate() {
+  document.getElementById('donate-modal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDonate(e) {
+  if (e && e.target !== document.getElementById('donate-modal')) return;
+  document.getElementById('donate-modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+// Donate handled via Ko-fi / Buy Me a Coffee links in the modal — no server needed.
+
+// ═══════════════════════════════════════════════════════════
+// FEEDBACK
+// ═══════════════════════════════════════════════════════════
+let _starRating = 0;
+
+function openFeedback() {
+  _starRating = 0;
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('feedback-text').value = '';
+  document.getElementById('feedback-email').value = '';
+  document.getElementById('feedback-submit-btn').textContent = 'Send Feedback';
+  document.getElementById('feedback-modal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFeedback(e) {
+  if (e && e.target !== document.getElementById('feedback-modal')) return;
+  document.getElementById('feedback-modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function setStar(n) {
+  _starRating = n;
+  document.querySelectorAll('.star-btn').forEach((b, i) => b.classList.toggle('on', i < n));
+}
+
+async function submitFeedback() {
+  const text = document.getElementById('feedback-text').value.trim();
+  const email = document.getElementById('feedback-email').value.trim();
+  if (!text) { document.getElementById('feedback-text').focus(); return; }
+  const btn = document.getElementById('feedback-submit-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: _starRating, text, email, page: state.topic || 'home', ts: new Date().toISOString() })
+    });
+    trackEvent('feedback_submit', { rating: _starRating, page: state.topic || 'home' });
+    btn.textContent = '&#10003; Sent! Thank you';
+    setTimeout(() => closeFeedback(), 1800);
+  } catch(err) {
+    btn.textContent = 'Send Feedback';
+    btn.disabled = false;
+  }
 }
 
 function submitSA() {
@@ -2152,6 +2420,11 @@ async function fetchWorked() {
 // ═══════════════════════════════════════════════════════════
 function showResults() {
   stopTimer();
+  try {
+    var tot = state.questions.length;
+    var cor = Object.values(state.answers).filter(function(a){ return a.correct; }).length;
+    trackEvent('test_complete', { topic: state.topic, tier: state.tier, score: cor, total: tot, pct: tot ? Math.round(cor/tot*100) : 0 });
+  } catch(_) {}
   const total = state.questions.length;
   const score = Object.values(state.answers).filter(a => a.correct).length;
   const pct = Math.round((score/total)*100);
@@ -2376,8 +2649,100 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// Apply saved theme on load
+applyTheme(localStorage.getItem('theme_preference') || 'system');
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', () => {
+  if (_themeMode === 'system') applyTheme('system');
+});
+
 // Init
 updateNavTierPill();
 </script>
+<!-- ══ DONATE MODAL ══════════════════════════════════════════ -->
+<div class="overlay" id="donate-modal" onclick="closeDonate(event)" role="dialog" aria-modal="true" aria-label="Support Genius Quest">
+  <div class="modal-box" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div style="font-size:1.5rem;margin-bottom:4px">&#9829;</div>
+        <div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;color:#fff">Support Genius Quest</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.6);margin-top:2px">Help keep it free for every student</div>
+      </div>
+      <button class="modal-close" onclick="closeDonate()" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:12px;padding:16px;background:var(--sur2);border-radius:12px;border:1.5px solid var(--bdr2);margin-bottom:20px">
+        <div style="font-size:2.2rem;line-height:1">&#127861;</div>
+        <div>
+          <div style="font-weight:700;color:var(--navy);font-size:.92rem;margin-bottom:3px">Genius Quest is free and ad-free</div>
+          <div style="font-size:.78rem;color:var(--mu);line-height:1.55">A small contribution keeps the AI running and new topics coming. Every penny goes directly to server costs.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+        <a href="https://ko-fi.com/P5P61VKVJP" target="_blank" rel="noopener"
+           class="btn btn-navy"
+           style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px"
+           onclick="trackEvent('donate_click',{platform:'kofi'})">
+          <span style="font-size:1.1rem">&#9749;</span> Ko-fi
+        </a>
+        <a href="https://www.buymeacoffee.com/geniusquest" target="_blank" rel="noopener"
+           style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px;background:#FFDD00;color:#000;border-radius:var(--r);font-weight:700;font-size:.85rem"
+           onclick="trackEvent('donate_click',{platform:'bmac'})">
+          <span style="font-size:1.1rem">&#9749;</span> Buy Me a Coffee
+        </a>
+      </div>
+      <div style="border-top:1.5px solid var(--bdr2);padding-top:14px;text-align:center">
+        <div style="font-size:.72rem;color:var(--mu);margin-bottom:10px">Or share with someone who would benefit</div>
+        <button class="btn btn-ghost btn-full" onclick="shareApp()" style="font-size:.82rem">&#128279; Share Genius Quest</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK BUTTON ════════════════════════════════════════ -->
+<button class="feedback-fab" onclick="openFeedback()" aria-label="Send feedback" title="Send feedback">
+  &#128172;
+</button>
+
+<!-- ══ FEEDBACK MODAL ════════════════════════════════════════ -->
+<div class="overlay" id="feedback-modal" onclick="closeFeedback(event)" role="dialog" aria-modal="true" aria-label="Send feedback">
+  <div class="modal-box" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;color:#fff">Share your feedback</div>
+        <div style="font-size:.73rem;color:rgba(255,255,255,.6);margin-top:2px">We read every message</div>
+      </div>
+      <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:8px">Rating</div>
+        <div id="star-row" style="display:flex;gap:6px" role="group" aria-label="Star rating">
+          <button class="star-btn" onclick="setStar(1)" aria-label="1 star">&#9733;</button>
+          <button class="star-btn" onclick="setStar(2)" aria-label="2 stars">&#9733;</button>
+          <button class="star-btn" onclick="setStar(3)" aria-label="3 stars">&#9733;</button>
+          <button class="star-btn" onclick="setStar(4)" aria-label="4 stars">&#9733;</button>
+          <button class="star-btn" onclick="setStar(5)" aria-label="5 stars">&#9733;</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <textarea id="feedback-text" placeholder="What do you think? Any bugs or ideas?" rows="4"
+          style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--bdr2);
+                 background:var(--sur);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.85rem;
+                 resize:vertical;outline:none;line-height:1.5"
+          aria-label="Feedback message"></textarea>
+      </div>
+      <div style="margin-bottom:16px">
+        <input id="feedback-email" type="email" placeholder="Email (optional)" 
+          style="width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid var(--bdr2);
+                 background:var(--sur);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none"
+          aria-label="Email address (optional)">
+      </div>
+      <button class="btn btn-navy btn-full" onclick="submitFeedback()" id="feedback-submit-btn">
+        Send Feedback
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
