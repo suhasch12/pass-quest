@@ -706,6 +706,59 @@ h1.page-title em{
   .lituk-mock-banner .btn{width:100%;justify-content:center}
 }
 
+/* ─── Life in the UK study panel ───────────────────────────── */
+.study-panel{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--r);box-shadow:var(--sh);
+  overflow:hidden;margin-bottom:32px;
+}
+.study-panel-head{
+  background:linear-gradient(135deg,#1e3a5f,#17253f);
+  padding:18px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  cursor:pointer;
+}
+.study-panel-head h3{
+  font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:#fff;
+  margin-bottom:2px;
+}
+.study-panel-head p{font-size:.75rem;color:rgba(255,255,255,.6)}
+.study-panel-toggle{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:none;color:#fff;
+  font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:transform .25s;
+}
+.study-panel.open .study-panel-toggle{transform:rotate(180deg)}
+.study-panel-body{
+  display:none;padding:20px 24px;
+}
+.study-panel.open .study-panel-body{display:block}
+.study-section{margin-bottom:20px}
+.study-section:last-child{margin-bottom:0}
+.study-section h4{
+  font-family:'Fraunces',serif;font-weight:700;font-size:.9rem;
+  color:var(--navy);margin-bottom:8px;padding-bottom:6px;
+  border-bottom:1.5px solid var(--bdr2);
+}
+.study-facts{display:flex;flex-direction:column;gap:6px}
+.study-fact{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:.82rem;line-height:1.55;color:var(--tx);
+}
+.study-fact-icon{flex-shrink:0;margin-top:1px;font-size:.75rem}
+.study-key{
+  display:inline-block;background:var(--t2b);color:var(--t2);
+  border-radius:4px;padding:1px 6px;font-size:.7rem;font-weight:700;
+  margin-right:4px;white-space:nowrap;
+}
+.study-footer{
+  padding:12px 24px;border-top:1.5px solid var(--bdr2);
+  background:var(--sur2);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.study-footer p{font-size:.75rem;color:var(--mu)}
+
 /* ─── Worked example panel ───────────────────────────────── */
 .worked-panel{
   background:linear-gradient(135deg,#fffbeb,#fef3c7);
@@ -1005,142 +1058,203 @@ h1.page-title em{
 
   <div class="section-label">British Citizenship Test</div>
   <h1 class="page-title">Life in the <em>UK</em> Test</h1>
-  <p class="page-sub">Practice all official topics for the Life in the UK citizenship test. AI-generated MCQ questions modelled on the real test format.</p>
+  <p class="page-sub">Study the official handbook content, then test yourself with AI-generated practice questions — all in the real test MCQ format.</p>
 
   <!-- Mock Test banner -->
   <div class="lituk-mock-banner">
     <div>
       <h3>📋 Take a Full Mock Test</h3>
-      <p>24 questions · 45 minutes · Official test format</p>
+      <p>24 questions · 45 minutes · Official test format · All chapters mixed</p>
     </div>
-    <button class="btn btn-gold btn-lg" onclick="startQuiz('Life in the UK: Mock Test','Full official-format Life in the UK citizenship test — 24 mixed questions covering all chapters. MCQ only, 4 options each.',24)">Start Mock Test →</button>
+    <button class="btn btn-gold btn-lg" onclick="startQuiz('Life in the UK: Mock Test','Full official-format Life in the UK citizenship test covering all 5 chapters. 24 MCQ questions, 4 options each, based strictly on the official handbook.',24)">Start Mock Test →</button>
   </div>
 
-  <!-- Chapter topic cards -->
-  <div class="section-label">Practice by Topic</div>
-  <div class="lituk-grid">
-
-    <div class="lituk-card" onclick="startQuiz('Life in the UK: The Values and Principles of the UK','British values, democracy, rule of law, individual liberty, mutual respect and tolerance',10)">
-      <div class="lituk-card-inner">
-        <div class="lituk-ring">
-          <svg width="52" height="52" viewBox="0 0 52 52">
-            <circle class="lituk-ring-bg" cx="26" cy="26" r="22"/>
-            <circle class="lituk-ring-fill" cx="26" cy="26" r="22" stroke="#3b82f6" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
-          </svg>
-          <div class="lituk-ring-label">Ch 1</div>
-        </div>
-        <div>
-          <div class="lituk-card-title">Values & Principles</div>
-          <div class="lituk-card-sub">British values, democracy, rule of law, freedoms</div>
+  <!-- ── CHAPTER 1 ── -->
+  <div class="study-panel" id="sp-1">
+    <div class="study-panel-head" onclick="toggleStudyPanel(1)">
+      <div>
+        <h3>Chapter 1 — The Values and Principles of the UK</h3>
+        <p>British values, democracy, rule of law, individual liberty, mutual respect</p>
+      </div>
+      <button class="study-panel-toggle">▾</button>
+    </div>
+    <div class="study-panel-body">
+      <div class="study-section">
+        <h4>Core British Values</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The UK is a <span class="study-key">democracy</span> — citizens vote for elected representatives. Everyone has a say in how the country is governed.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span><span class="study-key">Rule of Law</span> — everyone, including the government, must obey the law. No one is above it.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span><span class="study-key">Individual Liberty</span> — people are free to live as they choose within the law. Freedom of speech and religion are protected.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span><span class="study-key">Mutual Respect and Tolerance</span> — different religions and beliefs are respected. Discrimination is not tolerated.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>These values are sometimes summarised as the <span class="study-key">Fundamental British Values</span>.</span></div>
         </div>
       </div>
-      <div class="lituk-card-foot">
-        <span class="lituk-card-count">10 questions</span>
-        <button class="tc-go" onclick="event.stopPropagation();startQuiz('Life in the UK: The Values and Principles of the UK','British values, democracy, rule of law, individual liberty, mutual respect and tolerance',10)">Practise →</button>
+      <div class="study-section">
+        <h4>Responsibilities of Residents</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">✅</span><span>Obey and respect the law. Pay taxes honestly. Treat others with respect regardless of background.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">✅</span><span>Look after yourself and your family. Support your children's education.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">✅</span><span>Register to vote and participate in democracy. Jury service if called.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">⛔</span><span>Forced marriage, female genital mutilation (FGM), and domestic violence are <strong>illegal</strong> in the UK.</span></div>
+        </div>
       </div>
     </div>
+    <div class="study-footer">
+      <p>Ready to test your knowledge?</p>
+      <button class="tc-go" onclick="startQuiz('Life in the UK: The Values and Principles of the UK','British values: democracy, rule of law, individual liberty, mutual respect and tolerance. Responsibilities of residents.',10)">Practise Chapter 1 →</button>
+    </div>
+  </div>
 
-    <div class="lituk-card" onclick="startQuiz('Life in the UK: What is the UK?','Countries of the UK, geography, national symbols, patron saints, flags',10)">
-      <div class="lituk-card-inner">
-        <div class="lituk-ring">
-          <svg width="52" height="52" viewBox="0 0 52 52">
-            <circle class="lituk-ring-bg" cx="26" cy="26" r="22"/>
-            <circle class="lituk-ring-fill" cx="26" cy="26" r="22" stroke="#10b981" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
-          </svg>
-          <div class="lituk-ring-label">Ch 2</div>
-        </div>
-        <div>
-          <div class="lituk-card-title">What is the UK?</div>
-          <div class="lituk-card-sub">Countries, geography, national symbols, flags</div>
+  <!-- ── CHAPTER 2 ── -->
+  <div class="study-panel" id="sp-2">
+    <div class="study-panel-head" onclick="toggleStudyPanel(2)">
+      <div>
+        <h3>Chapter 2 — What is the UK?</h3>
+        <p>Countries, geography, national symbols, patron saints, flags</p>
+      </div>
+      <button class="study-panel-toggle">▾</button>
+    </div>
+    <div class="study-panel-body">
+      <div class="study-section">
+        <h4>The Four Countries</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span><span class="study-key">England</span> — Capital: London. Patron saint: St George (23 April). National flower: Rose.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><span><span class="study-key">Scotland</span> — Capital: Edinburgh. Patron saint: St Andrew (30 November). National flower: Thistle.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🏴󠁧󠁢󠁷󠁬󠁳󠁿</span><span><span class="study-key">Wales</span> — Capital: Cardiff. Patron saint: St David (1 March). National flower: Daffodil.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🍀</span><span><span class="study-key">Northern Ireland</span> — Capital: Belfast. Patron saint: St Patrick (17 March). National flower: Shamrock.</span></div>
         </div>
       </div>
-      <div class="lituk-card-foot">
-        <span class="lituk-card-count">10 questions</span>
-        <button class="tc-go" onclick="event.stopPropagation();startQuiz('Life in the UK: What is the UK?','Countries of the UK, geography, national symbols, patron saints, flags',10)">Practise →</button>
+      <div class="study-section">
+        <h4>The Union Flag (Union Jack)</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">🇬🇧</span><span>Combines the crosses of <span class="study-key">St George</span> (England), <span class="study-key">St Andrew</span> (Scotland), and <span class="study-key">St Patrick</span> (Ireland). Wales is not represented as it was already united with England.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The national currency is <span class="study-key">pounds sterling (£)</span>. The UK does NOT use the Euro.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>Driving is on the <span class="study-key">left</span> side of the road — the opposite of most other countries.</span></div>
+        </div>
       </div>
     </div>
+    <div class="study-footer">
+      <p>Ready to test your knowledge?</p>
+      <button class="tc-go" onclick="startQuiz('Life in the UK: What is the UK?','Countries of the UK, capitals, patron saints, national flowers, the Union Flag, currency, devolved governments.',10)">Practise Chapter 2 →</button>
+    </div>
+  </div>
 
-    <div class="lituk-card" onclick="startQuiz('Life in the UK: A Long and Illustrious History','British history from Stone Age to 21st century, monarchs, wars, Empire, key events',10)">
-      <div class="lituk-card-inner">
-        <div class="lituk-ring">
-          <svg width="52" height="52" viewBox="0 0 52 52">
-            <circle class="lituk-ring-bg" cx="26" cy="26" r="22"/>
-            <circle class="lituk-ring-fill" cx="26" cy="26" r="22" stroke="#f59e0b" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
-          </svg>
-          <div class="lituk-ring-label">Ch 3</div>
-        </div>
-        <div>
-          <div class="lituk-card-title">A Long History</div>
-          <div class="lituk-card-sub">History from Stone Age to modern times, monarchs, wars</div>
+  <!-- ── CHAPTER 3 ── -->
+  <div class="study-panel" id="sp-3">
+    <div class="study-panel-head" onclick="toggleStudyPanel(3)">
+      <div>
+        <h3>Chapter 3 — A Long and Illustrious History</h3>
+        <p>Stone Age to modern times, monarchs, wars, Empire</p>
+      </div>
+      <button class="study-panel-toggle">▾</button>
+    </div>
+    <div class="study-panel-body">
+      <div class="study-section">
+        <h4>Early Britain</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">Stone Age</span> — First farmers arrived about 6,000 years ago. Stonehenge built as a ceremonial site.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">55 BC</span> — Julius Caesar's first Roman invasion (unsuccessful). Romans successfully invaded in <span class="study-key">AD 43</span> under Emperor Claudius.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1066</span> — Norman Conquest. William the Conqueror defeated King Harold at the Battle of Hastings.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1215</span> — Magna Carta signed by King John — limited the power of the monarch for the first time.</span></div>
         </div>
       </div>
-      <div class="lituk-card-foot">
-        <span class="lituk-card-count">10 questions</span>
-        <button class="tc-go" onclick="event.stopPropagation();startQuiz('Life in the UK: A Long and Illustrious History','British history from Stone Age to 21st century, monarchs, wars, Empire, key events',10)">Practise →</button>
+      <div class="study-section">
+        <h4>Tudors, Stuarts &amp; Empire</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">👑</span><span><span class="study-key">Henry VIII</span> — broke from the Catholic Church to form the Church of England. Had six wives.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">👑</span><span><span class="study-key">Elizabeth I</span> — defeated the Spanish Armada in 1588. Age of Shakespeare and exploration.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1707</span> — Act of Union united England, Wales and Scotland into the Kingdom of Great Britain.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1833</span> — Slavery Abolition Act abolished slavery throughout the British Empire.</span></div>
+        </div>
+      </div>
+      <div class="study-section">
+        <h4>20th Century</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1914-1918</span> — First World War. Over 2 million British casualties.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1939-1945</span> — Second World War. Winston Churchill was Prime Minister.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1948</span> — NHS founded. Windrush generation arrived from Caribbean to help rebuild Britain.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1969</span> — Voting age lowered from 21 to 18.</span></div>
+        </div>
       </div>
     </div>
+    <div class="study-footer">
+      <p>Ready to test your knowledge?</p>
+      <button class="tc-go" onclick="startQuiz('Life in the UK: A Long and Illustrious History','British history: Stone Age, Romans, Normans, Magna Carta, Tudors, Empire, World Wars, NHS, key dates and monarchs.',10)">Practise Chapter 3 →</button>
+    </div>
+  </div>
 
-    <div class="lituk-card" onclick="startQuiz('Life in the UK: A Modern Thriving Society','UK society today — culture, sport, arts, religion, customs, traditions, holidays',10)">
-      <div class="lituk-card-inner">
-        <div class="lituk-ring">
-          <svg width="52" height="52" viewBox="0 0 52 52">
-            <circle class="lituk-ring-bg" cx="26" cy="26" r="22"/>
-            <circle class="lituk-ring-fill" cx="26" cy="26" r="22" stroke="#8b5cf6" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
-          </svg>
-          <div class="lituk-ring-label">Ch 4</div>
-        </div>
-        <div>
-          <div class="lituk-card-title">A Modern Society</div>
-          <div class="lituk-card-sub">Culture, sport, arts, religion, customs, traditions</div>
+  <!-- ── CHAPTER 4 ── -->
+  <div class="study-panel" id="sp-4">
+    <div class="study-panel-head" onclick="toggleStudyPanel(4)">
+      <div>
+        <h3>Chapter 4 — A Modern, Thriving Society</h3>
+        <p>Culture, sport, arts, religion, customs, bank holidays</p>
+      </div>
+      <button class="study-panel-toggle">▾</button>
+    </div>
+    <div class="study-panel-body">
+      <div class="study-section">
+        <h4>Religion &amp; Traditions</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">⛪</span><span>The official church is the <span class="study-key">Church of England</span> (Protestant). The monarch is its Supreme Governor.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>About <span class="study-key">59%</span> of people identify as Christian. Islam is the second largest religion.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🎄</span><span><span class="study-key">Bank holidays</span>: New Year's Day, Good Friday, Easter Monday, Early May, Spring, Summer, Christmas Day, Boxing Day.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🎭</span><span>Guy Fawkes Night (5 Nov) — commemorates the failed Gunpowder Plot of 1605.</span></div>
         </div>
       </div>
-      <div class="lituk-card-foot">
-        <span class="lituk-card-count">10 questions</span>
-        <button class="tc-go" onclick="event.stopPropagation();startQuiz('Life in the UK: A Modern Thriving Society','UK society today — culture, sport, arts, religion, customs, traditions, holidays',10)">Practise →</button>
+      <div class="study-section">
+        <h4>Sport &amp; Culture</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">⚽</span><span>Football was developed in Britain. The FA was founded in <span class="study-key">1863</span>. England won the World Cup in <span class="study-key">1966</span>.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🎾</span><span>Wimbledon tennis tournament is the oldest in the world, held annually in London.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🐎</span><span>The Grand National (horse racing) and the Ashes (cricket vs Australia) are major sporting events.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🎭</span><span>The UK has produced world-famous writers including Shakespeare, Jane Austen, Charles Dickens and Roald Dahl.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🎵</span><span>The BBC (British Broadcasting Corporation) was founded in <span class="study-key">1927</span>. It is the world's oldest national broadcaster.</span></div>
+        </div>
       </div>
     </div>
+    <div class="study-footer">
+      <p>Ready to test your knowledge?</p>
+      <button class="tc-go" onclick="startQuiz('Life in the UK: A Modern Thriving Society','UK society: religion, Church of England, bank holidays, sport (football, cricket, tennis), arts, BBC, famous British figures.',10)">Practise Chapter 4 →</button>
+    </div>
+  </div>
 
-    <div class="lituk-card" onclick="startQuiz('Life in the UK: The UK Government, the Law and Your Role','Parliament, government, voting, legal system, rights and responsibilities',10)">
-      <div class="lituk-card-inner">
-        <div class="lituk-ring">
-          <svg width="52" height="52" viewBox="0 0 52 52">
-            <circle class="lituk-ring-bg" cx="26" cy="26" r="22"/>
-            <circle class="lituk-ring-fill" cx="26" cy="26" r="22" stroke="#ef4444" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
-          </svg>
-          <div class="lituk-ring-label">Ch 5</div>
-        </div>
-        <div>
-          <div class="lituk-card-title">Government & Law</div>
-          <div class="lituk-card-sub">Parliament, voting, legal system, rights, responsibilities</div>
+  <!-- ── CHAPTER 5 ── -->
+  <div class="study-panel" id="sp-5">
+    <div class="study-panel-head" onclick="toggleStudyPanel(5)">
+      <div>
+        <h3>Chapter 5 — The UK Government, the Law and Your Role</h3>
+        <p>Parliament, elections, legal system, your rights and responsibilities</p>
+      </div>
+      <button class="study-panel-toggle">▾</button>
+    </div>
+    <div class="study-panel-body">
+      <div class="study-section">
+        <h4>Parliament &amp; Government</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">🏛</span><span>Parliament has two chambers: the <span class="study-key">House of Commons</span> (elected MPs) and the <span class="study-key">House of Lords</span> (appointed/hereditary peers).</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The <span class="study-key">Prime Minister</span> is the leader of the government and usually the leader of the largest party in the Commons.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>Elections use <span class="study-key">First Past the Post</span> — the candidate with the most votes in each constituency wins.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The <span class="study-key">monarch</span> is Head of State but has a largely ceremonial role. The King/Queen gives Royal Assent to new laws.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The minimum voting age is <span class="study-key">18</span>. You must be on the electoral register to vote.</span></div>
         </div>
       </div>
-      <div class="lituk-card-foot">
-        <span class="lituk-card-count">10 questions</span>
-        <button class="tc-go" onclick="event.stopPropagation();startQuiz('Life in the UK: The UK Government, the Law and Your Role','Parliament, government, voting, legal system, rights and responsibilities',10)">Practise →</button>
+      <div class="study-section">
+        <h4>The Legal System</h4>
+        <div class="study-facts">
+          <div class="study-fact"><span class="study-fact-icon">⚖️</span><span>Everyone is <span class="study-key">innocent until proven guilty</span>. You have the right to a fair trial.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">⚖️</span><span>The <span class="study-key">Supreme Court</span> is the highest court in the UK. It hears final appeals.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">🚔</span><span>You must carry your driving licence when driving. The police can ask to see it within 7 days.</span></div>
+          <div class="study-fact"><span class="study-fact-icon">📌</span><span>Jury service — if called, it is a civic duty. Juries consist of <span class="study-key">12</span> members of the public.</span></div>
+        </div>
       </div>
     </div>
-
-    <div class="lituk-card" onclick="startQuiz('Life in the UK: Everyday Needs','Housing, money, health, education, work, driving, communication in the UK',10)">
-      <div class="lituk-card-inner">
-        <div class="lituk-ring">
-          <svg width="52" height="52" viewBox="0 0 52 52">
-            <circle class="lituk-ring-bg" cx="26" cy="26" r="22"/>
-            <circle class="lituk-ring-fill" cx="26" cy="26" r="22" stroke="#06b6d4" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
-          </svg>
-          <div class="lituk-ring-label">Ch 6</div>
-        </div>
-        <div>
-          <div class="lituk-card-title">Everyday Needs</div>
-          <div class="lituk-card-sub">Housing, health, education, work, driving, money</div>
-        </div>
-      </div>
-      <div class="lituk-card-foot">
-        <span class="lituk-card-count">10 questions</span>
-        <button class="tc-go" onclick="event.stopPropagation();startQuiz('Life in the UK: Everyday Needs','Housing, money, health, education, work, driving, communication in the UK',10)">Practise →</button>
-      </div>
+    <div class="study-footer">
+      <p>Ready to test your knowledge?</p>
+      <button class="tc-go" onclick="startQuiz('Life in the UK: The UK Government, the Law and Your Role','Parliament, House of Commons, House of Lords, Prime Minister, elections, voting, legal system, Supreme Court, jury service.',10)">Practise Chapter 5 →</button>
     </div>
+  </div>
 
-  </div><!-- /lituk-grid -->
 </div>
 </div>
 
@@ -2100,6 +2214,15 @@ function closeLbModal(e) {
   if (e && e.target !== document.getElementById('lb-modal')) return;
   document.getElementById('lb-modal').classList.remove('on');
   document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// LIFE IN THE UK — STUDY PANEL
+// ═══════════════════════════════════════════════════════════
+function toggleStudyPanel(n) {
+  const panel = document.getElementById('sp-' + n);
+  if (!panel) return;
+  panel.classList.toggle('open');
 }
 
 // ═══════════════════════════════════════════════════════════
