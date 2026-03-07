@@ -1857,51 +1857,48 @@ function renderQuestion(idx) {
   const isMCQ = qtype === 'mcq' && q.options && q.options.length >= 2;
   const isTF  = qtype === 'truefalse' || qtype === 'tf';
 
+  // Store options globally so onclick handlers can reference by index (avoids quoting issues)
+  window._qopts = (isMCQ ? q.options : (isTF ? (q.options && q.options.length >= 2 ? q.options : ['True','False']) : []));
+
+  function makeOptBtn(opt, oi, letters) {
+    let cls = 'opt';
+    if (isAnswered) {
+      if (opt === correct) cls += ' cor';
+      else if (opt === chosen && opt !== correct) cls += ' wrg';
+      else cls += ' dim';
+    }
+    const letter = letters[oi] || String(oi+1);
+    const tick = isAnswered && opt === correct ? ' <span class="opt-tick">&#10003;</span>'
+               : (isAnswered && opt === chosen && opt !== correct ? ' <span class="opt-tick">&#10007;</span>' : '');
+    return '<button class="' + cls + '" ' + (isAnswered ? 'disabled' : '')
+      + ' onclick="answerByIndex(' + oi + ')">'
+      + '<span class="opt-letter">' + letter + '</span>'
+      + '<span class="opt-text">' + escHtml(opt) + '</span>'
+      + tick + '</button>';
+  }
+
   let optionsHtml = '';
   if (isMCQ) {
-    optionsHtml = '<div class="mcq-grid">' + q.options.map((opt, oi) => {
-      let cls = 'opt';
-      if (isAnswered) {
-        if (opt === correct) cls += ' cor';
-        else if (opt === chosen && opt !== correct) cls += ' wrg';
-        else cls += ' dim';
-      }
-      const letter = ['A','B','C','D'][oi] || (oi+1);
-      const tick = isAnswered && opt === correct ? ' <span class="opt-tick">✓</span>' : (isAnswered && opt === chosen && opt !== correct ? ' <span class="opt-tick">✗</span>' : '');
-      return '<button class="' + cls + '" ' + (isAnswered?'disabled':'') + ' onclick="answer(' + JSON.stringify(opt) + ')">'
-        + '<span class="opt-letter">' + letter + '</span>'
-        + '<span class="opt-text">' + escHtml(opt) + '</span>'
-        + tick
-        + '</button>';
-    }).join('') + '</div>';
+    optionsHtml = '<div class="mcq-grid">'
+      + q.options.map((opt, oi) => makeOptBtn(opt, oi, ['A','B','C','D'])).join('')
+      + '</div>';
   } else if (isTF) {
-    const tfOpts = q.options && q.options.length >= 2 ? q.options : ['True', 'False'];
-    optionsHtml = '<div class="mcq-grid">' + tfOpts.map((opt, oi) => {
-      let cls = 'opt';
-      if (isAnswered) {
-        if (opt === correct) cls += ' cor';
-        else if (opt === chosen && opt !== correct) cls += ' wrg';
-        else cls += ' dim';
-      }
-      const letter = ['A','B'][oi];
-      const tick = isAnswered && opt === correct ? ' <span class="opt-tick">✓</span>' : (isAnswered && opt === chosen && opt !== correct ? ' <span class="opt-tick">✗</span>' : '');
-      return '<button class="' + cls + '" ' + (isAnswered?'disabled':'') + ' onclick="answer(' + JSON.stringify(opt) + ')">'
-        + '<span class="opt-letter">' + letter + '</span>'
-        + '<span class="opt-text">' + escHtml(opt) + '</span>'
-        + tick
-        + '</button>';
-    }).join('') + '</div>';
+    const tfOpts = window._qopts;
+    optionsHtml = '<div class="mcq-grid">'
+      + tfOpts.map((opt, oi) => makeOptBtn(opt, oi, ['A','B'])).join('')
+      + '</div>';
   } else {
     // Short answer fallback (maths only)
     if (!isAnswered) {
       optionsHtml = '<div style="display:flex;gap:8px">'
         + '<input id="sa-input" class="card" style="flex:1;padding:12px 16px;border-radius:11px;font-size:.9rem;border:2px solid var(--bdr2);outline:none" '
-        + 'placeholder="Type your answer..." onkeydown="if(event.key==='Enter')submitSA()">'
+        + 'placeholder="Type your answer...">'
         + '<button class="btn btn-navy" onclick="submitSA()">Submit</button>'
         + '</div>';
     } else {
       const cls = wasCorrect ? 'opt cor' : 'opt wrg';
-      optionsHtml = '<div class="' + cls + '">' + escHtml(chosen) + (wasCorrect ? ' <span class="opt-tick">✓</span>' : ' <span class="opt-tick">✗</span>') + '</div>';
+      optionsHtml = '<div class="' + cls + '">' + escHtml(chosen)
+        + (wasCorrect ? ' <span class="opt-tick">&#10003;</span>' : ' <span class="opt-tick">&#10007;</span>') + '</div>';
     }
   }
 
@@ -1926,7 +1923,13 @@ function renderQuestion(idx) {
 
   // Focus short answer input
   if (!isAnswered && qtype === 'shortanswer') {
-    setTimeout(() => document.getElementById('sa-input')?.focus(), 50);
+    setTimeout(() => {
+      const inp = document.getElementById('sa-input');
+      if (inp) {
+        inp.focus();
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitSA(); });
+      }
+    }, 50);
   }
 
   // Bottom buttons
@@ -1957,6 +1960,12 @@ function hideBottomBtns() {
 // ═══════════════════════════════════════════════════════════
 // ANSWERING
 // ═══════════════════════════════════════════════════════════
+function answerByIndex(oi) {
+  const chosen = (window._qopts || [])[oi];
+  if (chosen === undefined) return;
+  answer(chosen);
+}
+
 function answer(chosen) {
   const q = state.questions[state.idx];
   const correct = chosen.trim().toLowerCase() === q.correct_answer.trim().toLowerCase();
