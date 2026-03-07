@@ -356,21 +356,37 @@ h1.page-title em{
   line-height:1.5;color:var(--tx);
   margin-bottom:22px;
 }
-.options{display:flex;flex-direction:column;gap:10px}
+.options{margin-top:4px}
+/* 2x2 grid for short options, single col for long ones — set via JS */
+.mcq-grid{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.mcq-grid.single-col{grid-template-columns:1fr}
 .opt{
-  width:100%;padding:14px 18px;
+  width:100%;padding:13px 16px;
   border-radius:11px;border:2px solid var(--bdr2);
   background:var(--sur);
-  font-family:'DM Sans',sans-serif;font-weight:500;font-size:.9rem;
+  font-family:'DM Sans',sans-serif;font-weight:500;font-size:.88rem;
   text-align:left;cursor:pointer;
   transition:all .15s;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  display:flex;align-items:center;gap:12px;
 }
-.opt:hover:not(:disabled){border-color:var(--tc,var(--navy));background:var(--tcb,#f0f9ff);transform:translateX(3px)}
-.opt.sel{border-color:var(--tc,var(--navy));background:var(--tcb,#dbeafe);color:var(--tc,var(--navy))}
-.opt.cor{border-color:var(--ok);background:var(--okb);color:var(--ok);font-weight:600}
-.opt.wrg{border-color:var(--bad);background:var(--badb);color:var(--bad)}
-.opt.dim{opacity:.3;pointer-events:none}
+.opt:hover:not(:disabled){border-color:var(--tc,var(--navy));background:var(--tcb,#f0f9ff)}
+.opt.cor{border-color:var(--ok)!important;background:var(--okb)!important;color:var(--ok)!important;font-weight:600}
+.opt.wrg{border-color:var(--bad)!important;background:var(--badb)!important;color:var(--bad)!important}
+.opt.dim{opacity:.35;pointer-events:none}
+.opt-letter{
+  width:26px;height:26px;border-radius:7px;
+  background:var(--bdr2);color:var(--mu);
+  font-size:.68rem;font-weight:800;letter-spacing:.02em;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .15s;
+}
+.opt:hover:not(:disabled) .opt-letter{background:var(--tc,var(--navy));color:#fff}
+.opt.cor .opt-letter{background:var(--ok);color:#fff}
+.opt.wrg .opt-letter{background:var(--bad);color:#fff}
+.opt.dim .opt-letter{opacity:.5}
+.opt-text{flex:1;line-height:1.4}
+.opt-tick{font-weight:700;font-size:.9rem;flex-shrink:0;margin-left:auto}
+@media(max-width:540px){.mcq-grid{grid-template-columns:1fr}}
 
 /* feedback strip under question */
 .feedback-box{
@@ -705,6 +721,66 @@ h1.page-title em{
   .lituk-mock-banner{flex-direction:column;align-items:flex-start;gap:14px}
   .lituk-mock-banner .btn{width:100%;justify-content:center}
 }
+
+/* ─── Life in the UK dashboard ──────────────────────────────── */
+.lituk-dashboard{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px}
+@media(max-width:700px){.lituk-dashboard{grid-template-columns:1fr}}
+
+.lituk-stat-card{
+  background:var(--sur);border:1.5px solid var(--bdr2);border-radius:var(--r);
+  padding:20px 22px;box-shadow:var(--sh);
+}
+.lituk-stat-card h4{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:12px}
+.lituk-big-num{font-family:'Fraunces',serif;font-weight:800;font-size:2.4rem;color:var(--navy);line-height:1}
+.lituk-big-sub{font-size:.75rem;color:var(--mu);margin-top:4px}
+
+.lituk-progress-bar{height:7px;background:var(--bdr2);border-radius:10px;margin:10px 0 4px;overflow:hidden}
+.lituk-progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#3b82f6,#1d4ed8);transition:width .6s ease}
+
+.lituk-chapter-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.lituk-chap{
+  background:var(--sur);border:1.5px solid var(--bdr2);border-radius:var(--r);
+  box-shadow:var(--sh);overflow:hidden;
+}
+.lituk-chap-head{
+  display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;
+  transition:background .14s;
+}
+.lituk-chap-head:hover{background:var(--sur2)}
+.lituk-chap-num{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.78rem;
+  flex-shrink:0;color:#fff;
+}
+.lituk-chap-meta{flex:1;min-width:0}
+.lituk-chap-title{font-family:'Fraunces',serif;font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:2px}
+.lituk-chap-sub{font-size:.72rem;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lituk-chap-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lituk-chap-pct{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;color:var(--mu);
+}
+.lituk-chap-arr{color:var(--mu);font-size:.8rem;transition:transform .2s}
+.lituk-chap.open .lituk-chap-arr{transform:rotate(90deg)}
+
+.lituk-chap-body{display:none;padding:0 20px 20px}
+.lituk-chap.open .lituk-chap-body{display:block}
+
+.lituk-fact-list{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.lituk-fact-row{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:.81rem;line-height:1.5;color:var(--tx);
+  padding:5px 0;border-bottom:1px solid var(--bdr2);
+}
+.lituk-fact-row:last-child{border-bottom:none}
+.lituk-fact-icon{flex-shrink:0;font-size:.78rem;width:18px;text-align:center;margin-top:1px}
+.lituk-key{
+  display:inline-block;background:var(--sur2);color:var(--navy);
+  border-radius:4px;padding:1px 6px;font-size:.68rem;font-weight:700;
+  margin:0 2px;white-space:nowrap;border:1px solid var(--bdr2);
+}
+.lituk-chap-btns{display:flex;gap:10px;flex-wrap:wrap}
+.lituk-chap-btns .btn{font-size:.8rem}
 
 /* ─── Life in the UK study panel ───────────────────────────── */
 .study-panel{
@@ -1058,203 +1134,189 @@ h1.page-title em{
 
   <div class="section-label">British Citizenship Test</div>
   <h1 class="page-title">Life in the <em>UK</em> Test</h1>
-  <p class="page-sub">Study the official handbook content, then test yourself with AI-generated practice questions — all in the real test MCQ format.</p>
+  <p class="page-sub">Study the official handbook, then practise with AI-generated MCQ questions in the real test format. Track your progress chapter by chapter.</p>
 
-  <!-- Mock Test banner -->
-  <div class="lituk-mock-banner">
-    <div>
-      <h3>📋 Take a Full Mock Test</h3>
-      <p>24 questions · 45 minutes · Official test format · All chapters mixed</p>
+  <!-- ── Stats dashboard ── -->
+  <div class="lituk-dashboard">
+    <div class="lituk-stat-card">
+      <h4>Overall Progress</h4>
+      <div class="lituk-big-num" id="lituk-total-pct">0%</div>
+      <div class="lituk-big-sub">of all chapters practised</div>
+      <div class="lituk-progress-bar"><div class="lituk-progress-fill" id="lituk-total-bar" style="width:0%"></div></div>
     </div>
-    <button class="btn btn-gold btn-lg" onclick="startQuiz('Life in the UK: Mock Test','Full official-format Life in the UK citizenship test covering all 5 chapters. 24 MCQ questions, 4 options each, based strictly on the official handbook.',24)">Start Mock Test →</button>
-  </div>
-
-  <!-- ── CHAPTER 1 ── -->
-  <div class="study-panel" id="sp-1">
-    <div class="study-panel-head" onclick="toggleStudyPanel(1)">
-      <div>
-        <h3>Chapter 1 — The Values and Principles of the UK</h3>
-        <p>British values, democracy, rule of law, individual liberty, mutual respect</p>
+    <div class="lituk-stat-card">
+      <h4>Mock Test</h4>
+      <div style="margin-bottom:12px">
+        <div style="font-size:.82rem;color:var(--tx);margin-bottom:6px">24 questions &nbsp;·&nbsp; 45 minutes &nbsp;·&nbsp; All chapters</div>
+        <div style="font-size:.75rem;color:var(--mu)">Matches the official test format exactly</div>
       </div>
-      <button class="study-panel-toggle">▾</button>
-    </div>
-    <div class="study-panel-body">
-      <div class="study-section">
-        <h4>Core British Values</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The UK is a <span class="study-key">democracy</span> — citizens vote for elected representatives. Everyone has a say in how the country is governed.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span><span class="study-key">Rule of Law</span> — everyone, including the government, must obey the law. No one is above it.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span><span class="study-key">Individual Liberty</span> — people are free to live as they choose within the law. Freedom of speech and religion are protected.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span><span class="study-key">Mutual Respect and Tolerance</span> — different religions and beliefs are respected. Discrimination is not tolerated.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>These values are sometimes summarised as the <span class="study-key">Fundamental British Values</span>.</span></div>
-        </div>
-      </div>
-      <div class="study-section">
-        <h4>Responsibilities of Residents</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">✅</span><span>Obey and respect the law. Pay taxes honestly. Treat others with respect regardless of background.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">✅</span><span>Look after yourself and your family. Support your children's education.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">✅</span><span>Register to vote and participate in democracy. Jury service if called.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">⛔</span><span>Forced marriage, female genital mutilation (FGM), and domestic violence are <strong>illegal</strong> in the UK.</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="study-footer">
-      <p>Ready to test your knowledge?</p>
-      <button class="tc-go" onclick="startQuiz('Life in the UK: The Values and Principles of the UK','British values: democracy, rule of law, individual liberty, mutual respect and tolerance. Responsibilities of residents.',10)">Practise Chapter 1 →</button>
+      <button class="btn btn-navy btn-full" onclick="startQuiz('Life in the UK: Mock Test','Full official-format Life in the UK citizenship test covering all 5 chapters. 24 MCQ questions, 4 options each, based strictly on the official handbook.',24)">
+        &#128203; Start Full Mock Test
+      </button>
     </div>
   </div>
 
-  <!-- ── CHAPTER 2 ── -->
-  <div class="study-panel" id="sp-2">
-    <div class="study-panel-head" onclick="toggleStudyPanel(2)">
-      <div>
-        <h3>Chapter 2 — What is the UK?</h3>
-        <p>Countries, geography, national symbols, patron saints, flags</p>
-      </div>
-      <button class="study-panel-toggle">▾</button>
-    </div>
-    <div class="study-panel-body">
-      <div class="study-section">
-        <h4>The Four Countries</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">🌹</span><span><span class="study-key">England</span> — Capital: London. Patron saint: St George (23 April). National flower: Rose.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🌿</span><span><span class="study-key">Scotland</span> — Capital: Edinburgh. Patron saint: St Andrew (30 November). National flower: Thistle.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🌼</span><span><span class="study-key">Wales</span> — Capital: Cardiff. Patron saint: St David (1 March). National flower: Daffodil.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🍀</span><span><span class="study-key">Northern Ireland</span> — Capital: Belfast. Patron saint: St Patrick (17 March). National flower: Shamrock.</span></div>
-        </div>
-      </div>
-      <div class="study-section">
-        <h4>The Union Flag (Union Jack)</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">🇬🇧</span><span>Combines the crosses of <span class="study-key">St George</span> (England), <span class="study-key">St Andrew</span> (Scotland), and <span class="study-key">St Patrick</span> (Ireland). Wales is not represented as it was already united with England.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The national currency is <span class="study-key">pounds sterling (£)</span>. The UK does NOT use the Euro.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>Driving is on the <span class="study-key">left</span> side of the road — the opposite of most other countries.</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="study-footer">
-      <p>Ready to test your knowledge?</p>
-      <button class="tc-go" onclick="startQuiz('Life in the UK: What is the UK?','Countries of the UK, capitals, patron saints, national flowers, the Union Flag, currency, devolved governments.',10)">Practise Chapter 2 →</button>
-    </div>
-  </div>
+  <!-- ── Chapter cards ── -->
+  <div class="section-label">Study &amp; Practise by Chapter</div>
+  <div class="lituk-chapter-grid">
 
-  <!-- ── CHAPTER 3 ── -->
-  <div class="study-panel" id="sp-3">
-    <div class="study-panel-head" onclick="toggleStudyPanel(3)">
-      <div>
-        <h3>Chapter 3 — A Long and Illustrious History</h3>
-        <p>Stone Age to modern times, monarchs, wars, Empire</p>
-      </div>
-      <button class="study-panel-toggle">▾</button>
-    </div>
-    <div class="study-panel-body">
-      <div class="study-section">
-        <h4>Early Britain</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">Stone Age</span> — First farmers arrived about 6,000 years ago. Stonehenge built as a ceremonial site.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">55 BC</span> — Julius Caesar's first Roman invasion (unsuccessful). Romans successfully invaded in <span class="study-key">AD 43</span> under Emperor Claudius.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1066</span> — Norman Conquest. William the Conqueror defeated King Harold at the Battle of Hastings.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1215</span> — Magna Carta signed by King John — limited the power of the monarch for the first time.</span></div>
+    <!-- Chapter 1 -->
+    <div class="lituk-chap" id="lc-1">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(1)">
+        <div class="lituk-chap-num" style="background:#3b82f6">Ch1</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">The Values and Principles of the UK</div>
+          <div class="lituk-chap-sub">Democracy, rule of law, individual liberty, mutual respect</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
         </div>
       </div>
-      <div class="study-section">
-        <h4>Tudors, Stuarts &amp; Empire</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">👑</span><span><span class="study-key">Henry VIII</span> — broke from the Catholic Church to form the Church of England. Had six wives.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">👑</span><span><span class="study-key">Elizabeth I</span> — defeated the Spanish Armada in 1588. Age of Shakespeare and exploration.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1707</span> — Act of Union united England, Wales and Scotland into the Kingdom of Great Britain.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1833</span> — Slavery Abolition Act abolished slavery throughout the British Empire.</span></div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The UK is a <span class="lituk-key">democracy</span> — citizens vote for elected representatives in free elections.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span><span class="lituk-key">Rule of Law</span> — everyone must obey the law, including the government and the monarch.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span><span class="lituk-key">Individual Liberty</span> — freedom of speech, religion and expression are protected within the law.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span><span class="lituk-key">Mutual Respect and Tolerance</span> — all faiths and beliefs are respected; discrimination is illegal.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#10060;</span><span>Forced marriage, FGM and domestic violence are <strong>illegal</strong> and will be prosecuted.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9989;</span><span>Responsibilities: obey the law, pay taxes, treat others with respect, support your children's education.</span></div>
         </div>
-      </div>
-      <div class="study-section">
-        <h4>20th Century</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1914-1918</span> — First World War. Over 2 million British casualties.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1939-1945</span> — Second World War. Winston Churchill was Prime Minister.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1948</span> — NHS founded. Windrush generation arrived from Caribbean to help rebuild Britain.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🗓</span><span><span class="study-key">1969</span> — Voting age lowered from 21 to 18.</span></div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: The Values and Principles of the UK','British values: democracy, rule of law, individual liberty, mutual respect and tolerance. Responsibilities of residents.',10)">&#9654; Practise Chapter 1</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: The Values and Principles of the UK','British values: democracy, rule of law, individual liberty, mutual respect and tolerance.',5)">Quick 5 Qs</button>
         </div>
       </div>
     </div>
-    <div class="study-footer">
-      <p>Ready to test your knowledge?</p>
-      <button class="tc-go" onclick="startQuiz('Life in the UK: A Long and Illustrious History','British history: Stone Age, Romans, Normans, Magna Carta, Tudors, Empire, World Wars, NHS, key dates and monarchs.',10)">Practise Chapter 3 →</button>
-    </div>
-  </div>
 
-  <!-- ── CHAPTER 4 ── -->
-  <div class="study-panel" id="sp-4">
-    <div class="study-panel-head" onclick="toggleStudyPanel(4)">
-      <div>
-        <h3>Chapter 4 — A Modern, Thriving Society</h3>
-        <p>Culture, sport, arts, religion, customs, bank holidays</p>
-      </div>
-      <button class="study-panel-toggle">▾</button>
-    </div>
-    <div class="study-panel-body">
-      <div class="study-section">
-        <h4>Religion &amp; Traditions</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">⛪</span><span>The official church is the <span class="study-key">Church of England</span> (Protestant). The monarch is its Supreme Governor.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>About <span class="study-key">59%</span> of people identify as Christian. Islam is the second largest religion.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🎄</span><span><span class="study-key">Bank holidays</span>: New Year's Day, Good Friday, Easter Monday, Early May, Spring, Summer, Christmas Day, Boxing Day.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🎭</span><span>Guy Fawkes Night (5 Nov) — commemorates the failed Gunpowder Plot of 1605.</span></div>
+    <!-- Chapter 2 -->
+    <div class="lituk-chap" id="lc-2">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(2)">
+        <div class="lituk-chap-num" style="background:#10b981">Ch2</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">What is the UK?</div>
+          <div class="lituk-chap-sub">Countries, capitals, patron saints, flags, geography</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
         </div>
       </div>
-      <div class="study-section">
-        <h4>Sport &amp; Culture</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">⚽</span><span>Football was developed in Britain. The FA was founded in <span class="study-key">1863</span>. England won the World Cup in <span class="study-key">1966</span>.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🎾</span><span>Wimbledon tennis tournament is the oldest in the world, held annually in London.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🐎</span><span>The Grand National (horse racing) and the Ashes (cricket vs Australia) are major sporting events.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🎭</span><span>The UK has produced world-famous writers including Shakespeare, Jane Austen, Charles Dickens and Roald Dahl.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🎵</span><span>The BBC (British Broadcasting Corporation) was founded in <span class="study-key">1927</span>. It is the world's oldest national broadcaster.</span></div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">England</span> — Capital: London. Patron saint: <strong>St George</strong> (23 April). National flower: Rose.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">Scotland</span> — Capital: Edinburgh. Patron saint: <strong>St Andrew</strong> (30 November). National flower: Thistle.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">Wales</span> — Capital: Cardiff. Patron saint: <strong>St David</strong> (1 March). National flower: Daffodil.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">Northern Ireland</span> — Capital: Belfast. Patron saint: <strong>St Patrick</strong> (17 March). National flower: Shamrock.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127468;&#127463;</span><span>The <span class="lituk-key">Union Flag (Union Jack)</span> combines the crosses of St George, St Andrew and St Patrick. Wales is not included as it was already united with England.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The currency is <span class="lituk-key">pounds sterling (GBP)</span>. The UK does NOT use the Euro.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>Driving is on the <span class="lituk-key">left</span> side of the road — the opposite of most other countries.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: What is the UK?','Countries of the UK, capitals, patron saints and days, national flowers, the Union Flag, currency, devolved governments.',10)">&#9654; Practise Chapter 2</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: What is the UK?','Countries, patron saints, national symbols, Union Flag.',5)">Quick 5 Qs</button>
         </div>
       </div>
     </div>
-    <div class="study-footer">
-      <p>Ready to test your knowledge?</p>
-      <button class="tc-go" onclick="startQuiz('Life in the UK: A Modern Thriving Society','UK society: religion, Church of England, bank holidays, sport (football, cricket, tennis), arts, BBC, famous British figures.',10)">Practise Chapter 4 →</button>
-    </div>
-  </div>
 
-  <!-- ── CHAPTER 5 ── -->
-  <div class="study-panel" id="sp-5">
-    <div class="study-panel-head" onclick="toggleStudyPanel(5)">
-      <div>
-        <h3>Chapter 5 — The UK Government, the Law and Your Role</h3>
-        <p>Parliament, elections, legal system, your rights and responsibilities</p>
-      </div>
-      <button class="study-panel-toggle">▾</button>
-    </div>
-    <div class="study-panel-body">
-      <div class="study-section">
-        <h4>Parliament &amp; Government</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">🏛</span><span>Parliament has two chambers: the <span class="study-key">House of Commons</span> (elected MPs) and the <span class="study-key">House of Lords</span> (appointed/hereditary peers).</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The <span class="study-key">Prime Minister</span> is the leader of the government and usually the leader of the largest party in the Commons.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>Elections use <span class="study-key">First Past the Post</span> — the candidate with the most votes in each constituency wins.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The <span class="study-key">monarch</span> is Head of State but has a largely ceremonial role. The King/Queen gives Royal Assent to new laws.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>The minimum voting age is <span class="study-key">18</span>. You must be on the electoral register to vote.</span></div>
+    <!-- Chapter 3 -->
+    <div class="lituk-chap" id="lc-3">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(3)">
+        <div class="lituk-chap-num" style="background:#f59e0b">Ch3</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">A Long and Illustrious History</div>
+          <div class="lituk-chap-sub">Stone Age to modern times, monarchs, wars, Empire</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
         </div>
       </div>
-      <div class="study-section">
-        <h4>The Legal System</h4>
-        <div class="study-facts">
-          <div class="study-fact"><span class="study-fact-icon">⚖️</span><span>Everyone is <span class="study-key">innocent until proven guilty</span>. You have the right to a fair trial.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">⚖️</span><span>The <span class="study-key">Supreme Court</span> is the highest court in the UK. It hears final appeals.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">🚔</span><span>You must carry your driving licence when driving. The police can ask to see it within 7 days.</span></div>
-          <div class="study-fact"><span class="study-fact-icon">📌</span><span>Jury service — if called, it is a civic duty. Juries consist of <span class="study-key">12</span> members of the public.</span></div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">55 BC</span> — Julius Caesar first invaded Britain (unsuccessful). Romans returned in <span class="lituk-key">AD 43</span> under Emperor Claudius.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1066</span> — Norman Conquest. William the Conqueror defeated King Harold at the Battle of Hastings.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1215</span> — King John signed the <strong>Magna Carta</strong>, limiting royal power for the first time.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128081;</span><span><span class="lituk-key">Henry VIII</span> — broke from the Catholic Church to form the Church of England. Had six wives.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128081;</span><span><span class="lituk-key">Elizabeth I</span> — defeated the Spanish Armada in 1588. Age of Shakespeare and global exploration.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1707</span> — Act of Union united England, Wales and Scotland into Great Britain.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1833</span> — Slavery Abolition Act abolished slavery throughout the British Empire.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1914-1918</span> — First World War. Over 2 million British casualties.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1939-1945</span> — Second World War. Winston Churchill was Prime Minister.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1948</span> — NHS founded. Empire Windrush arrived with Caribbean workers to help rebuild Britain.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1969</span> — Voting age lowered from 21 to 18.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: A Long and Illustrious History','British history: Stone Age, Romans, Normans, Magna Carta, Tudors, Empire, World Wars, NHS, key dates and monarchs.',10)">&#9654; Practise Chapter 3</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: A Long and Illustrious History — Early Period','Early British history: Romans, Normans, Medieval period, Magna Carta.',5)">Early History</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: A Long and Illustrious History — Tudors and Empire','Tudors, Stuarts, Act of Union, Industrial Revolution, British Empire, slavery abolition.',5)">Tudors and Empire</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: A Long and Illustrious History — 20th Century','World War One, World War Two, Winston Churchill, NHS, Windrush, post-war Britain.',5)">20th Century</button>
         </div>
       </div>
     </div>
-    <div class="study-footer">
-      <p>Ready to test your knowledge?</p>
-      <button class="tc-go" onclick="startQuiz('Life in the UK: The UK Government, the Law and Your Role','Parliament, House of Commons, House of Lords, Prime Minister, elections, voting, legal system, Supreme Court, jury service.',10)">Practise Chapter 5 →</button>
-    </div>
-  </div>
 
+    <!-- Chapter 4 -->
+    <div class="lituk-chap" id="lc-4">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(4)">
+        <div class="lituk-chap-num" style="background:#8b5cf6">Ch4</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">A Modern, Thriving Society</div>
+          <div class="lituk-chap-sub">Religion, culture, sport, arts, traditions, bank holidays</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
+        </div>
+      </div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9962;</span><span>The official church is the <span class="lituk-key">Church of England</span> (Protestant/Anglican). The monarch is its Supreme Governor.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>About <span class="lituk-key">59%</span> of people in the UK identify as Christian. Islam is the second largest religion.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127874;</span><span><span class="lituk-key">UK Bank Holidays</span>: New Year's Day, Good Friday, Easter Monday, Early May Bank Holiday, Spring Bank Holiday, Summer Bank Holiday, Christmas Day, Boxing Day.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128293;</span><span><span class="lituk-key">Guy Fawkes Night</span> (5 November) — commemorates the failed Gunpowder Plot of 1605 to blow up Parliament.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9917;</span><span>Football was codified in Britain. The FA was founded in <span class="lituk-key">1863</span>. England won the World Cup in <span class="lituk-key">1966</span>.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127914;</span><span>Wimbledon — the world's oldest tennis tournament, held annually in London since <span class="lituk-key">1877</span>.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128218;</span><span>Famous British writers include Shakespeare, Jane Austen, Charles Dickens, Roald Dahl and J.K. Rowling.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128251;</span><span>The <span class="lituk-key">BBC</span> (British Broadcasting Corporation) was founded in <span class="lituk-key">1927</span> — the world's oldest national broadcaster.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: A Modern Thriving Society','UK society: religion, Church of England, bank holidays, sport (football, cricket, Wimbledon), arts, BBC, famous British figures, traditions.',10)">&#9654; Practise Chapter 4</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: Religion and Traditions','Church of England, religions in UK, bank holidays, Guy Fawkes, Christmas, Easter.',5)">Religion and Traditions</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: Sport and Culture','Football FA, World Cup 1966, Wimbledon, Grand National, cricket, BBC, British authors.',5)">Sport and Culture</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter 5 -->
+    <div class="lituk-chap" id="lc-5">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(5)">
+        <div class="lituk-chap-num" style="background:#ef4444">Ch5</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">The UK Government, the Law and Your Role</div>
+          <div class="lituk-chap-sub">Parliament, elections, legal system, rights, responsibilities</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
+        </div>
+      </div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127963;</span><span>Parliament has two chambers: the <span class="lituk-key">House of Commons</span> (elected MPs) and the <span class="lituk-key">House of Lords</span> (appointed/hereditary).</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The <span class="lituk-key">Prime Minister</span> leads the government — usually the leader of the largest party in the House of Commons.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The UK uses <span class="lituk-key">First Past the Post</span> elections — the candidate with the most votes in each constituency wins.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The <span class="lituk-key">monarch</span> is Head of State with a ceremonial role. The King/Queen gives Royal Assent to new laws.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span>Minimum voting age is <span class="lituk-key">18</span>. You must be on the electoral register to vote.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9878;</span><span><span class="lituk-key">Devolved governments</span>: Scotland has the Scottish Parliament, Wales has the Senedd, Northern Ireland has the Assembly.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9878;</span><span>Everyone is <span class="lituk-key">innocent until proven guilty</span>. The right to a fair trial is guaranteed.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9878;</span><span>The <span class="lituk-key">Supreme Court</span> is the highest court in the UK — hears final appeals in all civil and criminal cases.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>Jury service — if called, it is a civic duty. A jury consists of <span class="lituk-key">12</span> members of the public.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>Non-emergency police: call <span class="lituk-key">101</span>. Emergency services: call <span class="lituk-key">999</span>.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: The UK Government, the Law and Your Role','Parliament, House of Commons, House of Lords, Prime Minister, elections, voting, First Past the Post, Supreme Court, jury service.',10)">&#9654; Practise Chapter 5</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: Parliament and Elections','House of Commons, House of Lords, Prime Minister, First Past the Post elections, voting age, monarchy.',5)">Parliament and Elections</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: The Legal System','Innocent until proven guilty, Supreme Court, jury service, police, rights and responsibilities.',5)">Legal System</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /lituk-chapter-grid -->
 </div>
 </div>
 
@@ -1860,6 +1922,10 @@ function renderQuestion(idx) {
   // Store options globally so onclick handlers can reference by index (avoids quoting issues)
   window._qopts = (isMCQ ? q.options : (isTF ? (q.options && q.options.length >= 2 ? q.options : ['True','False']) : []));
 
+  // Use 2x2 grid only when all 4 options are short enough to sit side-by-side
+  const allShort = window._qopts.length === 4 && window._qopts.every(function(o){ return (o||'').length <= 42; });
+  const gridClass = 'mcq-grid' + (allShort ? '' : ' single-col');
+
   function makeOptBtn(opt, oi, letters) {
     let cls = 'opt';
     if (isAnswered) {
@@ -1879,12 +1945,12 @@ function renderQuestion(idx) {
 
   let optionsHtml = '';
   if (isMCQ) {
-    optionsHtml = '<div class="mcq-grid">'
+    optionsHtml = '<div class="' + gridClass + '">'
       + q.options.map((opt, oi) => makeOptBtn(opt, oi, ['A','B','C','D'])).join('')
       + '</div>';
   } else if (isTF) {
     const tfOpts = window._qopts;
-    optionsHtml = '<div class="mcq-grid">'
+    optionsHtml = '<div class="mcq-grid single-col">'
       + tfOpts.map((opt, oi) => makeOptBtn(opt, oi, ['A','B'])).join('')
       + '</div>';
   } else {
@@ -2247,13 +2313,20 @@ function closeLbModal(e) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// LIFE IN THE UK — STUDY PANEL
+// LIFE IN THE UK — CHAPTER ACCORDION
 // ═══════════════════════════════════════════════════════════
-function toggleStudyPanel(n) {
-  const panel = document.getElementById('sp-' + n);
-  if (!panel) return;
-  panel.classList.toggle('open');
+function toggleLitukChap(n) {
+  const chap = document.getElementById('lc-' + n);
+  if (!chap) return;
+  const isOpen = chap.classList.contains('open');
+  // Close all first
+  document.querySelectorAll('.lituk-chap').forEach(c => c.classList.remove('open'));
+  // Open clicked one if it wasn't already open
+  if (!isOpen) chap.classList.add('open');
 }
+
+// Legacy alias in case any old panel refs remain
+function toggleStudyPanel(n) { toggleLitukChap(n); }
 
 // ═══════════════════════════════════════════════════════════
 // UTILITIES
