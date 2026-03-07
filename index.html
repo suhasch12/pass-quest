@@ -113,7 +113,7 @@ body::before{
 
 /* ─── Nav ─────────────────────────────────────────────────── */
 #nav{
-  position:sticky;top:0;z-index:100;
+  position:sticky;top:0;z-index:200;
   background:rgba(246,243,238,.92);
   backdrop-filter:blur(14px);
   border-bottom:1.5px solid var(--bdr2);
@@ -140,13 +140,15 @@ body::before{
 .nav-tab:hover,.nav-tab.on{color:var(--navy);background:rgba(23,37,63,.07);font-weight:600}
 .nav-right{ display:flex;align-items:center;gap:8px }
 .theme-toggle{
-  width:32px;height:32px;border-radius:50%;
+  height:32px;padding:0 10px;border-radius:20px;
   border:1.5px solid var(--bdr2);background:var(--sur2);
-  color:var(--mu);cursor:pointer;font-size:1.1rem;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s;flex-shrink:0;
+  color:var(--mu);cursor:pointer;font-size:.85rem;
+  display:flex;align-items:center;gap:5px;
+  transition:all .2s;flex-shrink:0;white-space:nowrap;
 }
 .theme-toggle:hover{border-color:var(--navy);color:var(--navy);background:var(--sur)}
+.theme-label{font-size:.68rem;font-weight:700;letter-spacing:.03em}
+@media(max-width:560px){.theme-label{display:none}}
 .btn-donate{
   padding:6px 12px;border-radius:20px;border:none;cursor:pointer;
   background:linear-gradient(135deg,#be123c,#9f1239);color:#fff;
@@ -340,10 +342,10 @@ h1.page-title em{
 #quiz-page{ background:var(--bg) }
 
 .quiz-header{
-  background:rgba(246,243,238,.92);backdrop-filter:blur(14px);
+  background:rgba(var(--quiz-header-rgb,246,243,238),.95);backdrop-filter:blur(14px);
   border-bottom:1.5px solid var(--bdr2);
   padding:12px 24px;
-  position:sticky;top:58px;z-index:80;
+  position:sticky;top:58px;z-index:60;
 }
 .quiz-header-inner{
   max-width:720px;margin:0 auto;
@@ -417,19 +419,19 @@ h1.page-title em{
 .opt{
   width:100%;padding:13px 16px;
   border-radius:11px;border:2px solid var(--bdr2);
-  background:var(--sur);
+  background:var(--sur);color:var(--tx);
   font-family:'DM Sans',sans-serif;font-weight:500;font-size:.88rem;
   text-align:left;cursor:pointer;
   transition:all .15s;
   display:flex;align-items:center;gap:12px;
 }
-.opt:hover:not(:disabled){border-color:var(--tc,var(--navy));background:var(--tcb,#f0f9ff)}
+.opt:hover:not(:disabled){border-color:var(--tc,var(--navy));background:var(--tcb);color:var(--tx)}
 .opt.cor{border-color:var(--ok)!important;background:var(--okb)!important;color:var(--ok)!important;font-weight:600}
 .opt.wrg{border-color:var(--bad)!important;background:var(--badb)!important;color:var(--bad)!important}
 .opt.dim{opacity:.35;pointer-events:none}
 .opt-letter{
   width:26px;height:26px;border-radius:7px;
-  background:var(--bdr2);color:var(--mu);
+  background:var(--bdr2);color:var(--tx);
   font-size:.68rem;font-weight:800;letter-spacing:.02em;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
   transition:all .15s;
@@ -983,8 +985,8 @@ h1.page-title em{
       <button class="nav-tab" id="tab-all" onclick="showPage('allsubjects')">All Subjects</button>
     </div>
     <div class="nav-right">
-      <button class="theme-toggle" id="theme-toggle" onclick="cycleTheme()" title="Toggle theme" aria-label="Toggle colour theme">
-        <span id="theme-icon">&#9788;</span>
+      <button class="theme-toggle" id="theme-toggle" onclick="cycleTheme()" aria-label="Toggle colour theme" title="Click to cycle: System → Light → Dark">
+        <span id="theme-icon">&#9788;</span><span class="theme-label" id="theme-label">System</span>
       </button>
       <button class="btn-donate" onclick="openDonate()" aria-label="Support us">
         &#9829; Support
@@ -1272,7 +1274,10 @@ h1.page-title em{
         <div style="font-size:.75rem;color:var(--mu)">Matches the official test format exactly</div>
       </div>
       <button class="btn btn-navy btn-full" onclick="startQuiz('Life in the UK: Mock Test','Full official-format Life in the UK citizenship test covering all 5 chapters. 24 MCQ questions, 4 options each, based strictly on the official handbook.',24)">
-        &#128203; Start Full Mock Test
+        &#128203; Start Full Mock Test (24 Qs)
+      </button>
+      <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="startQuiz('Life in the UK: Exam Sprint','Quick 20-question sprint across all Life in the UK chapters. Fast practice for the real test.',20)">
+        &#9889; Exam Sprint — 20 in 20
       </button>
     </div>
   </div>
@@ -2325,6 +2330,40 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+// ═══════════════════════════════════════════════════════════
+// SWIPE NAVIGATION (mobile)
+// ═══════════════════════════════════════════════════════════
+(function() {
+  var tx = 0, ty = 0;
+  document.addEventListener('touchstart', function(e) {
+    var page = document.querySelector('.page.on');
+    if (!page || page.id !== 'quiz-page') return;
+    tx = e.touches[0].clientX;
+    ty = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    var page = document.querySelector('.page.on');
+    if (!page || page.id !== 'quiz-page') return;
+    var dx = e.changedTouches[0].clientX - tx;
+    var dy = e.changedTouches[0].clientY - ty;
+    // Only horizontal swipes longer than 60px and not mostly vertical
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
+    // Only act after question is answered (prevent accidental skip)
+    if (!state.answers[state.idx]) return;
+    if (dx < 0) {
+      // Swipe left = Next
+      var btnNext = document.getElementById('btn-next');
+      var btnRes  = document.getElementById('btn-results');
+      if (btnNext && btnNext.style.display !== 'none') nextQ();
+      else if (btnRes && btnRes.style.display !== 'none') showResults();
+    } else {
+      // Swipe right = Prev (if index > 0)
+      if (state.idx > 0) jumpToQ(state.idx - 1);
+    }
+  }, { passive: true });
+})();
+
 // Multi-answer checkbox toggle
 function toggleMultiOpt(oi) {
   if (!state._multiPending) state._multiPending = [];
@@ -2364,7 +2403,9 @@ function applyTheme(mode) {
   else html.removeAttribute('data-theme');
   const icon = document.getElementById('theme-icon');
   if (icon) icon.innerHTML = THEME_ICONS[mode] || THEME_ICONS.system;
-  // Update meta theme-color
+  const lbl = document.getElementById('theme-label');
+  const labelMap = { light: 'Light', dark: 'Dark', system: 'Auto' };
+  if (lbl) lbl.textContent = labelMap[mode] || 'Auto';
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
     const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme:dark)').matches);
@@ -2422,9 +2463,16 @@ function setStar(n) {
 }
 
 async function submitFeedback() {
+  // Simple rate limit: 1 submission per 30 seconds
+  var lastFb = parseInt(localStorage.getItem('gq_last_feedback') || '0');
+  if (Date.now() - lastFb < 30000) {
+    alert('Please wait a moment before sending another message.');
+    return;
+  }
   const text = document.getElementById('feedback-text').value.trim();
   const email = document.getElementById('feedback-email').value.trim();
   if (!text) { document.getElementById('feedback-text').focus(); return; }
+  localStorage.setItem('gq_last_feedback', Date.now());
   const btn = document.getElementById('feedback-submit-btn');
   btn.textContent = 'Sending...';
   btn.disabled = true;
