@@ -1,13 +1,44 @@
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
 
-// Topics that benefit from mixed question types (pure maths reasoning)
-const MATHS_TOPICS = ["number", "algebra", "geometry", "statistics", "probability",
-  "combinatorics", "logic", "mathematics", "trigonometry", "calculus"];
+// Pure maths topics — these get mixed question types (MCQ + true/false + short answer)
+const MATHS_KEYWORDS = ["number","algebra","geometry","statistics","probability",
+  "combinatorics","trigonometry","calculus","arithmetic","quadratic","pythagoras"];
 
 function isMathsTopic(topic) {
   const t = (topic || "").toLowerCase();
-  return MATHS_TOPICS.some(k => t.includes(k));
+  return MATHS_KEYWORDS.some(k => t.includes(k));
+}
+
+// Robustly clean AI output and parse JSON
+function parseAIJson(raw) {
+  let s = raw
+    .replace(/```json\s*/gi, "")
+    .replace(/```\s*/g, "")
+    .trim();
+
+  // Remove BOM / zero-width chars
+  s = s.replace(/[\u200B-\u200D\uFEFF]/g, "");
+
+  // Replace smart quotes with straight quotes
+  s = s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');
+
+  // Replace em/en dashes with hyphens inside strings
+  s = s.replace(/[\u2013\u2014]/g, "-");
+
+  // Remove literal newlines/tabs inside JSON string values
+  // (replace \n and \t that appear inside quoted strings with a space)
+  s = s.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) =>
+    match.replace(/\n/g, " ").replace(/\r/g, "").replace(/\t/g, " ")
+  );
+
+  // Find the JSON object boundaries
+  const start = s.indexOf("{");
+  const end = s.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error("No JSON object found in response");
+  s = s.slice(start, end + 1);
+
+  return JSON.parse(s);
 }
 
 export default async function handler(req, res) {
@@ -22,9 +53,8 @@ export default async function handler(req, res) {
 
   const body = req.body;
 
-  // ── Direct AI call mode (hints, why wrong, lesson, motiv, worked example) ──
+  // ── Direct mode (hints, explanations, coach messages) ─────────────────────
   if (body._direct) {
-    const { _prompt, _system } = body;
     try {
       const r = await fetch(GROQ_API_URL, {
         method: "POST",
@@ -33,58 +63,65 @@ export default async function handler(req, res) {
           model: MODEL,
           max_tokens: 400,
           messages: [
-            { role: "system", content: _system || "You are a helpful assistant." },
-            { role: "user", content: _prompt },
+            { role: "system", content: body._system || "You are a helpful assistant." },
+            { role: "user", content: body._prompt },
           ],
         }),
       });
       const d = await r.json();
-      const text = d.choices?.[0]?.message?.content || null;
-      return res.status(200).json({ text });
+      return res.status(200).json({ text: d.choices?.[0]?.message?.content || null });
     } catch (err) {
       return res.status(500).json({ error: err.message });
     }
   }
 
   // ── Quiz generation mode ───────────────────────────────────────────────────
-  const { topic, numQuestions = 5, _topicOverride, _topicDesc, _tier, _difficulty, _systemExtra } = body;
+  const { numQuestions = 5, _topicOverride, _topicDesc, _tier, _difficulty, _systemExtra } = body;
 
-  const topicName = _topicOverride || topic || "Mixed Maths";
-  const topicDesc = _topicDesc || "";
-  const tier      = _tier || "Challenger";
+  const topicName  = _topicOverride || body.topic || "Mixed Maths";
+  const topicDesc  = _topicDesc || "";
+  const tier       = _tier || "Challenger";
   const difficulty = _difficulty || "JMC level";
-  const varietySeed = Math.floor(Math.random() * 10000);
+  const seed       = Math.floor(Math.random() * 10000);
+  const mathsTopic = isMathsTopic(topicName);
 
-  // Decide question type rules based on topic
-  const allowMixed = isMathsTopic(topicName);
-
-  const typeRules = allowMixed
-    ? `Types allowed: "mcq" (4 options), "true_false" (options: ["True","False"]), "short_answer" (no options, correct_answer is the answer string).
-Mix question types — use mostly mcq (at least 60%), some true_false, occasionally short_answer for calculation answers.`
-    : `IMPORTANT: You MUST use ONLY type "mcq" for every single question. No short_answer, no true_false.
-Each mcq question must have exactly 4 options. Only one option is correct. Make all 4 options plausible.`;
+  // ── Type rules — enforced SERVER SIDE, cannot be overridden by frontend ───
+  const typeRules = mathsTopic
+    ? `Allowed types: "mcq" (4 options), "true_false" (options: ["True","False"]), "short_answer" (no options field, correct_answer is a short string).
+Use mostly "mcq" (at least 70%). Occasionally use "true_false" or "short_answer" for variety.`
+    : `CRITICAL RULE: You MUST use ONLY type "mcq" for every question. Never use "short_answer" or "true_false".
+Every question must have exactly 4 options as an array. Only one option is correct.
+Make all 4 options plausible but only one correct. Distractors should be realistic and educational.`;
 
   const systemPrompt = `You are an expert educator creating quiz questions for UK students.
 Difficulty: ${difficulty} (${tier} tier).
 ${_systemExtra || ""}
-Always respond ONLY with valid JSON in exactly this format:
+
+You MUST respond with ONLY a raw JSON object. No explanation, no markdown, no code fences.
+Use only straight double quotes. No smart quotes. No em dashes. No special characters in JSON keys or values.
+Use simple ASCII characters only in your JSON output.
+
+JSON format:
 {
   "questions": [
     {
       "type": "mcq",
-      "question_text": "...",
+      "question_text": "Question here?",
       "options": ["Option A", "Option B", "Option C", "Option D"],
       "correct_answer": "Option A",
-      "explanation": "..."
+      "explanation": "Explanation here."
     }
   ]
 }
-${typeRules}
-No preamble, no markdown fences, just the raw JSON object.`;
+
+${typeRules}`;
 
   const userPrompt = `Topic: ${topicName}${topicDesc ? " — " + topicDesc : ""}.
-Generate exactly ${numQuestions} questions. Variety seed: ${varietySeed}.
-${allowMixed ? "Mix question types. Reward reasoning and thinking, not just recall." : "ALL questions must be MCQ with 4 options. Make distractors realistic and educational."}`;
+Generate exactly ${numQuestions} questions. Seed: ${seed}.
+${mathsTopic
+  ? "Mix question types. Reward reasoning over recall."
+  : "ALL questions must be MCQ with exactly 4 options. Make options plausible and educational."}
+Output ONLY the JSON object. Nothing else.`;
 
   try {
     const r = await fetch(GROQ_API_URL, {
@@ -92,7 +129,7 @@ ${allowMixed ? "Mix question types. Reward reasoning and thinking, not just reca
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${GROQ_API_KEY}` },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: Math.min(4000, numQuestions * 350),
+        max_tokens: Math.min(4000, numQuestions * 380),
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -102,10 +139,9 @@ ${allowMixed ? "Mix question types. Reward reasoning and thinking, not just reca
 
     const d = await r.json();
     const raw = d.choices?.[0]?.message?.content || "";
-    const clean = raw.replace(/```json|```/g, "").trim();
-    const parsed = JSON.parse(clean);
+    const parsed = parseAIJson(raw);
     return res.status(200).json(parsed);
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "Failed to parse questions: " + err.message });
   }
 }
