@@ -1,6 +1,15 @@
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "llama-3.3-70b-versatile";
 
+// Topics that benefit from mixed question types (pure maths reasoning)
+const MATHS_TOPICS = ["number", "algebra", "geometry", "statistics", "probability",
+  "combinatorics", "logic", "mathematics", "trigonometry", "calculus"];
+
+function isMathsTopic(topic) {
+  const t = (topic || "").toLowerCase();
+  return MATHS_TOPICS.some(k => t.includes(k));
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -13,7 +22,7 @@ export default async function handler(req, res) {
 
   const body = req.body;
 
-  // Direct AI call mode (hints, why wrong, lesson, motiv, worked example)
+  // ── Direct AI call mode (hints, why wrong, lesson, motiv, worked example) ──
   if (body._direct) {
     const { _prompt, _system } = body;
     try {
@@ -37,20 +46,25 @@ export default async function handler(req, res) {
     }
   }
 
-  // Quiz generation mode
-  const {
-    topic, numQuestions = 5,
-    _topicOverride, _topicDesc, _tier, _difficulty, _systemExtra,
-  } = body;
+  // ── Quiz generation mode ───────────────────────────────────────────────────
+  const { topic, numQuestions = 5, _topicOverride, _topicDesc, _tier, _difficulty, _systemExtra } = body;
 
-  const topicName  = _topicOverride || topic || "Mixed Maths";
-  const topicDesc  = _topicDesc    || "";
-  const tier       = _tier         || "Challenger";
-  const difficulty = _difficulty   || "JMC level";
-
+  const topicName = _topicOverride || topic || "Mixed Maths";
+  const topicDesc = _topicDesc || "";
+  const tier      = _tier || "Challenger";
+  const difficulty = _difficulty || "JMC level";
   const varietySeed = Math.floor(Math.random() * 10000);
 
-  const systemPrompt = `You are an expert UK maths teacher creating quiz questions aligned with UKMT philosophy — reward reasoning not recall.
+  // Decide question type rules based on topic
+  const allowMixed = isMathsTopic(topicName);
+
+  const typeRules = allowMixed
+    ? `Types allowed: "mcq" (4 options), "true_false" (options: ["True","False"]), "short_answer" (no options, correct_answer is the answer string).
+Mix question types — use mostly mcq (at least 60%), some true_false, occasionally short_answer for calculation answers.`
+    : `IMPORTANT: You MUST use ONLY type "mcq" for every single question. No short_answer, no true_false.
+Each mcq question must have exactly 4 options. Only one option is correct. Make all 4 options plausible.`;
+
+  const systemPrompt = `You are an expert educator creating quiz questions for UK students.
 Difficulty: ${difficulty} (${tier} tier).
 ${_systemExtra || ""}
 Always respond ONLY with valid JSON in exactly this format:
@@ -59,18 +73,18 @@ Always respond ONLY with valid JSON in exactly this format:
     {
       "type": "mcq",
       "question_text": "...",
-      "options": ["A", "B", "C", "D"],
-      "correct_answer": "A",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correct_answer": "Option A",
       "explanation": "..."
     }
   ]
 }
-Types allowed: "mcq" (4 options), "true_false" (options: ["True","False"]), "short_answer" (no options, correct_answer is the answer string).
-No preamble, no markdown fences, just the JSON object.`;
+${typeRules}
+No preamble, no markdown fences, just the raw JSON object.`;
 
   const userPrompt = `Topic: ${topicName}${topicDesc ? " — " + topicDesc : ""}.
-Generate exactly ${numQuestions} varied questions. Variety seed: ${varietySeed}.
-Mix question types. Make sure questions test genuine understanding, not just recall.`;
+Generate exactly ${numQuestions} questions. Variety seed: ${varietySeed}.
+${allowMixed ? "Mix question types. Reward reasoning and thinking, not just recall." : "ALL questions must be MCQ with 4 options. Make distractors realistic and educational."}`;
 
   try {
     const r = await fetch(GROQ_API_URL, {
@@ -78,7 +92,7 @@ Mix question types. Make sure questions test genuine understanding, not just rec
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${GROQ_API_KEY}` },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: Math.min(4000, numQuestions * 320),
+        max_tokens: Math.min(4000, numQuestions * 350),
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
