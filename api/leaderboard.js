@@ -1,12 +1,18 @@
-// Leaderboard using Vercel KV (free key-value store, built into Vercel)
-// @vercel/kv is available automatically — no install needed on Vercel
-import { kv } from "@vercel/kv";
+// Leaderboard using Upstash Redis REST API (plain fetch, no npm needed)
+// Uses KV_REST_API_URL and KV_REST_API_TOKEN auto-added by Vercel KV integration
 
 const MAX_ENTRIES = 50;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const url   = process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+
+  if (!url || !token) {
+    return res.status(500).json({ error: "KV store not configured" });
   }
 
   const { action, topic } = req.body;
@@ -16,8 +22,8 @@ export default async function handler(req, res) {
 
   if (action === "get") {
     try {
-      const entries = (await kv.get(key)) || [];
-      return res.status(200).json({ entries });
+      const entries = await kvGet(url, token, key);
+      return res.status(200).json({ entries: entries || [] });
     } catch (err) {
       return res.status(200).json({ entries: [], _err: err.message });
     }
@@ -30,7 +36,7 @@ export default async function handler(req, res) {
     }
     const safeName = String(name).trim().substring(0, 20).replace(/[<>&"]/g, "") || "Anonymous";
     try {
-      const existing = (await kv.get(key)) || [];
+      const existing = await kvGet(url, token, key) || [];
       const newEntry = {
         name: safeName, topic, tier, score, total, pct,
         date: new Date().toISOString().split("T")[0],
@@ -38,8 +44,10 @@ export default async function handler(req, res) {
       const updated = [...existing, newEntry]
         .sort((a, b) => b.pct - a.pct || b.score - a.score)
         .slice(0, MAX_ENTRIES);
-      await kv.set(key, updated);
-      const rank = updated.findIndex(e => e.name === safeName && e.pct === pct && e.score === score) + 1;
+      await kvSet(url, token, key, updated);
+      const rank = updated.findIndex(
+        e => e.name === safeName && e.pct === pct && e.score === score
+      ) + 1;
       return res.status(200).json({ ok: true, rank, total: updated.length });
     } catch (err) {
       return res.status(500).json({ error: err.message });
@@ -47,4 +55,22 @@ export default async function handler(req, res) {
   }
 
   return res.status(400).json({ error: "Unknown action" });
+}
+
+async function kvGet(url, token, key) {
+  const res = await fetch(`${url}/get/${encodeURIComponent(key)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`KV GET failed: ${res.status}`);
+  const data = await res.json();
+  return data.result ? JSON.parse(data.result) : [];
+}
+
+async function kvSet(url, token, key, value) {
+  const res = await fetch(`${url}/set/${encodeURIComponent(key)}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify(JSON.stringify(value)),
+  });
+  if (!res.ok) throw new Error(`KV SET failed: ${res.status}`);
 }
