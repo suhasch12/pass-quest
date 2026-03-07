@@ -1708,7 +1708,12 @@ Each option should be plausible but only one correct. Make distractors realistic
     if (data.error) throw new Error(data.error);
     state.questions = data.questions || [];
     if (!state.questions.length) throw new Error('No questions returned');
-    state.questions.forEach(q => USED_IDS.add(q.question_id));
+    // Normalise question types to lowercase so rendering is consistent
+    state.questions.forEach(q => {
+      if (q.type) q.type = q.type.toLowerCase().replace(/[_\/\-\s]+/g, '');
+      // 'mcq','trueFalse','trueFalse','shortAnswer' -> 'mcq','truefalse','shortanswer'
+      USED_IDS.add(q.question_id);
+    });
     renderQuestion(0);
   } catch(err) {
     renderError(err.message);
@@ -1847,40 +1852,56 @@ function renderQuestion(idx) {
   const correct = q.correct_answer;
   const wasCorrect = isAnswered && state.answers[idx].correct;
 
+  // Determine question type (normalised to lowercase, underscores removed)
+  const qtype = (q.type || 'shortanswer').toLowerCase().replace(/[_\/\-\s]+/g, '');
+  const isMCQ = qtype === 'mcq' && q.options && q.options.length >= 2;
+  const isTF  = qtype === 'truefalse' || qtype === 'tf';
+
   let optionsHtml = '';
-  if (q.type === 'MCQ' && q.options?.length) {
-    optionsHtml = q.options.map(opt => {
+  if (isMCQ) {
+    optionsHtml = '<div class="mcq-grid">' + q.options.map((opt, oi) => {
       let cls = 'opt';
       if (isAnswered) {
         if (opt === correct) cls += ' cor';
         else if (opt === chosen && opt !== correct) cls += ' wrg';
         else cls += ' dim';
       }
-      const indicator = isAnswered && opt === correct ? ' ✓' : (isAnswered && opt === chosen && opt !== correct ? ' ✗' : '');
-      return `<button class="${cls}" ${isAnswered?'disabled':''} onclick="answer('${escHtml(opt)}')">${escHtml(opt)}${indicator}</button>`;
-    }).join('');
-  } else if (q.type === 'True/False') {
-    ['True','False'].forEach(opt => {
+      const letter = ['A','B','C','D'][oi] || (oi+1);
+      const tick = isAnswered && opt === correct ? ' <span class="opt-tick">✓</span>' : (isAnswered && opt === chosen && opt !== correct ? ' <span class="opt-tick">✗</span>' : '');
+      return '<button class="' + cls + '" ' + (isAnswered?'disabled':'') + ' onclick="answer(' + JSON.stringify(opt) + ')">'
+        + '<span class="opt-letter">' + letter + '</span>'
+        + '<span class="opt-text">' + escHtml(opt) + '</span>'
+        + tick
+        + '</button>';
+    }).join('') + '</div>';
+  } else if (isTF) {
+    const tfOpts = q.options && q.options.length >= 2 ? q.options : ['True', 'False'];
+    optionsHtml = '<div class="mcq-grid">' + tfOpts.map((opt, oi) => {
       let cls = 'opt';
       if (isAnswered) {
         if (opt === correct) cls += ' cor';
         else if (opt === chosen && opt !== correct) cls += ' wrg';
         else cls += ' dim';
       }
-      optionsHtml += `<button class="${cls}" ${isAnswered?'disabled':''} onclick="answer('${opt}')">${opt}</button>`;
-    });
+      const letter = ['A','B'][oi];
+      const tick = isAnswered && opt === correct ? ' <span class="opt-tick">✓</span>' : (isAnswered && opt === chosen && opt !== correct ? ' <span class="opt-tick">✗</span>' : '');
+      return '<button class="' + cls + '" ' + (isAnswered?'disabled':'') + ' onclick="answer(' + JSON.stringify(opt) + ')">'
+        + '<span class="opt-letter">' + letter + '</span>'
+        + '<span class="opt-text">' + escHtml(opt) + '</span>'
+        + tick
+        + '</button>';
+    }).join('') + '</div>';
   } else {
-    // Short answer
+    // Short answer fallback (maths only)
     if (!isAnswered) {
-      optionsHtml = `
-        <div style="display:flex;gap:8px">
-          <input id="sa-input" class="card" style="flex:1;padding:12px 16px;border-radius:11px;font-size:.9rem;border:2px solid var(--bdr2);outline:none" 
-            placeholder="Type your answer…" onkeydown="if(event.key==='Enter')submitSA()">
-          <button class="btn btn-navy" onclick="submitSA()">Submit</button>
-        </div>`;
+      optionsHtml = '<div style="display:flex;gap:8px">'
+        + '<input id="sa-input" class="card" style="flex:1;padding:12px 16px;border-radius:11px;font-size:.9rem;border:2px solid var(--bdr2);outline:none" '
+        + 'placeholder="Type your answer..." onkeydown="if(event.key==='Enter')submitSA()">'
+        + '<button class="btn btn-navy" onclick="submitSA()">Submit</button>'
+        + '</div>';
     } else {
       const cls = wasCorrect ? 'opt cor' : 'opt wrg';
-      optionsHtml = `<div class="${cls}">${escHtml(chosen)} ${wasCorrect?'✓':'✗'}</div>`;
+      optionsHtml = '<div class="' + cls + '">' + escHtml(chosen) + (wasCorrect ? ' <span class="opt-tick">✓</span>' : ' <span class="opt-tick">✗</span>') + '</div>';
     }
   }
 
@@ -1904,7 +1925,7 @@ function renderQuestion(idx) {
   `;
 
   // Focus short answer input
-  if (!isAnswered && q.type === 'Short Answer') {
+  if (!isAnswered && qtype === 'shortanswer') {
     setTimeout(() => document.getElementById('sa-input')?.focus(), 50);
   }
 
