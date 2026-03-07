@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="theme-color" content="#f6f3ee"/>
 <title>Genius Quest — UK Maths Practice</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,6 +15,7 @@
 <style>
 /* ─── Reset & tokens ───────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 
 :root{
   /* brand */
@@ -331,7 +336,7 @@ h1.page-title em{
 /* Question card */
 .q-wrap{
   max-width:720px;margin:0 auto;
-  padding:24px 24px 120px;
+  padding:24px 24px 140px;
 }
 .q-card{
   background:var(--sur);border:1.5px solid var(--bdr2);
@@ -395,6 +400,7 @@ h1.page-title em{
   background:rgba(246,243,238,.95);backdrop-filter:blur(14px);
   border-top:1.5px solid var(--bdr2);
   padding:12px 24px;
+  padding-bottom:max(12px,env(safe-area-inset-bottom));
 }
 .q-bottom-inner{
   max-width:720px;margin:0 auto;
@@ -410,17 +416,20 @@ h1.page-title em{
   display:flex;justify-content:center;margin-bottom:24px;
 }
 .score-ring{
-  width:140px;height:140px;border-radius:50%;
-  border:6px solid var(--bdr2);
+  width:150px;height:150px;border-radius:50%;
+  border:7px solid var(--bdr2);
   position:relative;
   display:flex;align-items:center;justify-content:center;
   flex-direction:column;
+  transition:border-color .6s ease;
+  box-shadow:0 0 0 4px var(--bg), 0 8px 32px rgba(23,37,63,.12);
 }
 .score-pct{
   font-family:'Fraunces',serif;font-weight:800;
-  font-size:2rem;color:var(--navy);
+  font-size:2.2rem;color:var(--navy);
+  line-height:1;
 }
-.score-lbl{font-size:.72rem;color:var(--mu)}
+.score-lbl{font-size:.75rem;color:var(--mu);margin-top:3px}
 .medal-banner{
   text-align:center;padding:18px;
   border-radius:var(--r);margin-bottom:20px;
@@ -454,6 +463,8 @@ h1.page-title em{
 .rq.open .rq-body{display:block}
 .rq-ans{font-weight:600;color:var(--ok);margin-bottom:6px;font-size:.82rem}
 .rq-exp{color:var(--tx)}
+.bad-q{ border-color:var(--badbdr)!important }
+.bad-q .rq-head{ background:var(--badb) }
 
 /* ─── MODAL (tier picker) ────────────────────────────────── */
 .overlay{
@@ -517,10 +528,91 @@ h1.page-title em{
 .d1{animation-delay:.06s} .d2{animation-delay:.14s} .d3{animation-delay:.22s}
 
 /* ─── Responsive ─────────────────────────────────────────── */
+
+/* Tablet (≤768px) */
+@media(max-width:768px){
+  .topic-grid{grid-template-columns:1fr}
+  .tier-strip{grid-template-columns:repeat(4,1fr)}
+}
+
+/* Mobile (≤600px) */
 @media(max-width:600px){
-  .tier-strip{grid-template-columns:1fr 1fr}
-  .quick-bar{flex-direction:column;align-items:flex-start}
-  .q-bottom-inner{flex-wrap:wrap}
+
+  /* Nav — hide text labels on very small screens, keep pill */
+  .nav-brand span + *{ display:none }  /* hide "Genius Quest" text */
+  .nav-tab{ padding:6px 10px;font-size:.78rem }
+
+  /* Home hero tighter */
+  h1.page-title{ font-size:clamp(1.7rem,8vw,2.4rem) }
+  .page-sub{ font-size:.9rem;margin-bottom:22px }
+  .wrap{ padding:20px 16px }
+
+  /* Tier strip — 2x2 on mobile */
+  .tier-strip{ grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px }
+  .tier-btn{ padding:11px 8px }
+  .tier-icon{ font-size:1.3rem }
+  .tier-name{ font-size:.82rem }
+
+  /* Quick bar stacks nicely */
+  .quick-bar{
+    flex-direction:column;align-items:flex-start;
+    padding:18px 18px;gap:14px;
+  }
+  .quick-bar .btn{ width:100%;justify-content:center }
+
+  /* Topic cards full width, chips wrap better */
+  .topic-grid{ grid-template-columns:1fr;gap:12px }
+  .tc-head{ padding:14px 14px 10px }
+  .tc-chips{ padding:4px 14px 12px;gap:6px }
+  .chip{ font-size:.72rem;padding:5px 11px }
+  .tc-foot{ padding:10px 14px }
+
+  /* Question count picker */
+  #qpick-page .card-lg{ padding:22px 18px }
+
+  /* Quiz header compact */
+  .quiz-header{ padding:10px 16px;top:58px }
+  .quiz-header-inner{ gap:10px }
+
+  /* Bottom action bar — wrap into 2 rows */
+  .q-bottom{ padding:10px 16px 14px }
+  .q-bottom-inner{
+    flex-wrap:wrap;gap:8px;
+  }
+  /* Left group (hint/why/worked) */
+  #btn-hint,#btn-why,#btn-worked{ flex:1;min-width:0;font-size:.74rem;padding:8px 6px }
+  /* Right group (lesson/next/results) */
+  #btn-lesson,#btn-next,#btn-results{ flex:1;min-width:0;font-size:.74rem;padding:8px 10px }
+
+  /* Question card */
+  .q-wrap{ padding:16px 16px 130px }
+  .q-card{ padding:20px 18px;border-radius:16px }
+  .q-text{ font-size:1rem;margin-bottom:18px }
+  .opt{ padding:12px 14px;font-size:.87rem }
+
+  /* Results page */
+  .results-wrap{ padding:20px 16px }
+  .score-ring{ width:120px;height:120px }
+  .score-pct{ font-size:1.7rem }
+
+  /* Leaderboard strip buttons stack */
+  #lb-submit-strip > div:last-of-type{
+    flex-direction:column;
+  }
+  #lb-name-input{ width:100% }
+
+  /* Modal fits screen */
+  .modal-box{ border-radius:16px }
+  .overlay{ padding:12px }
+}
+
+/* Tiny phones (≤380px) */
+@media(max-width:380px){
+  .nav-tabs{ display:none }  /* hide tabs, rely on burger or just brand */
+  .brand-text{ display:none }
+  .tier-strip{ grid-template-columns:1fr 1fr }
+  .tier-name{ font-size:.75rem }
+  h1.page-title{ font-size:1.6rem }
 }
 
 /* ─── Question count picker ──────────────────────────────── */
@@ -585,7 +677,7 @@ h1.page-title em{
 <nav id="nav">
   <div class="nav-inner">
     <a href="#" class="nav-brand" onclick="showPage('home');return false">
-      <span>🧮</span> Genius Quest
+      <span>🧮</span><span class="brand-text"> Genius Quest</span>
     </a>
     <div class="nav-tabs">
       <button class="nav-tab on" id="tab-maths" onclick="showPage('home')">UK Maths</button>
