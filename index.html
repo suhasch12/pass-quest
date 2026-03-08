@@ -77,7 +77,19 @@ button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   --shlg:0 8px 40px rgba(0,0,0,.5);
 }
 
-/* System dark mode auto-apply removed — user controls theme explicitly via Day/Night toggle */
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){ 
+    --quiz-header-rgb:15,17,23;
+    --navy:#a8c4ff;--navy2:#c0d4ff;--gold:#fbbf24;--gold2:#fcd34d;
+    --bg:#0f1117;--sur:#1a1d27;--sur2:#22253a;--bdr:#2e3148;--bdr2:#333654;
+    --tx:#e8eaf6;--mu:#9196b0;--lite:#5c6080;
+    --tc:#60a5fa;--tcb:#1e3a5f;
+    --ok:#4ade80;--okb:#052e16;--okbdr:#166534;
+    --bad:#f87171;--badb:#450a0a;--badbdr:#7f1d1d;
+    --sh:0 1px 3px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
+    --shlg:0 8px 40px rgba(0,0,0,.5);
+  }
+}
 
 html{ scroll-behavior:smooth }
 body{
@@ -101,11 +113,10 @@ body::before{
 
 /* ─── Nav ─────────────────────────────────────────────────── */
 #nav{
-  position:sticky;top:0;z-index:9999;
+  position:sticky;top:0;z-index:100;
   background:rgba(246,243,238,.92);
   backdrop-filter:blur(14px);
   border-bottom:1.5px solid var(--bdr2);
-  isolation:isolate;
   padding:0 24px;
 }
 .nav-inner{
@@ -119,7 +130,7 @@ body::before{
   color:var(--navy);font-size:1.08rem;text-decoration:none;
 }
 .nav-brand span{font-size:1.3rem}
-.nav-tabs{display:flex;gap:2px;position:relative;z-index:9999}
+.nav-tabs{display:flex;gap:2px}
 .nav-tab{
   padding:7px 13px;border-radius:8px;
   font-size:.84rem;font-weight:500;color:var(--mu);
@@ -129,15 +140,13 @@ body::before{
 .nav-tab:hover,.nav-tab.on{color:var(--navy);background:rgba(23,37,63,.07);font-weight:600}
 .nav-right{ display:flex;align-items:center;gap:8px }
 .theme-toggle{
-  height:32px;padding:0 10px;border-radius:20px;
+  width:32px;height:32px;border-radius:50%;
   border:1.5px solid var(--bdr2);background:var(--sur2);
-  color:var(--mu);cursor:pointer;font-size:.85rem;
-  display:flex;align-items:center;gap:5px;
-  transition:all .2s;flex-shrink:0;white-space:nowrap;
+  color:var(--mu);cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
 }
 .theme-toggle:hover{border-color:var(--navy);color:var(--navy);background:var(--sur)}
-.theme-label{font-size:.68rem;font-weight:700;letter-spacing:.03em}
-@media(max-width:560px){.theme-label{display:none}}
 .btn-donate{
   padding:6px 12px;border-radius:20px;border:none;cursor:pointer;
   background:linear-gradient(135deg,#be123c,#9f1239);color:#fff;
@@ -158,8 +167,8 @@ body::before{
 
 /* ─── Page wrapper ───────────────────────────────────────── */
 #app{ position:relative;z-index:1 }
-.page{ display:none; pointer-events:none }
-.page.on{ display:block; pointer-events:auto }
+.page{ display:none }
+.page.on{ display:block }
 
 /* ─── Shared layout ──────────────────────────────────────── */
 .wrap{
@@ -331,10 +340,10 @@ h1.page-title em{
 #quiz-page{ background:var(--bg) }
 
 .quiz-header{
-  background:rgba(var(--quiz-header-rgb,246,243,238),.95);backdrop-filter:blur(14px);
+  background:rgba(246,243,238,.92);backdrop-filter:blur(14px);
   border-bottom:1.5px solid var(--bdr2);
   padding:12px 24px;
-  position:sticky;top:58px;z-index:60;
+  position:sticky;top:58px;z-index:80;
 }
 .quiz-header-inner{
   max-width:720px;margin:0 auto;
@@ -408,19 +417,19 @@ h1.page-title em{
 .opt{
   width:100%;padding:13px 16px;
   border-radius:11px;border:2px solid var(--bdr2);
-  background:var(--sur);color:var(--tx);
+  background:var(--sur);
   font-family:'DM Sans',sans-serif;font-weight:500;font-size:.88rem;
   text-align:left;cursor:pointer;
   transition:all .15s;
   display:flex;align-items:center;gap:12px;
 }
-.opt:hover:not(:disabled){border-color:var(--tc,var(--navy));background:var(--tcb);color:var(--tx)}
+.opt:hover:not(:disabled){border-color:var(--tc,var(--navy));background:var(--tcb,#f0f9ff)}
 .opt.cor{border-color:var(--ok)!important;background:var(--okb)!important;color:var(--ok)!important;font-weight:600}
 .opt.wrg{border-color:var(--bad)!important;background:var(--badb)!important;color:var(--bad)!important}
 .opt.dim{opacity:.35;pointer-events:none}
 .opt-letter{
   width:26px;height:26px;border-radius:7px;
-  background:var(--bdr2);color:var(--tx);
+  background:var(--bdr2);color:var(--mu);
   font-size:.68rem;font-weight:800;letter-spacing:.02em;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
   transition:all .15s;
@@ -466,6 +475,7 @@ h1.page-title em{
 /* Fixed bottom bar */
 .q-bottom{
   position:fixed;bottom:0;left:0;right:0;z-index:70;
+  background:rgba(246,243,238,.95);backdrop-filter:blur(14px);
   background:rgba(var(--quiz-header-rgb,246,243,238),.96);backdrop-filter:blur(14px);
   border-top:1.5px solid var(--bdr2);
   padding:12px 24px;
@@ -712,6 +722,7 @@ h1.page-title em{
 
 /* Tiny phones (≤380px) */
 @media(max-width:380px){
+  .nav-tabs{ display:none }  /* hide tabs, rely on burger or just brand */
   .brand-text{ display:none }
   .tier-strip{ grid-template-columns:1fr 1fr }
   .tier-name{ font-size:.75rem }
@@ -973,8 +984,8 @@ h1.page-title em{
       <button class="nav-tab" id="tab-all" onclick="showPage('allsubjects')">All Subjects</button>
     </div>
     <div class="nav-right">
-      <button class="theme-toggle" id="theme-toggle" onclick="cycleTheme()" aria-label="Toggle day/night mode" title="Toggle day/night mode">
-        <span id="theme-icon">&#9788;</span><span class="theme-label" id="theme-label">Day</span>
+      <button class="theme-toggle" id="theme-toggle" onclick="cycleTheme()" title="Toggle theme" aria-label="Toggle colour theme">
+        <span id="theme-icon">&#9788;</span>
       </button>
       <button class="btn-donate" onclick="openDonate()" aria-label="Support us">
         &#9829; Support
@@ -1262,10 +1273,7 @@ h1.page-title em{
         <div style="font-size:.75rem;color:var(--mu)">Matches the official test format exactly</div>
       </div>
       <button class="btn btn-navy btn-full" onclick="startQuiz('Life in the UK: Mock Test','Full official-format Life in the UK citizenship test covering all 5 chapters. 24 MCQ questions, 4 options each, based strictly on the official handbook.',24)">
-        &#128203; Start Full Mock Test (24 Qs)
-      </button>
-      <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="startQuiz('Life in the UK: Exam Sprint','Quick 20-question sprint across all Life in the UK chapters. Fast practice for the real test.',20)">
-        &#9889; Exam Sprint — 20 in 20
+        &#128203; Start Full Mock Test
       </button>
     </div>
   </div>
@@ -1542,9 +1550,8 @@ h1.page-title em{
   <div class="section-label">Question Review</div>
   <div class="result-q-list" id="result-q-list"></div>
 
-</div><!-- /results-wrap -->
-
-</div><!-- /results-page -->
+</div>
+</div>
 
 </div><!-- /app -->
 
@@ -2319,40 +2326,6 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// ═══════════════════════════════════════════════════════════
-// SWIPE NAVIGATION (mobile)
-// ═══════════════════════════════════════════════════════════
-(function() {
-  var tx = 0, ty = 0;
-  document.addEventListener('touchstart', function(e) {
-    var page = document.querySelector('.page.on');
-    if (!page || page.id !== 'quiz-page') return;
-    tx = e.touches[0].clientX;
-    ty = e.touches[0].clientY;
-  }, { passive: true });
-
-  document.addEventListener('touchend', function(e) {
-    var page = document.querySelector('.page.on');
-    if (!page || page.id !== 'quiz-page') return;
-    var dx = e.changedTouches[0].clientX - tx;
-    var dy = e.changedTouches[0].clientY - ty;
-    // Only horizontal swipes longer than 60px and not mostly vertical
-    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
-    // Only act after question is answered (prevent accidental skip)
-    if (!state.answers[state.idx]) return;
-    if (dx < 0) {
-      // Swipe left = Next
-      var btnNext = document.getElementById('btn-next');
-      var btnRes  = document.getElementById('btn-results');
-      if (btnNext && btnNext.style.display !== 'none') nextQ();
-      else if (btnRes && btnRes.style.display !== 'none') showResults();
-    } else {
-      // Swipe right = Prev (if index > 0)
-      if (state.idx > 0) jumpToQ(state.idx - 1);
-    }
-  }, { passive: true });
-})();
-
 // Multi-answer checkbox toggle
 function toggleMultiOpt(oi) {
   if (!state._multiPending) state._multiPending = [];
@@ -2380,7 +2353,7 @@ function submitMulti() {
 // ═══════════════════════════════════════════════════════════
 // THEME MANAGEMENT
 // ═══════════════════════════════════════════════════════════
-const THEME_ICONS = { light: '&#9788;', dark: '&#9790;', system: '&#9788;' };
+const THEME_ICONS = { light: '&#9788;', dark: '&#9790;', system: '&#9728;' };
 let _themeMode = localStorage.getItem('theme_preference') || 'system';
 
 function applyTheme(mode) {
@@ -2392,9 +2365,7 @@ function applyTheme(mode) {
   else html.removeAttribute('data-theme');
   const icon = document.getElementById('theme-icon');
   if (icon) icon.innerHTML = THEME_ICONS[mode] || THEME_ICONS.system;
-  const lbl = document.getElementById('theme-label');
-  const labelMap = { light: 'Day', dark: 'Night', system: 'Auto' };
-  if (lbl) lbl.textContent = labelMap[mode] || 'Auto';
+  // Update meta theme-color
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
     const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme:dark)').matches);
@@ -2403,8 +2374,9 @@ function applyTheme(mode) {
 }
 
 function cycleTheme() {
-  // Simple toggle: light <-> dark only (no 'system' to avoid OS dark mode surprises)
-  applyTheme(_themeMode === 'dark' ? 'light' : 'dark');
+  const order = ['system', 'light', 'dark'];
+  const next = order[(order.indexOf(_themeMode) + 1) % order.length];
+  applyTheme(next);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2451,16 +2423,9 @@ function setStar(n) {
 }
 
 async function submitFeedback() {
-  // Simple rate limit: 1 submission per 30 seconds
-  var lastFb = parseInt(localStorage.getItem('gq_last_feedback') || '0');
-  if (Date.now() - lastFb < 30000) {
-    alert('Please wait a moment before sending another message.');
-    return;
-  }
   const text = document.getElementById('feedback-text').value.trim();
   const email = document.getElementById('feedback-email').value.trim();
   if (!text) { document.getElementById('feedback-text').focus(); return; }
-  localStorage.setItem('gq_last_feedback', Date.now());
   const btn = document.getElementById('feedback-submit-btn');
   btn.textContent = 'Sending...';
   btn.disabled = true;
@@ -2595,6 +2560,7 @@ function showResults() {
   try {
     var tot = state.questions.length;
     var cor = Object.values(state.answers).filter(function(a){ return a.correct; }).length;
+    trackEvent('test_complete', { topic: state.topic, tier: state.tier, score: cor, total: tot, pct: tot ? Math.round(cor/tot*100) : 0 });
     var pct = tot ? Math.round(cor/tot*100) : 0;
     trackEvent('test_complete', { topic: state.topic, tier: state.tier, score: cor, total: tot, pct: pct });
     // Show donate CTA on every 3rd completed quiz (not intrusive)
@@ -2827,8 +2793,11 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Apply saved theme on load — default to LIGHT
-applyTheme(localStorage.getItem('theme_preference') || 'light');
+// Apply saved theme on load
+applyTheme(localStorage.getItem('theme_preference') || 'system');
+window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', () => {
+  if (_themeMode === 'system') applyTheme('system');
+});
 
 // Init
 updateNavTierPill();
@@ -2919,66 +2888,5 @@ updateNavTierPill();
   </div>
 </div>
 
-
-<!-- ═══ CRITICAL OVERRIDES - DO NOT REMOVE ═══ -->
-<style id="critical-overrides">
-/* Force all inactive pages hidden */
-.page { display: none !important; pointer-events: none !important; }
-.page.on { display: block !important; pointer-events: auto !important; }
-/* Force nav above everything */
-#nav { z-index: 9999 !important; position: sticky !important; top: 0 !important; }
-nav#nav * { pointer-events: auto !important; }
-.nav-tab { cursor: pointer !important; pointer-events: auto !important; }
-/* Hide nav-tabs on nothing - always show */
-.nav-tabs { display: flex !important; }
-</style>
-<script id="critical-js">
-// CRITICAL: Ensure showPage works on load
-(function() {
-  // Simple Day/Night toggle - no system mode
-  window._themeMode = localStorage.getItem('gq_theme') || 'light';
-  function applySimpleTheme(mode) {
-    window._themeMode = mode;
-    localStorage.setItem('gq_theme', mode);
-    var html = document.documentElement;
-    if (mode === 'dark') {
-      html.setAttribute('data-theme', 'dark');
-    } else {
-      html.removeAttribute('data-theme');
-    }
-    var icon = document.getElementById('theme-icon');
-    var label = document.getElementById('theme-label');
-    if (icon) icon.textContent = mode === 'dark' ? '☾' : '☼';
-    if (label) label.textContent = mode === 'dark' ? 'Night' : 'Day';
-  }
-  // Override cycleTheme globally
-  window.cycleTheme = function() {
-    applySimpleTheme(window._themeMode === 'dark' ? 'light' : 'dark');
-  };
-  // Apply on load
-  applySimpleTheme(window._themeMode);
-
-  // Override showPage to ensure it works
-  window.showPage = function(name) {
-    document.querySelectorAll('.page').forEach(function(p) {
-      p.classList.remove('on');
-    });
-    var target = document.getElementById(name + '-page');
-    if (target) target.classList.add('on');
-    document.querySelectorAll('.nav-tab').forEach(function(t) {
-      t.classList.remove('on');
-    });
-    var tabMap = { home: 'tab-maths', allsubjects: 'tab-all', lituk: 'tab-lituk' };
-    var tab = document.getElementById(tabMap[name]);
-    if (tab) tab.classList.add('on');
-    try { window.trackEvent('page_view', { page: name }); } catch(e) {}
-    window.scrollTo(0, 0);
-  };
-})();
-</script>
-<!-- ═══ END CRITICAL OVERRIDES ═══ -->
-
 </body>
-  <style>.page{display:none!important}.page.on{display:block!important}.nav-tabs{display:flex!important}#nav{z-index:9999!important}</style>
-<script>window.showPage=function(n){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on')});var t=document.getElementById(n+'-page');if(t)t.classList.add('on');document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('on')});var m={home:'tab-maths',allsubjects:'tab-all',lituk:'tab-lituk'};var tb=document.getElementById(m[n]);if(tb)tb.classList.add('on');window.scrollTo(0,0)};window.cycleTheme=function(){var m=localStorage.getItem('gq_theme')||'light';var d=m==='dark'?'light':'dark';localStorage.setItem('gq_theme',d);document.documentElement[d==='dark'?'setAttribute':'removeAttribute']('data-theme','dark');var i=document.getElementById('theme-icon');if(i)i.textContent=d==='dark'?'☾':'☼';};</script>
 </html>
