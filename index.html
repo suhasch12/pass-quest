@@ -2979,4 +2979,6 @@ nav#nav * { pointer-events: auto !important; }
 <!-- ═══ END CRITICAL OVERRIDES ═══ -->
 
 </body>
+  <style>.page{display:none!important}.page.on{display:block!important}.nav-tabs{display:flex!important}#nav{z-index:9999!important}</style>
+<script>window.showPage=function(n){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on')});var t=document.getElementById(n+'-page');if(t)t.classList.add('on');document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('on')});var m={home:'tab-maths',allsubjects:'tab-all',lituk:'tab-lituk'};var tb=document.getElementById(m[n]);if(tb)tb.classList.add('on');window.scrollTo(0,0)};window.cycleTheme=function(){var m=localStorage.getItem('gq_theme')||'light';var d=m==='dark'?'light':'dark';localStorage.setItem('gq_theme',d);document.documentElement[d==='dark'?'setAttribute':'removeAttribute']('data-theme','dark');var i=document.getElementById('theme-icon');if(i)i.textContent=d==='dark'?'☾':'☼';};</script>
 </html>
