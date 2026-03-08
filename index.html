@@ -1,0 +1,2982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="theme-color" content="#f6f3ee"/>
+<title>Genius Quest — UK Maths Practice</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ─── Reset & tokens ───────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+:root{
+  /* brand */
+  --navy:#17253f;
+  --navy2:#1f3156;
+  --gold:#c8912a;
+  --gold2:#e5a832;
+
+  /* surface — light */
+  --bg:#f6f3ee;
+  --sur:#ffffff;
+  --sur2:#faf8f4;
+  --bdr:#e0d8cc;
+  --bdr2:#ede8df;
+
+  /* text — light */
+  --tx:#1a1a2e;
+  --mu:#6b6878;
+  --lite:#9d99a8;
+
+  /* topic accent */
+  --tc:#2563eb; --tcb:#dbeafe;
+
+  /* feedback */
+  --ok:#15803d; --okb:#dcfce7; --okbdr:#86efac;
+  --bad:#be123c; --badb:#ffe4e6; --badbdr:#fca5a5;
+
+  /* tier */
+  --t1:#15803d; --t1b:#dcfce7;
+  --t2:#1d4ed8; --t2b:#dbeafe;
+  --t3:#7e22ce; --t3b:#f3e8ff;
+  --t4:#9f1239; --t4b:#ffe4e6;
+
+  /* spacing */
+  --r:13px; --rlg:20px;
+  --sh:0 1px 3px rgba(23,37,63,.07),0 4px 14px rgba(23,37,63,.07);
+  --shlg:0 8px 40px rgba(23,37,63,.14);
+}
+
+/* ─── Dark theme tokens ────────────────────────────────────── */
+[data-theme="dark"]{
+  --quiz-header-rgb:15,17,23;
+  --navy:#a8c4ff;
+  --navy2:#c0d4ff;
+  --gold:#fbbf24;
+  --gold2:#fcd34d;
+  --bg:#0f1117;
+  --sur:#1a1d27;
+  --sur2:#22253a;
+  --bdr:#2e3148;
+  --bdr2:#333654;
+  --tx:#e8eaf6;
+  --mu:#9196b0;
+  --lite:#5c6080;
+  --tc:#60a5fa; --tcb:#1e3a5f;
+  --ok:#4ade80; --okb:#052e16; --okbdr:#166534;
+  --bad:#f87171; --badb:#450a0a; --badbdr:#7f1d1d;
+  --sh:0 1px 3px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.3);
+  --shlg:0 8px 40px rgba(0,0,0,.5);
+}
+
+/* System dark mode auto-apply removed — user controls theme explicitly via Day/Night toggle */
+
+html{ scroll-behavior:smooth }
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--tx);
+  min-height:100vh;
+  line-height:1.6;
+}
+
+/* subtle grain texture */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:.5;
+}
+
+/* ─── Typography helpers ─────────────────────────────────── */
+.f-head{ font-family:'Fraunces',serif }
+.f-mono{ font-family:'JetBrains Mono',monospace }
+
+/* ─── Nav ─────────────────────────────────────────────────── */
+#nav{
+  position:sticky;top:0;z-index:9999;
+  background:rgba(246,243,238,.92);
+  backdrop-filter:blur(14px);
+  border-bottom:1.5px solid var(--bdr2);
+  isolation:isolate;
+  padding:0 24px;
+}
+.nav-inner{
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:58px;gap:16px;
+}
+.nav-brand{
+  display:flex;align-items:center;gap:9px;
+  font-family:'Fraunces',serif;font-weight:700;
+  color:var(--navy);font-size:1.08rem;text-decoration:none;
+}
+.nav-brand span{font-size:1.3rem}
+.nav-tabs{display:flex;gap:2px;position:relative;z-index:9999}
+.nav-tab{
+  padding:7px 13px;border-radius:8px;
+  font-size:.84rem;font-weight:500;color:var(--mu);
+  border:none;background:none;cursor:pointer;
+  transition:all .16s;
+}
+.nav-tab:hover,.nav-tab.on{color:var(--navy);background:rgba(23,37,63,.07);font-weight:600}
+.nav-right{ display:flex;align-items:center;gap:8px }
+.theme-toggle{
+  height:32px;padding:0 10px;border-radius:20px;
+  border:1.5px solid var(--bdr2);background:var(--sur2);
+  color:var(--mu);cursor:pointer;font-size:.85rem;
+  display:flex;align-items:center;gap:5px;
+  transition:all .2s;flex-shrink:0;white-space:nowrap;
+}
+.theme-toggle:hover{border-color:var(--navy);color:var(--navy);background:var(--sur)}
+.theme-label{font-size:.68rem;font-weight:700;letter-spacing:.03em}
+@media(max-width:560px){.theme-label{display:none}}
+.btn-donate{
+  padding:6px 12px;border-radius:20px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#be123c,#9f1239);color:#fff;
+  font-size:.73rem;font-weight:700;letter-spacing:.03em;
+  display:flex;align-items:center;gap:4px;
+  transition:all .18s;flex-shrink:0;white-space:nowrap;
+}
+.btn-donate:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(159,18,57,.35)}
+@media(max-width:480px){.btn-donate{display:none}}
+.nav-tier-pill{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:100px;
+  font-size:.75rem;font-weight:700;
+  background:var(--t2b);color:var(--t2);
+  border:none;cursor:pointer;transition:all .15s;
+}
+.nav-tier-pill:hover{filter:brightness(.95)}
+
+/* ─── Page wrapper ───────────────────────────────────────── */
+#app{ position:relative;z-index:1 }
+.page{ display:none; pointer-events:none }
+.page.on{ display:block; pointer-events:auto }
+
+/* ─── Shared layout ──────────────────────────────────────── */
+.wrap{
+  max-width:1100px;margin:0 auto;
+  padding:clamp(28px,5vw,56px) 24px;
+}
+.section-label{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:9px;
+}
+.section-label::before{content:'';width:18px;height:1.5px;background:var(--gold)}
+h1.page-title{
+  font-family:'Fraunces',serif;font-weight:800;
+  font-size:clamp(2rem,5vw,3.2rem);
+  color:var(--navy);line-height:1.1;margin-bottom:12px;
+}
+h1.page-title em{
+  font-style:normal;
+  background:linear-gradient(130deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.page-sub{
+  font-size:1rem;color:var(--mu);line-height:1.7;
+  max-width:560px;margin-bottom:32px;
+}
+.divider{
+  border:none;height:1.5px;margin:0;
+  background:linear-gradient(90deg,transparent,var(--bdr),transparent);
+}
+
+/* ─── Buttons ────────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 20px;border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-weight:600;font-size:.87rem;
+  border:none;cursor:pointer;text-decoration:none;
+  transition:all .16s;white-space:nowrap;
+}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn-navy{background:var(--navy);color:#fff;box-shadow:0 3px 12px rgba(23,37,63,.22)}
+.btn-navy:hover:not(:disabled){background:var(--navy2);transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:#fff;box-shadow:0 3px 12px rgba(200,145,42,.3)}
+.btn-gold:hover:not(:disabled){background:var(--gold2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--mu);border:1.5px solid var(--bdr)}
+.btn-ghost:hover:not(:disabled){background:var(--sur);color:var(--tx)}
+.btn-ok{background:var(--okb);color:var(--ok);border:1.5px solid var(--okbdr)}
+.btn-err{background:var(--badb);color:var(--bad);border:1.5px solid var(--badbdr)}
+.btn-sm{padding:6px 12px;font-size:.78rem;border-radius:8px}
+.btn-lg{padding:13px 26px;font-size:.95rem;border-radius:12px}
+.btn-full{width:100%}
+
+/* ─── Cards ──────────────────────────────────────────────── */
+.card{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--r);box-shadow:var(--sh);
+}
+.card-lg{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--rlg);box-shadow:var(--shlg);
+}
+
+/* ─── HOME PAGE ──────────────────────────────────────────── */
+
+/* Tier selector strip */
+.tier-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  margin-bottom:36px;
+}
+@media(max-width:700px){.tier-strip{grid-template-columns:1fr 1fr}}
+.tier-btn{
+  padding:14px 10px;border-radius:12px;
+  border:2px solid var(--bdr2);background:var(--sur);
+  cursor:pointer;text-align:center;transition:all .18s;
+  position:relative;overflow:hidden;
+}
+.tier-btn::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--tc);transform:scaleX(0);transform-origin:center;
+  transition:transform .2s;
+}
+.tier-btn:hover{border-color:var(--tc);box-shadow:var(--sh)}
+.tier-btn:hover::after,.tier-btn.on::after{transform:scaleX(1)}
+.tier-btn.on{border-color:var(--tc);background:var(--tcb)}
+.tier-icon{font-size:1.5rem;margin-bottom:5px}
+.tier-name{font-family:'Fraunces',serif;font-weight:700;font-size:.92rem;color:var(--navy)}
+.tier-age{font-size:.7rem;color:var(--mu);margin-top:2px}
+.tier-tag{
+  display:inline-block;margin-top:6px;
+  padding:2px 8px;border-radius:100px;
+  font-size:.63rem;font-weight:700;letter-spacing:.04em;
+  background:var(--tcb);color:var(--tc);
+}
+
+/* Topic grid */
+.topic-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:18px;
+}
+.topic-card{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--sh);
+  transition:transform .18s,box-shadow .18s;
+  cursor:pointer;
+}
+.topic-card:hover{transform:translateY(-3px);box-shadow:var(--shlg)}
+.tc-head{
+  padding:18px 18px 14px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.tc-icon{
+  width:42px;height:42px;border-radius:11px;
+  background:var(--tcb);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.25rem;flex-shrink:0;
+}
+.tc-meta{ flex:1;min-width:0 }
+.tc-title{
+  font-family:'Fraunces',serif;font-weight:700;
+  font-size:.97rem;color:var(--navy);margin-bottom:2px;
+}
+.tc-sub{font-size:.73rem;color:var(--mu)}
+.tc-chips{
+  padding:4px 18px 14px;
+  display:flex;flex-wrap:wrap;gap:5px;
+}
+.chip{
+  padding:4px 10px;border-radius:100px;
+  border:1.5px solid var(--bdr2);background:#fff;
+  font-size:.7rem;font-weight:500;color:var(--mu);
+  cursor:pointer;transition:all .14s;
+}
+.chip:hover{
+  border-color:var(--tc);color:var(--tc);background:var(--tcb);
+}
+.tc-foot{
+  padding:10px 18px;border-top:1.5px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.tc-count{font-size:.7rem;color:var(--lite)}
+.tc-go{
+  padding:6px 14px;border-radius:8px;font-size:.77rem;font-weight:700;
+  background:var(--navy);color:#fff;border:none;cursor:pointer;
+  transition:all .14s;
+}
+.tc-go:hover{background:var(--navy2)}
+
+/* Quick-start banner */
+.quick-bar{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  border-radius:var(--r);padding:22px 26px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  margin-bottom:36px;overflow:hidden;position:relative;
+}
+.quick-bar::before{
+  content:'∑ ∫ π √ ∞';
+  position:absolute;right:250px;top:0;bottom:0;
+  font-size:3rem;letter-spacing:16px;
+  color:rgba(255,255,255,.04);
+  display:flex;align-items:center;pointer-events:none;
+}
+.qb-txt h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:4px}
+.qb-txt p{font-size:.8rem;color:rgba(255,255,255,.62)}
+
+/* ─── QUIZ PAGE ──────────────────────────────────────────── */
+#quiz-page{ background:var(--bg) }
+
+.quiz-header{
+  background:rgba(var(--quiz-header-rgb,246,243,238),.95);backdrop-filter:blur(14px);
+  border-bottom:1.5px solid var(--bdr2);
+  padding:12px 24px;
+  position:sticky;top:58px;z-index:60;
+}
+.quiz-header-inner{
+  max-width:720px;margin:0 auto;
+  display:flex;align-items:center;gap:14px;
+}
+.quiz-meta{
+  flex:1;min-width:0;
+}
+.quiz-meta-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:6px;
+}
+.quiz-topic-label{
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;
+  color:var(--tc,var(--navy));
+}
+.quiz-counter{font-size:.72rem;color:var(--mu)}
+.progress-bar{
+  height:5px;background:var(--bdr2);border-radius:100px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;border-radius:100px;
+  background:var(--tc,var(--navy));
+  transition:width .4s ease;
+}
+.dot-row{
+  display:flex;gap:5px;flex-wrap:wrap;justify-content:center;
+  padding:8px 24px;max-width:720px;margin:0 auto;
+}
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--bdr2);border:none;padding:0;cursor:default;
+  transition:all .2s;flex-shrink:0;
+}
+.dot.cur{
+  background:var(--tc,var(--navy));
+  box-shadow:0 0 0 3px rgba(23,37,63,.15);
+  transform:scale(1.3);
+}
+.dot.ok{background:var(--ok)}
+.dot.bad{background:var(--bad)}
+
+/* Question card */
+.q-wrap{
+  max-width:720px;margin:0 auto;
+  padding:24px 24px 140px;
+}
+.q-card{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--rlg);padding:28px;
+  box-shadow:var(--shlg);margin-bottom:16px;
+  color:var(--tx);
+}
+.q-category-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:100px;
+  font-size:.67rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  background:var(--tcb,#dbeafe);color:var(--tc,var(--navy));
+  margin-bottom:16px;
+}
+.q-text{
+  font-family:'Fraunces',serif;font-weight:600;
+  font-size:clamp(1rem,2.5vw,1.18rem);
+  line-height:1.5;color:var(--tx);
+  margin-bottom:22px;
+}
+.options{margin-top:4px}
+/* 2x2 grid for short options, single col for long ones — set via JS */
+.mcq-grid{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+.mcq-grid.single-col{grid-template-columns:1fr}
+.opt{
+  width:100%;padding:13px 16px;
+  border-radius:11px;border:2px solid var(--bdr2);
+  background:var(--sur);color:var(--tx);
+  font-family:'DM Sans',sans-serif;font-weight:500;font-size:.88rem;
+  text-align:left;cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;gap:12px;
+}
+.opt:hover:not(:disabled){border-color:var(--tc,var(--navy));background:var(--tcb);color:var(--tx)}
+.opt.cor{border-color:var(--ok)!important;background:var(--okb)!important;color:var(--ok)!important;font-weight:600}
+.opt.wrg{border-color:var(--bad)!important;background:var(--badb)!important;color:var(--bad)!important}
+.opt.dim{opacity:.35;pointer-events:none}
+.opt-letter{
+  width:26px;height:26px;border-radius:7px;
+  background:var(--bdr2);color:var(--tx);
+  font-size:.68rem;font-weight:800;letter-spacing:.02em;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .15s;
+}
+.opt:hover:not(:disabled) .opt-letter{background:var(--tc,var(--navy));color:#fff}
+.opt.cor .opt-letter{background:var(--ok);color:#fff}
+.opt.wrg .opt-letter{background:var(--bad);color:#fff}
+.opt.dim .opt-letter{opacity:.5}
+.opt-text{flex:1;line-height:1.4}
+.opt-tick{font-weight:700;font-size:.9rem;flex-shrink:0;margin-left:auto}
+@media(max-width:540px){.mcq-grid{grid-template-columns:1fr}}
+.multi-hint{
+  font-size:.75rem;font-weight:700;color:var(--tc);
+  padding:6px 10px;background:var(--tcb);border-radius:8px;
+  margin-bottom:10px;display:inline-block;
+}
+.opt-check.sel{border-color:var(--tc)!important;background:var(--tcb)!important}
+.opt-checkbox{background:var(--navy);color:#fff}
+.opt-check.sel .opt-checkbox{background:var(--tc);color:#fff}
+
+/* feedback strip under question */
+.feedback-box{
+  border-radius:var(--r);padding:16px 18px;
+  margin-bottom:16px;font-size:.87rem;line-height:1.6;
+}
+.feedback-box.ok{background:var(--okb);border:1.5px solid var(--okbdr);color:var(--ok)}
+.feedback-box.bad{background:var(--badb);border:1.5px solid var(--badbdr);color:var(--bad)}
+.feedback-label{font-weight:700;margin-bottom:4px;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+.feedback-txt{color:var(--tx)}
+
+/* AI panels */
+.ai-panel{
+  background:var(--sur2);border:1.5px solid var(--bdr2);
+  border-radius:var(--r);padding:14px 18px;
+  margin-bottom:10px;font-size:.83rem;line-height:1.65;color:var(--tx);
+}
+.ai-label{
+  font-family:'JetBrains Mono',monospace;font-size:.63rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:7px;
+}
+
+/* Fixed bottom bar */
+.q-bottom{
+  position:fixed;bottom:0;left:0;right:0;z-index:70;
+  background:rgba(var(--quiz-header-rgb,246,243,238),.96);backdrop-filter:blur(14px);
+  border-top:1.5px solid var(--bdr2);
+  padding:12px 24px;
+  padding-bottom:max(12px,env(safe-area-inset-bottom));
+}
+.q-bottom-inner{
+  max-width:720px;margin:0 auto;
+  display:flex;align-items:center;gap:10px;
+}
+
+/* ─── RESULTS PAGE ───────────────────────────────────────── */
+.results-wrap{
+  max-width:680px;margin:0 auto;
+  padding:clamp(24px,5vw,48px) 24px;
+}
+.score-ring-wrap{
+  display:flex;justify-content:center;margin-bottom:24px;
+}
+.score-ring{
+  width:150px;height:150px;border-radius:50%;
+  border:7px solid var(--bdr2);
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  transition:border-color .6s ease;
+  box-shadow:0 0 0 4px var(--bg), 0 8px 32px rgba(23,37,63,.12);
+}
+.score-pct{
+  font-family:'Fraunces',serif;font-weight:800;
+  font-size:2.2rem;color:var(--navy);
+  line-height:1;
+}
+.score-lbl{font-size:.75rem;color:var(--mu);margin-top:3px}
+.medal-banner{
+  text-align:center;padding:18px;
+  border-radius:var(--r);margin-bottom:20px;
+}
+.medal-emoji{font-size:2.5rem;margin-bottom:6px}
+.medal-name{
+  font-family:'Fraunces',serif;font-weight:700;
+  font-size:1.2rem;color:var(--navy);
+}
+.medal-sub{font-size:.8rem;color:var(--mu);margin-top:4px}
+
+.result-q-list{ display:flex;flex-direction:column;gap:10px;margin-top:20px }
+.rq{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--r);overflow:hidden;
+}
+.rq-head{
+  padding:12px 16px;
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;
+}
+.rq-icon{font-size:1rem;flex-shrink:0}
+.rq-txt{flex:1;font-size:.83rem;font-weight:500;color:var(--tx)}
+.rq-chevron{color:var(--lite);font-size:.7rem;transition:transform .2s}
+.rq.open .rq-chevron{transform:rotate(90deg)}
+.rq-body{
+  display:none;padding:12px 16px;
+  border-top:1.5px solid var(--bdr2);
+  background:var(--sur2);font-size:.8rem;line-height:1.6;color:var(--mu);
+}
+.rq.open .rq-body{display:block}
+.rq-ans{font-weight:600;color:var(--ok);margin-bottom:6px;font-size:.82rem}
+.rq-exp{color:var(--tx)}
+.bad-q{ border-color:var(--badbdr)!important }
+.bad-q .rq-head{ background:var(--badb) }
+
+/* ─── MODAL (tier picker) ────────────────────────────────── */
+.overlay{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(23,37,63,.5);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.overlay.on{display:flex;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{
+  background:var(--sur);border-radius:var(--rlg);
+  width:100%;max-width:480px;
+  box-shadow:0 24px 80px rgba(23,37,63,.3);
+  overflow:hidden;animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{
+  background:var(--navy);padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-head h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;color:#fff}
+.modal-head p{font-size:.78rem;color:rgba(255,255,255,.6);margin-top:3px}
+.modal-close{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:none;
+  color:#fff;cursor:pointer;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .14s;flex-shrink:0;
+}
+.modal-close:hover{background:rgba(255,255,255,.22)}
+.modal-body{padding:20px 24px}
+.modal-label{font-size:.75rem;font-weight:700;color:var(--navy);margin-bottom:9px;text-transform:uppercase;letter-spacing:.05em}
+.opt-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.opt-btn{
+  flex:1;min-width:80px;
+  padding:9px 10px;border-radius:9px;
+  border:2px solid var(--bdr2);background:var(--sur);
+  cursor:pointer;text-align:center;font-size:.78rem;font-weight:600;
+  color:var(--mu);transition:all .14s;
+}
+.opt-btn:hover{border-color:var(--navy);color:var(--navy)}
+.opt-btn.on{border-color:var(--tc,var(--navy));background:var(--tcb,#dbeafe);color:var(--tc,var(--navy))}
+.opt-btn .ob-icon{font-size:1.2rem;display:block;margin-bottom:3px}
+.modal-foot{
+  padding:14px 24px;border-top:1.5px solid var(--bdr2);
+  display:flex;gap:8px;
+}
+
+/* ─── Question index nav ─────────────────────────────────── */
+.q-index-bar{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:10px 16px;background:var(--sur2);border-bottom:1.5px solid var(--bdr2);
+}
+.q-index-btn{
+  width:30px;height:30px;border-radius:8px;
+  border:1.5px solid var(--bdr2);background:var(--sur);
+  font-size:.72rem;font-weight:700;color:var(--mu);
+  cursor:pointer;transition:all .12s;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.q-index-btn:hover{border-color:var(--navy);color:var(--navy)}
+.q-index-btn.qi-current{background:var(--navy);color:#fff;border-color:var(--navy)}
+.q-index-btn.qi-answered{background:var(--okb);border-color:var(--ok);color:var(--ok)}
+.q-index-btn.qi-flagged::after{
+  content:'⚑';position:absolute;top:-5px;right:-4px;
+  font-size:.55rem;color:#f59e0b;
+}
+.q-index-btn.qi-current.qi-answered{background:var(--navy);color:#fff}
+.q-index-spacer{flex:1}
+.q-flag-btn{
+  padding:5px 10px;border-radius:8px;border:1.5px solid var(--bdr2);
+  background:var(--sur);font-size:.72rem;font-weight:600;color:var(--mu);
+  cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:4px;
+}
+.q-flag-btn.flagged{border-color:#f59e0b;background:#fef3c7;color:#92400e}
+[data-theme="dark"] .q-flag-btn.flagged{background:#451a03;color:#fbbf24}
+.q-skip-btn{
+  padding:5px 10px;border-radius:8px;border:1.5px solid var(--bdr2);
+  background:var(--sur);font-size:.72rem;font-weight:600;color:var(--mu);
+  cursor:pointer;transition:all .12s;
+}
+.q-skip-btn:hover{border-color:var(--navy);color:var(--navy)}
+
+/* ─── Spinner ────────────────────────────────────────────── */
+.spin{
+  width:32px;height:32px;border-radius:50%;
+  border:3px solid var(--bdr2);border-top-color:var(--navy);
+  animation:rotate .6s linear infinite;display:inline-block;
+}
+@keyframes rotate{to{transform:rotate(360deg)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* ─── Animations ─────────────────────────────────────────── */
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.rise{ animation:rise .4s ease both }
+.d1{animation-delay:.06s} .d2{animation-delay:.14s} .d3{animation-delay:.22s}
+
+/* ─── Responsive ─────────────────────────────────────────── */
+
+/* Tablet (≤768px) */
+@media(max-width:768px){
+  .topic-grid{grid-template-columns:1fr}
+  .tier-strip{grid-template-columns:repeat(4,1fr)}
+}
+
+/* Mobile (≤600px) */
+@media(max-width:600px){
+
+  /* Nav — hide text labels on very small screens, keep pill */
+  .nav-brand span + *{ display:none }  /* hide "Genius Quest" text */
+  .nav-tab{ padding:6px 10px;font-size:.78rem }
+
+  /* Home hero tighter */
+  h1.page-title{ font-size:clamp(1.7rem,8vw,2.4rem) }
+  .page-sub{ font-size:.9rem;margin-bottom:22px }
+  .wrap{ padding:20px 16px }
+
+  /* Tier strip — 2x2 on mobile */
+  .tier-strip{ grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px }
+  .tier-btn{ padding:11px 8px }
+  .tier-icon{ font-size:1.3rem }
+  .tier-name{ font-size:.82rem }
+
+  /* Quick bar stacks nicely */
+  .quick-bar{
+    flex-direction:column;align-items:flex-start;
+    padding:18px 18px;gap:14px;
+  }
+  .quick-bar .btn{ width:100%;justify-content:center }
+
+  /* Topic cards full width, chips wrap better */
+  .topic-grid{ grid-template-columns:1fr;gap:12px }
+  .tc-head{ padding:14px 14px 10px }
+  .tc-chips{ padding:4px 14px 12px;gap:6px }
+  .chip{ font-size:.72rem;padding:5px 11px }
+  .tc-foot{ padding:10px 14px }
+
+  /* Question count picker */
+  #qpick-page .card-lg{ padding:22px 18px }
+
+  /* Quiz header compact */
+  .quiz-header{ padding:10px 16px;top:58px }
+  .quiz-header-inner{ gap:10px }
+
+  /* Bottom action bar — wrap into 2 rows */
+  .q-bottom{ padding:10px 16px 14px }
+  .q-bottom-inner{
+    flex-wrap:wrap;gap:8px;
+  }
+  /* Left group (hint/why/worked) */
+  #btn-hint,#btn-why,#btn-worked{ flex:1;min-width:0;font-size:.74rem;padding:8px 6px }
+  /* Right group (lesson/next/results) */
+  #btn-lesson,#btn-next,#btn-results{ flex:1;min-width:0;font-size:.74rem;padding:8px 10px }
+
+  /* Question card */
+  .q-wrap{ padding:16px 16px 130px }
+  .q-card{ padding:20px 18px;border-radius:16px }
+  .q-text{ font-size:1rem;margin-bottom:18px }
+  .opt{ padding:12px 14px;font-size:.87rem }
+
+  /* Results page */
+  .results-wrap{ padding:20px 16px }
+  .score-ring{ width:120px;height:120px }
+  .score-pct{ font-size:1.7rem }
+
+  /* Leaderboard strip buttons stack */
+  #lb-submit-strip > div:last-of-type{
+    flex-direction:column;
+  }
+  #lb-name-input{ width:100% }
+
+  /* Modal fits screen */
+  .modal-box{ border-radius:16px }
+  .overlay{ padding:12px }
+}
+
+/* Tiny phones (≤380px) */
+@media(max-width:380px){
+  .brand-text{ display:none }
+  .tier-strip{ grid-template-columns:1fr 1fr }
+  .tier-name{ font-size:.75rem }
+  h1.page-title{ font-size:1.6rem }
+}
+
+/* ─── Question count picker ──────────────────────────────── */
+.qpick-btn{
+  padding:14px 8px;border-radius:12px;
+  border:2px solid var(--bdr2);background:var(--sur);
+  color:var(--mu);cursor:pointer;transition:all .15s;
+  font-family:'DM Sans',sans-serif;
+}
+.qpick-btn:hover{border-color:var(--navy);color:var(--navy);background:var(--sur2)}
+.qpick-on{border-color:var(--navy)!important;background:var(--navy)!important;color:#fff!important}
+
+/* ─── Timer display ──────────────────────────────────────── */
+#timer-display{
+  display:none;align-items:center;gap:7px;
+  font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.82rem;
+  color:var(--navy);background:var(--sur2);
+  border:1.5px solid var(--bdr2);border-radius:8px;
+  padding:4px 11px;flex-shrink:0;transition:all .3s;
+}
+#timer-display.urgent{color:var(--bad);border-color:var(--badbdr);background:var(--badb);animation:timerPulse 1s ease infinite}
+#timer-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+@keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ─── Leaderboard modal ──────────────────────────────────── */
+.lb-row{
+  display:grid;grid-template-columns:32px 1fr auto auto;
+  align-items:center;gap:10px;
+  padding:10px 14px;border-radius:9px;
+  font-size:.8rem;transition:background .12s;
+}
+.lb-row:hover{background:var(--sur2)}
+.lb-row.me{background:var(--t2b);font-weight:600}
+.lb-rank{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.75rem;color:var(--mu);text-align:center}
+.lb-name{font-weight:500;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-tier{font-size:.65rem;color:var(--mu);white-space:nowrap}
+.lb-pct{font-family:'Fraunces',serif;font-weight:700;font-size:.9rem;color:var(--navy)}
+.lb-empty{text-align:center;padding:32px;color:var(--mu);font-size:.83rem}
+
+/* ─── Life in the UK page ───────────────────────────────── */
+.lituk-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;margin-top:8px;
+}
+.lituk-card{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--r);box-shadow:var(--sh);
+  overflow:hidden;cursor:pointer;
+  transition:transform .18s,box-shadow .18s;
+}
+.lituk-card:hover{transform:translateY(-3px);box-shadow:var(--shlg)}
+.lituk-card-inner{
+  padding:20px;
+  display:flex;align-items:center;gap:16px;
+}
+.lituk-ring{
+  position:relative;width:52px;height:52px;flex-shrink:0;
+}
+.lituk-ring svg{transform:rotate(-90deg)}
+.lituk-ring-bg{fill:none;stroke:var(--bdr2);stroke-width:4}
+.lituk-ring-fill{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.lituk-ring-label{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:700;color:var(--navy);
+}
+.lituk-card-title{
+  font-family:'Fraunces',serif;font-weight:700;font-size:.97rem;color:var(--navy);
+  margin-bottom:3px;
+}
+.lituk-card-sub{font-size:.73rem;color:var(--mu);line-height:1.4}
+.lituk-card-foot{
+  padding:10px 20px;border-top:1.5px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--sur2);
+}
+.lituk-card-count{font-size:.7rem;color:var(--lite)}
+
+.lituk-mock-banner{
+  background:linear-gradient(135deg,#1e3a5f,#17253f);
+  border-radius:var(--r);padding:22px 26px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  margin-bottom:32px;
+}
+.lituk-mock-banner h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:4px}
+.lituk-mock-banner p{font-size:.8rem;color:rgba(255,255,255,.6)}
+
+@media(max-width:600px){
+  .lituk-grid{grid-template-columns:1fr}
+  .lituk-mock-banner{flex-direction:column;align-items:flex-start;gap:14px}
+  .lituk-mock-banner .btn{width:100%;justify-content:center}
+}
+
+/* ─── Life in the UK dashboard ──────────────────────────────── */
+.lituk-dashboard{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px}
+@media(max-width:700px){.lituk-dashboard{grid-template-columns:1fr}}
+
+.lituk-stat-card{
+  background:var(--sur);border:1.5px solid var(--bdr2);border-radius:var(--r);
+  padding:20px 22px;box-shadow:var(--sh);
+}
+.lituk-stat-card h4{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:12px}
+.lituk-big-num{font-family:'Fraunces',serif;font-weight:800;font-size:2.4rem;color:var(--navy);line-height:1}
+.lituk-big-sub{font-size:.75rem;color:var(--mu);margin-top:4px}
+
+.lituk-progress-bar{height:7px;background:var(--bdr2);border-radius:10px;margin:10px 0 4px;overflow:hidden}
+.lituk-progress-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#3b82f6,#1d4ed8);transition:width .6s ease}
+
+.lituk-chapter-grid{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.lituk-chap{
+  background:var(--sur);border:1.5px solid var(--bdr2);border-radius:var(--r);
+  box-shadow:var(--sh);overflow:hidden;
+}
+.lituk-chap-head{
+  display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;
+  transition:background .14s;
+}
+.lituk-chap-head:hover{background:var(--sur2)}
+.lituk-chap-num{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-weight:800;font-size:.78rem;
+  flex-shrink:0;color:#fff;
+}
+.lituk-chap-meta{flex:1;min-width:0}
+.lituk-chap-title{font-family:'Fraunces',serif;font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:2px}
+.lituk-chap-sub{font-size:.72rem;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lituk-chap-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lituk-chap-pct{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;color:var(--mu);
+}
+.lituk-chap-arr{color:var(--mu);font-size:.8rem;transition:transform .2s}
+.lituk-chap.open .lituk-chap-arr{transform:rotate(90deg)}
+
+.lituk-chap-body{display:none;padding:0 20px 20px}
+.lituk-chap.open .lituk-chap-body{display:block}
+
+.lituk-fact-list{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.lituk-fact-row{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:.81rem;line-height:1.5;color:var(--tx);
+  padding:5px 0;border-bottom:1px solid var(--bdr2);
+}
+.lituk-fact-row:last-child{border-bottom:none}
+.lituk-fact-icon{flex-shrink:0;font-size:.78rem;width:18px;text-align:center;margin-top:1px}
+.lituk-key{
+  display:inline-block;background:var(--sur2);color:var(--navy);
+  border-radius:4px;padding:1px 6px;font-size:.68rem;font-weight:700;
+  margin:0 2px;white-space:nowrap;border:1px solid var(--bdr2);
+}
+.lituk-chap-btns{display:flex;gap:10px;flex-wrap:wrap}
+.lituk-chap-btns .btn{font-size:.8rem}
+
+/* ─── Life in the UK study panel ───────────────────────────── */
+.study-panel{
+  background:var(--sur);border:1.5px solid var(--bdr2);
+  border-radius:var(--r);box-shadow:var(--sh);
+  overflow:hidden;margin-bottom:32px;
+}
+.study-panel-head{
+  background:linear-gradient(135deg,#1e3a5f,#17253f);
+  padding:18px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  cursor:pointer;
+}
+.study-panel-head h3{
+  font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:#fff;
+  margin-bottom:2px;
+}
+.study-panel-head p{font-size:.75rem;color:rgba(255,255,255,.6)}
+.study-panel-toggle{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:none;color:#fff;
+  font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:transform .25s;
+}
+.study-panel.open .study-panel-toggle{transform:rotate(180deg)}
+.study-panel-body{
+  display:none;padding:20px 24px;
+}
+.study-panel.open .study-panel-body{display:block}
+.study-section{margin-bottom:20px}
+.study-section:last-child{margin-bottom:0}
+.study-section h4{
+  font-family:'Fraunces',serif;font-weight:700;font-size:.9rem;
+  color:var(--navy);margin-bottom:8px;padding-bottom:6px;
+  border-bottom:1.5px solid var(--bdr2);
+}
+.study-facts{display:flex;flex-direction:column;gap:6px}
+.study-fact{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:.82rem;line-height:1.55;color:var(--tx);
+}
+.study-fact-icon{flex-shrink:0;margin-top:1px;font-size:.75rem}
+.study-key{
+  display:inline-block;background:var(--t2b);color:var(--t2);
+  border-radius:4px;padding:1px 6px;font-size:.7rem;font-weight:700;
+  margin-right:4px;white-space:nowrap;
+}
+.study-footer{
+  padding:12px 24px;border-top:1.5px solid var(--bdr2);
+  background:var(--sur2);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.study-footer p{font-size:.75rem;color:var(--mu)}
+
+/* ─── Feedback FAB ──────────────────────────────────────── */
+.feedback-fab{
+  position:fixed;bottom:80px;right:18px;z-index:80;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--navy);color:#fff;border:none;
+  font-size:1.1rem;cursor:pointer;
+  box-shadow:0 4px 16px rgba(23,37,63,.3);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.feedback-fab:hover{transform:scale(1.08);box-shadow:0 6px 22px rgba(23,37,63,.4)}
+.star-btn{
+  font-size:1.4rem;background:none;border:none;cursor:pointer;
+  color:var(--bdr2);transition:color .15s;padding:2px;
+}
+.star-btn.on{color:#f59e0b}
+.star-btn:hover{color:#f59e0b}
+
+/* ─── Worked example panel ───────────────────────────────── */
+.worked-panel{
+  background:linear-gradient(135deg,#fffbeb,#fef3c7);
+  border:1.5px solid #fde68a;
+  border-radius:var(--r);padding:16px 18px;
+  margin-bottom:10px;font-size:.83rem;line-height:1.7;color:var(--tx);
+}
+.worked-step{
+  display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;
+}
+.step-num{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--gold);color:#fff;
+  font-size:.65rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand" onclick="showPage('home');return false">
+      <span>🧮</span><span class="brand-text"> Genius Quest</span>
+    </a>
+    <div class="nav-tabs">
+      <button class="nav-tab on" id="tab-maths" onclick="showPage('home')">UK Maths</button>
+      <button class="nav-tab" id="tab-lituk" onclick="showPage('lituk')">🇬🇧 Life in the UK</button>
+      <button class="nav-tab" id="tab-all" onclick="showPage('allsubjects')">All Subjects</button>
+    </div>
+    <div class="nav-right">
+      <button class="theme-toggle" id="theme-toggle" onclick="cycleTheme()" aria-label="Toggle day/night mode" title="Toggle day/night mode">
+        <span id="theme-icon">&#9788;</span><span class="theme-label" id="theme-label">Day</span>
+      </button>
+      <button class="btn-donate" onclick="openDonate()" aria-label="Support us">
+        &#9829; Support
+      </button>
+      <button class="nav-tier-pill" id="nav-tier-pill" onclick="openTierModal()">
+        <span id="nav-tier-icon">&#9889;</span>
+        <span id="nav-tier-name">Challenger</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ APP ══════════════════════ -->
+<div id="app">
+
+<!-- ──────────────────────── HOME PAGE ─────────────────────── -->
+<div id="home-page" class="page on">
+<div class="wrap">
+
+  <!-- Hero -->
+  <div class="section-label rise">UK Curriculum · UKMT Aligned</div>
+  <h1 class="page-title rise d1">
+    Practice <em>UK Maths</em><br>the right way
+  </h1>
+  <p class="page-sub rise d2">
+    Choose a topic, pick your level, and get unlimited AI-generated questions — structured exactly around the five UKMT pillars. Every question is new, every time.
+  </p>
+
+  <!-- Tier selector -->
+  <div class="section-label">Your Level</div>
+  <div class="tier-strip rise d2" id="tier-strip">
+    <div class="tier-btn on" data-tier="Explorer" data-age="9"
+      style="--tc:var(--t1);--tcb:var(--t1b)" onclick="selectTier(this)">
+      <div class="tier-icon">🌱</div>
+      <div class="tier-name">Explorer</div>
+      <div class="tier-age">Ages 7 – 10</div>
+      <div class="tier-tag">KS2</div>
+    </div>
+    <div class="tier-btn" data-tier="Challenger" data-age="12"
+      style="--tc:var(--t2);--tcb:var(--t2b)" onclick="selectTier(this)">
+      <div class="tier-icon">⚡</div>
+      <div class="tier-name">Challenger</div>
+      <div class="tier-age">Ages 11 – 13</div>
+      <div class="tier-tag">JMC Level</div>
+    </div>
+    <div class="tier-btn" data-tier="Olympian" data-age="15"
+      style="--tc:var(--t3);--tcb:var(--t3b)" onclick="selectTier(this)">
+      <div class="tier-icon">🔥</div>
+      <div class="tier-name">Olympian</div>
+      <div class="tier-age">Ages 14 – 16</div>
+      <div class="tier-tag">IMC Level</div>
+    </div>
+    <div class="tier-btn" data-tier="Champion" data-age="17"
+      style="--tc:var(--t4);--tcb:var(--t4b)" onclick="selectTier(this)">
+      <div class="tier-icon">🏆</div>
+      <div class="tier-name">Champion</div>
+      <div class="tier-age">Ages 17 – 18</div>
+      <div class="tier-tag">BMO Level</div>
+    </div>
+  </div>
+
+  <!-- Quick-start bar -->
+  <div class="quick-bar rise d3">
+    <div class="qb-txt">
+      <h3>Not sure where to begin?</h3>
+      <p>Take a quick 5-question mixed Maths quiz across all topics at your chosen level.</p>
+    </div>
+    <button class="btn btn-gold btn-lg" onclick="startQuiz('UK Maths — Mixed','All five topic pillars mixed',5)">
+      Quick Mixed Quiz →
+    </button>
+  </div>
+
+  <!-- The 5 topic pillars -->
+  <div class="section-label">The 5 UKMT Topic Pillars</div>
+  <p style="font-size:.88rem;color:var(--mu);margin-bottom:20px;max-width:560px">
+    Click any subtopic chip for targeted practice, or "Practise All" to cover the whole pillar.
+  </p>
+
+  <div class="topic-grid" id="topic-grid">
+
+    <!-- NUMBER & ARITHMETIC -->
+    <div class="topic-card" style="--tc:#1d4ed8;--tcb:#dbeafe">
+      <div class="tc-head">
+        <div class="tc-icon">🔢</div>
+        <div class="tc-meta">
+          <div class="tc-title">Number & Arithmetic</div>
+          <div class="tc-sub">Foundation of all mathematics</div>
+        </div>
+      </div>
+      <div class="tc-chips">
+        <div class="chip" onclick="startQuiz('Number: Primes & Factors','Primes, factors, multiples, HCF and LCM',5)">Primes & Factors</div>
+        <div class="chip" onclick="startQuiz('Number: Fractions','Adding, subtracting, multiplying and dividing fractions',5)">Fractions</div>
+        <div class="chip" onclick="startQuiz('Number: Percentages','Decimals, percentages and percentage change',5)">Percentages</div>
+        <div class="chip" onclick="startQuiz('Number: Powers & Roots','Powers, roots, index laws, scientific notation',5)">Powers & Roots</div>
+        <div class="chip" onclick="startQuiz('Number: Ratio & Proportion','Ratio, proportion, direct and inverse variation',5)">Ratio & Proportion</div>
+        <div class="chip" onclick="startQuiz('Number: Sequences','Arithmetic, geometric and Fibonacci sequences',5)">Sequences</div>
+      </div>
+      <div class="tc-foot">
+        <span class="tc-count">6 subtopics</span>
+        <button class="tc-go" onclick="startQuiz('Number & Arithmetic','All number topics: primes, fractions, percentages, powers, ratio, sequences',5)">Practise All →</button>
+      </div>
+    </div>
+
+    <!-- ALGEBRA -->
+    <div class="topic-card" style="--tc:#7e22ce;--tcb:#f3e8ff">
+      <div class="tc-head">
+        <div class="tc-icon">🔡</div>
+        <div class="tc-meta">
+          <div class="tc-title">Algebra</div>
+          <div class="tc-sub">Patterns, expressions and equations</div>
+        </div>
+      </div>
+      <div class="tc-chips">
+        <div class="chip" onclick="startQuiz('Algebra: Expressions','Expanding brackets, factorising, simplifying expressions',5)">Expressions</div>
+        <div class="chip" onclick="startQuiz('Algebra: Linear Equations','Solving linear equations and rearranging formulae',5)">Linear Equations</div>
+        <div class="chip" onclick="startQuiz('Algebra: Simultaneous Equations','Solving pairs of simultaneous linear equations',5)">Simultaneous Eqs</div>
+        <div class="chip" onclick="startQuiz('Algebra: Quadratics','Quadratic expressions, equations and the quadratic formula',5)">Quadratics</div>
+        <div class="chip" onclick="startQuiz('Algebra: Inequalities','Solving and representing inequalities',5)">Inequalities</div>
+        <div class="chip" onclick="startQuiz('Algebra: nth Term','Finding the nth term of arithmetic and quadratic sequences',5)">nth Term</div>
+        <div class="chip" onclick="startQuiz('Algebra: Graphs','Straight-line graphs, gradients and curve sketching',5)">Graphs</div>
+      </div>
+      <div class="tc-foot">
+        <span class="tc-count">7 subtopics</span>
+        <button class="tc-go" onclick="startQuiz('Algebra','All algebra: expressions, equations, quadratics, inequalities, graphs',5)">Practise All →</button>
+      </div>
+    </div>
+
+    <!-- GEOMETRY -->
+    <div class="topic-card" style="--tc:#0d9488;--tcb:#ccfbf1">
+      <div class="tc-head">
+        <div class="tc-icon">📐</div>
+        <div class="tc-meta">
+          <div class="tc-title">Geometry & Measures</div>
+          <div class="tc-sub">Shapes, space and spatial reasoning</div>
+        </div>
+      </div>
+      <div class="tc-chips">
+        <div class="chip" onclick="startQuiz('Geometry: Angles','Angles in triangles, polygons and parallel lines',5)">Angles</div>
+        <div class="chip" onclick="startQuiz('Geometry: Area & Perimeter','Area and perimeter of 2D shapes and compound figures',5)">Area & Perimeter</div>
+        <div class="chip" onclick="startQuiz('Geometry: Circles','Circumference, area, arc length, sectors and circle theorems',5)">Circles</div>
+        <div class="chip" onclick="startQuiz('Geometry: Volume','Volume and surface area of 3D shapes',5)">Volume & SA</div>
+        <div class="chip" onclick="startQuiz('Geometry: Pythagoras Theorem','Pythagoras theorem in 2D and 3D problems',5)">Pythagoras</div>
+        <div class="chip" onclick="startQuiz('Geometry: Trigonometry','Sin, cos, tan in right-angled and non-right-angled triangles',5)">Trigonometry</div>
+        <div class="chip" onclick="startQuiz('Geometry: Transformations','Translation, rotation, reflection and enlargement',5)">Transformations</div>
+        <div class="chip" onclick="startQuiz('Geometry: Vectors','Column vectors, addition, subtraction and magnitude',5)">Vectors</div>
+      </div>
+      <div class="tc-foot">
+        <span class="tc-count">8 subtopics</span>
+        <button class="tc-go" onclick="startQuiz('Geometry & Measures','All geometry: angles, area, circles, volume, Pythagoras, trigonometry',5)">Practise All →</button>
+      </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="topic-card" style="--tc:#be185d;--tcb:#fce7f3">
+      <div class="tc-head">
+        <div class="tc-icon">📊</div>
+        <div class="tc-meta">
+          <div class="tc-title">Statistics & Probability</div>
+          <div class="tc-sub">Data, chance and reasoning from evidence</div>
+        </div>
+      </div>
+      <div class="tc-chips">
+        <div class="chip" onclick="startQuiz('Statistics: Mean Median Mode','Mean, median, mode, range and averages from frequency tables',5)">Mean/Median/Mode</div>
+        <div class="chip" onclick="startQuiz('Statistics: Charts & Graphs','Interpreting bar charts, pie charts, histograms and scatter graphs',5)">Charts & Graphs</div>
+        <div class="chip" onclick="startQuiz('Statistics: Frequency Tables','Grouped frequency tables and cumulative frequency',5)">Frequency Tables</div>
+        <div class="chip" onclick="startQuiz('Probability: Basic','Single event probability, the probability scale, mutually exclusive events',5)">Basic Probability</div>
+        <div class="chip" onclick="startQuiz('Probability: Tree Diagrams','Combined events, independent events and tree diagrams',5)">Tree Diagrams</div>
+        <div class="chip" onclick="startQuiz('Probability: Venn Diagrams','Venn diagrams, union, intersection and conditional probability',5)">Venn Diagrams</div>
+      </div>
+      <div class="tc-foot">
+        <span class="tc-count">6 subtopics</span>
+        <button class="tc-go" onclick="startQuiz('Statistics & Probability','All stats: averages, charts, probability, tree diagrams, Venn diagrams',5)">Practise All →</button>
+      </div>
+    </div>
+
+    <!-- COMBINATORICS -->
+    <div class="topic-card" style="--tc:#c2410c;--tcb:#ffedd5">
+      <div class="tc-head">
+        <div class="tc-icon">🧩</div>
+        <div class="tc-meta">
+          <div class="tc-title">Combinatorics & Logic</div>
+          <div class="tc-sub">The heart of UKMT competitions ✦ Think carefully</div>
+        </div>
+      </div>
+      <div class="tc-chips">
+        <div class="chip" onclick="startQuiz('Combinatorics: Counting Principles','Fundamental counting principle, multiplication rule, addition rule',5)">Counting Principles</div>
+        <div class="chip" onclick="startQuiz('Combinatorics: Permutations','Ordered arrangements — permutations of n items',5)">Permutations</div>
+        <div class="chip" onclick="startQuiz('Combinatorics: Combinations','Unordered selections — combinations and Pascal triangle',5)">Combinations</div>
+        <div class="chip" onclick="startQuiz('Logic: Deductive Reasoning','Logical deduction puzzles, truth tables, if-then reasoning',5)">Logical Deduction</div>
+        <div class="chip" onclick="startQuiz('Logic: Number Theory','Modular arithmetic, divisibility rules, digit-based problems',5)">Number Theory</div>
+        <div class="chip" onclick="startQuiz('Logic: Pigeonhole Principle','Pigeonhole principle problems — guaranteed outcomes',5)">Pigeonhole</div>
+        <div class="chip" onclick="startQuiz('Logic: UKMT Puzzles','Multi-step UKMT-style reasoning puzzles — think, do not guess',5)">UKMT Style Puzzles</div>
+      </div>
+      <div class="tc-foot">
+        <span class="tc-count">7 subtopics</span>
+        <button class="tc-go" onclick="startQuiz('Combinatorics & Logic','UKMT-style: counting, permutations, combinations, logic, number theory, pigeonhole',5)">Practise All →</button>
+      </div>
+    </div>
+
+  </div><!-- /topic-grid -->
+</div><!-- /wrap -->
+</div><!-- /home-page -->
+
+<!-- ──────────────────────── ALL SUBJECTS PAGE ─────────────── -->
+<div id="allsubjects-page" class="page">
+<div class="wrap">
+  <div class="section-label">All Subjects</div>
+  <h1 class="page-title">Choose a <em>subject</em></h1>
+  <p class="page-sub">Practice any of our 9 subject areas — AI-generated questions every time. Select your age group and subject, then dive in.</p>
+
+  <!-- Age group -->
+  <div class="section-label" style="margin-top:8px">Your Age</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px" id="age-row">
+    <button class="btn btn-ghost btn-sm" data-age="8" onclick="selectAge(this)">Age 7–9</button>
+    <button class="btn btn-ghost btn-sm" data-age="11" onclick="selectAge(this)">Age 10–12</button>
+    <button class="btn btn-navy btn-sm" data-age="14" onclick="selectAge(this)">Age 13–15</button>
+    <button class="btn btn-ghost btn-sm" data-age="17" onclick="selectAge(this)">Age 16–18</button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('Mathematics','All maths topics',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">🔢</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">Mathematics</div>
+      <div style="font-size:.75rem;color:var(--mu)">All maths topics, mixed</div>
+    </div>
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('Science','Physics, Chemistry, Biology',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">⚗️</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">Science</div>
+      <div style="font-size:.75rem;color:var(--mu)">Physics, Chemistry, Biology</div>
+    </div>
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('English','Grammar, comprehension, vocabulary',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">📖</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">English</div>
+      <div style="font-size:.75rem;color:var(--mu)">Grammar, comprehension, vocabulary</div>
+    </div>
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('General Knowledge','History, geography, culture, current affairs',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">🌍</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">General Knowledge</div>
+      <div style="font-size:.75rem;color:var(--mu)">History, geography, culture</div>
+    </div>
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('Computer Science','Algorithms, programming, data, networks',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">💻</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">Computer Science</div>
+      <div style="font-size:.75rem;color:var(--mu)">Algorithms, programming, networks</div>
+    </div>
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('Logical Reasoning','Deduction, patterns, critical thinking',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">🧩</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">Logical Reasoning</div>
+      <div style="font-size:.75rem;color:var(--mu)">Deduction, patterns, thinking</div>
+    </div>
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('Riddles','Creative riddles and brain teasers',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">🎭</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">Riddles</div>
+      <div style="font-size:.75rem;color:var(--mu)">Creative riddles and brain teasers</div>
+    </div>
+    <div class="card" style="padding:18px;cursor:pointer;transition:all .18s;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#fde68a" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''" onclick="startQuiz('Achievers Challenge','Olympiad-level cross-subject challenge questions',5)">
+      <div style="font-size:1.8rem;margin-bottom:8px">🏆</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;color:var(--navy);margin-bottom:4px">Achievers Challenge</div>
+      <div style="font-size:.75rem;color:var(--mu)">Olympiad-hard, mixed subjects</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ──────────────────────── LIFE IN THE UK PAGE ──────────────────────── -->
+<div id="lituk-page" class="page">
+<div class="wrap">
+
+  <div class="section-label">British Citizenship Test</div>
+  <h1 class="page-title">Life in the <em>UK</em> Test</h1>
+  <p class="page-sub">Study the official handbook, then practise with AI-generated MCQ questions in the real test format. Track your progress chapter by chapter.</p>
+
+  <!-- ── Stats dashboard ── -->
+  <div class="lituk-dashboard">
+    <div class="lituk-stat-card">
+      <h4>Overall Progress</h4>
+      <div class="lituk-big-num" id="lituk-total-pct">0%</div>
+      <div class="lituk-big-sub">of all chapters practised</div>
+      <div class="lituk-progress-bar"><div class="lituk-progress-fill" id="lituk-total-bar" style="width:0%"></div></div>
+    </div>
+    <div class="lituk-stat-card">
+      <h4>Mock Test</h4>
+      <div style="margin-bottom:12px">
+        <div style="font-size:.82rem;color:var(--tx);margin-bottom:6px">24 questions &nbsp;·&nbsp; 45 minutes &nbsp;·&nbsp; All chapters</div>
+        <div style="font-size:.75rem;color:var(--mu)">Matches the official test format exactly</div>
+      </div>
+      <button class="btn btn-navy btn-full" onclick="startQuiz('Life in the UK: Mock Test','Full official-format Life in the UK citizenship test covering all 5 chapters. 24 MCQ questions, 4 options each, based strictly on the official handbook.',24)">
+        &#128203; Start Full Mock Test (24 Qs)
+      </button>
+      <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="startQuiz('Life in the UK: Exam Sprint','Quick 20-question sprint across all Life in the UK chapters. Fast practice for the real test.',20)">
+        &#9889; Exam Sprint — 20 in 20
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Chapter cards ── -->
+  <div class="section-label">Study &amp; Practise by Chapter</div>
+  <div class="lituk-chapter-grid">
+
+    <!-- Chapter 1 -->
+    <div class="lituk-chap" id="lc-1">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(1)">
+        <div class="lituk-chap-num" style="background:#3b82f6">Ch1</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">The Values and Principles of the UK</div>
+          <div class="lituk-chap-sub">Democracy, rule of law, individual liberty, mutual respect</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
+        </div>
+      </div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The UK is a <span class="lituk-key">democracy</span> — citizens vote for elected representatives in free elections.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span><span class="lituk-key">Rule of Law</span> — everyone must obey the law, including the government and the monarch.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span><span class="lituk-key">Individual Liberty</span> — freedom of speech, religion and expression are protected within the law.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span><span class="lituk-key">Mutual Respect and Tolerance</span> — all faiths and beliefs are respected; discrimination is illegal.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#10060;</span><span>Forced marriage, FGM and domestic violence are <strong>illegal</strong> and will be prosecuted.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9989;</span><span>Responsibilities: obey the law, pay taxes, treat others with respect, support your children's education.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: The Values and Principles of the UK','British values: democracy, rule of law, individual liberty, mutual respect and tolerance. Responsibilities of residents.',10)">&#9654; Practise Chapter 1</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: The Values and Principles of the UK','British values: democracy, rule of law, individual liberty, mutual respect and tolerance.',5)">Quick 5 Qs</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter 2 -->
+    <div class="lituk-chap" id="lc-2">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(2)">
+        <div class="lituk-chap-num" style="background:#10b981">Ch2</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">What is the UK?</div>
+          <div class="lituk-chap-sub">Countries, capitals, patron saints, flags, geography</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
+        </div>
+      </div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">England</span> — Capital: London. Patron saint: <strong>St George</strong> (23 April). National flower: Rose.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">Scotland</span> — Capital: Edinburgh. Patron saint: <strong>St Andrew</strong> (30 November). National flower: Thistle.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">Wales</span> — Capital: Cardiff. Patron saint: <strong>St David</strong> (1 March). National flower: Daffodil.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127988;</span><span><span class="lituk-key">Northern Ireland</span> — Capital: Belfast. Patron saint: <strong>St Patrick</strong> (17 March). National flower: Shamrock.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127468;&#127463;</span><span>The <span class="lituk-key">Union Flag (Union Jack)</span> combines the crosses of St George, St Andrew and St Patrick. Wales is not included as it was already united with England.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The currency is <span class="lituk-key">pounds sterling (GBP)</span>. The UK does NOT use the Euro.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>Driving is on the <span class="lituk-key">left</span> side of the road — the opposite of most other countries.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: What is the UK?','Countries of the UK, capitals, patron saints and days, national flowers, the Union Flag, currency, devolved governments.',10)">&#9654; Practise Chapter 2</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: What is the UK?','Countries, patron saints, national symbols, Union Flag.',5)">Quick 5 Qs</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter 3 -->
+    <div class="lituk-chap" id="lc-3">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(3)">
+        <div class="lituk-chap-num" style="background:#f59e0b">Ch3</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">A Long and Illustrious History</div>
+          <div class="lituk-chap-sub">Stone Age to modern times, monarchs, wars, Empire</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
+        </div>
+      </div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">55 BC</span> — Julius Caesar first invaded Britain (unsuccessful). Romans returned in <span class="lituk-key">AD 43</span> under Emperor Claudius.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1066</span> — Norman Conquest. William the Conqueror defeated King Harold at the Battle of Hastings.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1215</span> — King John signed the <strong>Magna Carta</strong>, limiting royal power for the first time.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128081;</span><span><span class="lituk-key">Henry VIII</span> — broke from the Catholic Church to form the Church of England. Had six wives.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128081;</span><span><span class="lituk-key">Elizabeth I</span> — defeated the Spanish Armada in 1588. Age of Shakespeare and global exploration.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1707</span> — Act of Union united England, Wales and Scotland into Great Britain.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1833</span> — Slavery Abolition Act abolished slavery throughout the British Empire.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1914-1918</span> — First World War. Over 2 million British casualties.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1939-1945</span> — Second World War. Winston Churchill was Prime Minister.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1948</span> — NHS founded. Empire Windrush arrived with Caribbean workers to help rebuild Britain.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span><span class="lituk-key">1969</span> — Voting age lowered from 21 to 18.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: A Long and Illustrious History','British history: Stone Age, Romans, Normans, Magna Carta, Tudors, Empire, World Wars, NHS, key dates and monarchs.',10)">&#9654; Practise Chapter 3</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: A Long and Illustrious History — Early Period','Early British history: Romans, Normans, Medieval period, Magna Carta.',5)">Early History</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: A Long and Illustrious History — Tudors and Empire','Tudors, Stuarts, Act of Union, Industrial Revolution, British Empire, slavery abolition.',5)">Tudors and Empire</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: A Long and Illustrious History — 20th Century','World War One, World War Two, Winston Churchill, NHS, Windrush, post-war Britain.',5)">20th Century</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter 4 -->
+    <div class="lituk-chap" id="lc-4">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(4)">
+        <div class="lituk-chap-num" style="background:#8b5cf6">Ch4</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">A Modern, Thriving Society</div>
+          <div class="lituk-chap-sub">Religion, culture, sport, arts, traditions, bank holidays</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
+        </div>
+      </div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9962;</span><span>The official church is the <span class="lituk-key">Church of England</span> (Protestant/Anglican). The monarch is its Supreme Governor.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>About <span class="lituk-key">59%</span> of people in the UK identify as Christian. Islam is the second largest religion.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127874;</span><span><span class="lituk-key">UK Bank Holidays</span>: New Year's Day, Good Friday, Easter Monday, Early May Bank Holiday, Spring Bank Holiday, Summer Bank Holiday, Christmas Day, Boxing Day.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128293;</span><span><span class="lituk-key">Guy Fawkes Night</span> (5 November) — commemorates the failed Gunpowder Plot of 1605 to blow up Parliament.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9917;</span><span>Football was codified in Britain. The FA was founded in <span class="lituk-key">1863</span>. England won the World Cup in <span class="lituk-key">1966</span>.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127914;</span><span>Wimbledon — the world's oldest tennis tournament, held annually in London since <span class="lituk-key">1877</span>.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128218;</span><span>Famous British writers include Shakespeare, Jane Austen, Charles Dickens, Roald Dahl and J.K. Rowling.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128251;</span><span>The <span class="lituk-key">BBC</span> (British Broadcasting Corporation) was founded in <span class="lituk-key">1927</span> — the world's oldest national broadcaster.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: A Modern Thriving Society','UK society: religion, Church of England, bank holidays, sport (football, cricket, Wimbledon), arts, BBC, famous British figures, traditions.',10)">&#9654; Practise Chapter 4</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: Religion and Traditions','Church of England, religions in UK, bank holidays, Guy Fawkes, Christmas, Easter.',5)">Religion and Traditions</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: Sport and Culture','Football FA, World Cup 1966, Wimbledon, Grand National, cricket, BBC, British authors.',5)">Sport and Culture</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter 5 -->
+    <div class="lituk-chap" id="lc-5">
+      <div class="lituk-chap-head" onclick="toggleLitukChap(5)">
+        <div class="lituk-chap-num" style="background:#ef4444">Ch5</div>
+        <div class="lituk-chap-meta">
+          <div class="lituk-chap-title">The UK Government, the Law and Your Role</div>
+          <div class="lituk-chap-sub">Parliament, elections, legal system, rights, responsibilities</div>
+        </div>
+        <div class="lituk-chap-right">
+          <span class="lituk-chap-arr">&#9654;</span>
+        </div>
+      </div>
+      <div class="lituk-chap-body">
+        <div class="lituk-fact-list">
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#127963;</span><span>Parliament has two chambers: the <span class="lituk-key">House of Commons</span> (elected MPs) and the <span class="lituk-key">House of Lords</span> (appointed/hereditary).</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The <span class="lituk-key">Prime Minister</span> leads the government — usually the leader of the largest party in the House of Commons.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The UK uses <span class="lituk-key">First Past the Post</span> elections — the candidate with the most votes in each constituency wins.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>The <span class="lituk-key">monarch</span> is Head of State with a ceremonial role. The King/Queen gives Royal Assent to new laws.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128197;</span><span>Minimum voting age is <span class="lituk-key">18</span>. You must be on the electoral register to vote.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9878;</span><span><span class="lituk-key">Devolved governments</span>: Scotland has the Scottish Parliament, Wales has the Senedd, Northern Ireland has the Assembly.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9878;</span><span>Everyone is <span class="lituk-key">innocent until proven guilty</span>. The right to a fair trial is guaranteed.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#9878;</span><span>The <span class="lituk-key">Supreme Court</span> is the highest court in the UK — hears final appeals in all civil and criminal cases.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>Jury service — if called, it is a civic duty. A jury consists of <span class="lituk-key">12</span> members of the public.</span></div>
+          <div class="lituk-fact-row"><span class="lituk-fact-icon">&#128204;</span><span>Non-emergency police: call <span class="lituk-key">101</span>. Emergency services: call <span class="lituk-key">999</span>.</span></div>
+        </div>
+        <div class="lituk-chap-btns">
+          <button class="btn btn-navy" onclick="startQuiz('Life in the UK: The UK Government, the Law and Your Role','Parliament, House of Commons, House of Lords, Prime Minister, elections, voting, First Past the Post, Supreme Court, jury service.',10)">&#9654; Practise Chapter 5</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: Parliament and Elections','House of Commons, House of Lords, Prime Minister, First Past the Post elections, voting age, monarchy.',5)">Parliament and Elections</button>
+          <button class="btn btn-ghost" onclick="startQuiz('Life in the UK: The Legal System','Innocent until proven guilty, Supreme Court, jury service, police, rights and responsibilities.',5)">Legal System</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /lituk-chapter-grid -->
+</div>
+</div>
+
+<!-- ──────────────────────── QUIZ PAGE ──────────────────────── -->
+<div id="quiz-page" class="page">
+
+  <!-- sticky quiz header -->
+  <div class="quiz-header">
+    <div class="quiz-header-inner">
+      <button class="btn btn-ghost btn-sm" onclick="goHome()" style="flex-shrink:0">← Back</button>
+      <div id="timer-display"><div id="timer-dot"></div><span id="timer-text">25:00</span></div>
+      <div class="quiz-meta">
+        <div class="quiz-meta-row">
+          <span class="quiz-topic-label" id="q-topic-label">Number: Fractions</span>
+          <span class="quiz-counter" id="q-counter">1 / 10</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="q-prog" style="width:10%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dot-row" id="dot-row"></div>
+  </div>
+
+  <!-- question index bar -->
+  <div class="q-index-bar" id="q-index-bar" style="display:none"></div>
+
+  <!-- question area -->
+  <div class="q-wrap" id="q-wrap">
+    <div style="display:flex;justify-content:center;padding:60px 0">
+      <div class="spin"></div>
+    </div>
+  </div>
+
+  <!-- fixed bottom bar -->
+  <div class="q-bottom">
+    <div class="q-bottom-inner">
+      <button class="btn btn-ghost btn-sm" id="btn-hint" onclick="fetchHint()" style="display:none">💡 Hint</button>
+      <button class="btn btn-ghost btn-sm" id="btn-why" onclick="fetchWhy()" style="display:none">🔍 Why wrong?</button>
+      <button class="btn btn-ghost btn-sm" id="btn-worked" onclick="fetchWorked()" style="display:none">✏️ Worked example</button>
+      <div style="flex:1"></div>
+      <button class="q-flag-btn" id="btn-flag" onclick="toggleFlag()" style="display:none" title="Flag for review" aria-label="Flag question">⚑ Flag</button>
+      <button class="q-skip-btn" id="btn-skip" onclick="skipQ()" style="display:none" title="Skip question" aria-label="Skip question">Skip</button>
+      <button class="btn btn-ghost btn-sm" id="btn-lesson" onclick="fetchLesson()" style="display:none">📚 Deep dive</button>
+      <button class="btn btn-navy btn-sm" id="btn-next" onclick="nextQ()" style="display:none">Next →</button>
+      <button class="btn btn-navy btn-sm" id="btn-results" onclick="showResults()" style="display:none">See Results →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────── RESULTS PAGE ───────────────────── -->
+<div id="results-page" class="page">
+<div class="results-wrap">
+
+  <button class="btn btn-ghost btn-sm" onclick="goHome()" style="margin-bottom:20px">← Back to Topics</button>
+
+  <div style="text-align:center;margin-bottom:24px">
+    <div class="section-label" style="justify-content:center">Results</div>
+    <div id="res-topic" style="font-family:'Fraunces',serif;font-weight:700;font-size:1.4rem;color:var(--navy);margin-bottom:4px"></div>
+    <div id="res-tier" style="font-size:.8rem;color:var(--mu)"></div>
+  </div>
+
+  <div class="score-ring-wrap">
+    <div class="score-ring" id="score-ring">
+      <span class="score-pct" id="score-pct">80%</span>
+      <span class="score-lbl" id="score-frac">8/10</span>
+    </div>
+  </div>
+
+  <div class="medal-banner card" id="medal-banner">
+    <div class="medal-emoji" id="medal-emoji">🥇</div>
+    <div class="medal-name" id="medal-name">Gold</div>
+    <div class="medal-sub" id="medal-sub">Excellent work!</div>
+  </div>
+
+  <div id="motiv-box" class="ai-panel" style="text-align:center;margin-bottom:20px;display:none">
+    <div class="ai-label">Your Coach</div>
+    <div id="motiv-txt"></div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="btn btn-navy" onclick="startQuiz(lastTopic, lastDesc, lastNum)" style="flex:1">Retry same topic</button>
+    <button class="btn btn-ghost" onclick="goHome()" style="flex:1">Choose new topic</button>
+  </div>
+
+  <!-- Donate CTA — shown every 3rd quiz completion -->
+  <div id="res-donate-cta" style="display:none;background:linear-gradient(135deg,#be123c,#9f1239);border-radius:var(--r);padding:18px 20px;margin-bottom:20px;text-align:center">
+    <div style="font-size:1.4rem;margin-bottom:6px">&#9829;</div>
+    <div style="font-weight:700;color:#fff;font-size:.95rem;margin-bottom:4px">Enjoying Genius Quest?</div>
+    <div style="color:rgba(255,255,255,.8);font-size:.78rem;margin-bottom:12px">It&#39;s free and ad-free — a coffee keeps the AI running for everyone.</div>
+    <a href="https://ko-fi.com/P5P61VKVJP" target="_blank" rel="noopener"
+       onclick="trackEvent('donate_click',{source:'results_page'})"
+       style="display:inline-flex;align-items:center;gap:6px;padding:9px 20px;background:#fff;color:#9f1239;border-radius:20px;font-weight:700;font-size:.82rem;text-decoration:none;">
+      &#9749; Buy me a coffee
+    </a>
+  </div>
+
+  <!-- Leaderboard submit strip -->
+  <div id="lb-submit-strip" class="card" style="padding:16px 18px;margin-bottom:24px">
+    <div style="font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:10px">🏆 Add your score to the leaderboard</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input id="lb-name-input" class="card" style="flex:1;min-width:140px;padding:9px 13px;font-size:.85rem;border:1.5px solid var(--bdr2);border-radius:9px;outline:none" placeholder="Your name or nickname" maxlength="20">
+      <button class="btn btn-gold btn-sm" onclick="submitLeaderboard()" id="lb-submit-btn">Submit score</button>
+      <button class="btn btn-ghost btn-sm" onclick="openLeaderboard()">View leaderboard</button>
+    </div>
+    <div id="lb-submit-msg" style="font-size:.75rem;color:var(--mu);margin-top:8px;display:none"></div>
+  </div>
+
+  <div class="section-label">Question Review</div>
+  <div class="result-q-list" id="result-q-list"></div>
+
+</div><!-- /results-wrap -->
+
+</div><!-- /results-page -->
+
+</div><!-- /app -->
+
+<!-- ═══════════════════════ LEADERBOARD MODAL ═══════════════ -->
+<div class="overlay" id="lb-modal" onclick="closeLbModal(event)">
+  <div class="modal-box" style="max-width:520px">
+    <div class="modal-head">
+      <div>
+        <h3>🏆 Leaderboard</h3>
+        <p id="lb-modal-topic">Top scores for this topic</p>
+      </div>
+      <button class="modal-close" onclick="closeLbModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:12px 16px;max-height:60vh;overflow-y:auto">
+      <div id="lb-modal-body">
+        <div class="lb-empty">Loading scores...</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost btn-sm" onclick="closeLbModal()" style="flex:1">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TIER MODAL ══════════════════════ -->
+<div class="overlay" id="tier-modal" onclick="closeTierModal(event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <h3>Change Your Level</h3>
+        <p>Affects difficulty of all AI-generated questions</p>
+      </div>
+      <button class="modal-close" onclick="closeTierModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-label">Select Tier</div>
+      <div class="opt-row">
+        <div class="opt-btn" data-tier="Explorer" data-age="9" style="--tc:var(--t1);--tcb:var(--t1b)" onclick="modalSelectTier(this)">
+          <span class="ob-icon">🌱</span>Explorer<br><small style="font-weight:400;color:var(--mu)">Ages 7-10</small>
+        </div>
+        <div class="opt-btn on" data-tier="Challenger" data-age="12" style="--tc:var(--t2);--tcb:var(--t2b)" onclick="modalSelectTier(this)">
+          <span class="ob-icon">⚡</span>Challenger<br><small style="font-weight:400;color:var(--mu)">Ages 11-13</small>
+        </div>
+        <div class="opt-btn" data-tier="Olympian" data-age="15" style="--tc:var(--t3);--tcb:var(--t3b)" onclick="modalSelectTier(this)">
+          <span class="ob-icon">🔥</span>Olympian<br><small style="font-weight:400;color:var(--mu)">Ages 14-16</small>
+        </div>
+        <div class="opt-btn" data-tier="Champion" data-age="17" style="--tc:var(--t4);--tcb:var(--t4b)" onclick="modalSelectTier(this)">
+          <span class="ob-icon">🏆</span>Champion<br><small style="font-weight:400;color:var(--mu)">Ages 17+</small>
+        </div>
+      </div>
+      <div id="modal-tier-note" style="background:var(--sur2);border:1.5px solid var(--bdr2);border-radius:9px;padding:10px 14px;font-size:.78rem;color:var(--mu)">
+        ⚡ <strong>Challenger</strong> — UKMT Junior Mathematical Challenge level
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost btn-sm" onclick="closeTierModal()" style="flex:1">Cancel</button>
+      <button class="btn btn-navy" onclick="applyTier()" style="flex:2">Apply Level</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+const SID = 's' + Date.now().toString(36);
+const USED_IDS = new Set();
+
+let state = {
+  tier: 'Challenger',
+  age: 12,
+  topic: '',
+  topicDesc: '',
+  numQ: 10,
+  timerMode: 'none',    // 'none' | '25' | '10'
+  timerSecsLeft: 0,
+  timerInterval: null,
+  questions: [],
+  idx: 0,
+  answers: {},          // idx -> {chosen, correct}
+  hintShown: false,
+  aiLoading: false,
+  allSubjectsAge: 14,
+};
+
+// pending modal tier selection
+let pendingTier = null;
+let pendingAge = null;
+
+let lastTopic = '', lastDesc = '', lastNum = 10;
+
+// Tier metadata
+const TIER_META = {
+  Explorer:   { age:9,  desc:'KS2 level — Primary Maths, ages 7-10',              tc:'var(--t1)', tcb:'var(--t1b)', style:'border-color:#15803d;background:#dcfce7' },
+  Challenger: { age:12, desc:'UKMT JMC level — Junior Maths Challenge, ages 11-13', tc:'var(--t2)', tcb:'var(--t2b)', style:'border-color:#1d4ed8;background:#dbeafe' },
+  Olympian:   { age:15, desc:'UKMT IMC level — Intermediate Challenge, ages 14-16', tc:'var(--t3)', tcb:'var(--t3b)', style:'border-color:#7e22ce;background:#f3e8ff' },
+  Champion:   { age:17, desc:'UKMT Senior/BMO level — Senior Maths Challenge, ages 17+', tc:'var(--t4)', tcb:'var(--t4b)', style:'border-color:#9f1239;background:#ffe4e6' },
+};
+const TIER_ICONS = { Explorer:'🌱', Challenger:'⚡', Olympian:'🔥', Champion:'🏆' };
+
+// ═══════════════════════════════════════════════════════════
+// PAGE ROUTING
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// BUILT-IN ANALYTICS & ERROR TRACKING  (no external account)
+// Events stored in Upstash KV via /api/analytics
+// View at: GET /api/analytics?key=YOUR_ANALYTICS_ADMIN_KEY
+// ═══════════════════════════════════════════════════════════
+function trackEvent(name, props) {
+  try {
+    fetch('/api/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: name, props: props || {}, ts: Date.now() }),
+      keepalive: true
+    }).catch(function(){});
+  } catch(_) {}
+}
+
+// Capture unhandled JS errors silently → /api/analytics
+window.addEventListener('error', function(e) {
+  trackEvent('js_error', { msg: e.message, src: (e.filename||'').split('/').pop(), line: e.lineno });
+});
+window.addEventListener('unhandledrejection', function(e) {
+  trackEvent('js_error', { msg: String(e.reason).slice(0, 200) });
+});
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById(name + '-page').classList.add('on');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('on'));
+  if (name === 'home') document.getElementById('tab-maths').classList.add('on');
+  if (name === 'allsubjects') document.getElementById('tab-all').classList.add('on');
+  if (name === 'lituk') document.getElementById('tab-lituk').classList.add('on');
+  trackEvent('page_view', { page: name });
+  window.scrollTo(0, 0);
+}
+
+function goHome() { stopTimer(); showPage('home'); }
+
+// ═══════════════════════════════════════════════════════════
+// TIER MANAGEMENT
+// ═══════════════════════════════════════════════════════════
+function selectTier(el) {
+  document.querySelectorAll('#tier-strip .tier-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  state.tier = el.dataset.tier;
+  state.age  = parseInt(el.dataset.age);
+  updateNavTierPill();
+}
+
+function updateNavTierPill() {
+  document.getElementById('nav-tier-icon').textContent = TIER_ICONS[state.tier];
+  document.getElementById('nav-tier-name').textContent = state.tier;
+  const pill = document.getElementById('nav-tier-pill');
+  const meta = TIER_META[state.tier];
+  // reset inline styles then apply
+  pill.style.cssText = '';
+  const colorMap = {
+    Explorer:'background:#dcfce7;color:#15803d',
+    Challenger:'background:#dbeafe;color:#1d4ed8',
+    Olympian:'background:#f3e8ff;color:#7e22ce',
+    Champion:'background:#ffe4e6;color:#9f1239',
+  };
+  pill.setAttribute('style', colorMap[state.tier]);
+}
+
+function openTierModal() {
+  pendingTier = state.tier;
+  pendingAge = state.age;
+  // sync modal selections
+  document.querySelectorAll('#tier-modal .opt-btn').forEach(b => {
+    b.classList.toggle('on', b.dataset.tier === state.tier);
+  });
+  updateModalNote(state.tier);
+  document.getElementById('tier-modal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTierModal(e) {
+  if (e && e.target !== document.getElementById('tier-modal')) return;
+  document.getElementById('tier-modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function modalSelectTier(el) {
+  document.querySelectorAll('#tier-modal .opt-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  pendingTier = el.dataset.tier;
+  pendingAge = parseInt(el.dataset.age);
+  updateModalNote(pendingTier);
+}
+
+function updateModalNote(tier) {
+  const note = document.getElementById('modal-tier-note');
+  const meta = TIER_META[tier];
+  note.innerHTML = `${TIER_ICONS[tier]} <strong>${tier}</strong> — ${meta.desc}`;
+}
+
+function applyTier() {
+  state.tier = pendingTier;
+  state.age  = pendingAge;
+  // sync home tier strip
+  document.querySelectorAll('#tier-strip .tier-btn').forEach(b => {
+    b.classList.toggle('on', b.dataset.tier === state.tier);
+  });
+  updateNavTierPill();
+  closeTierModal();
+}
+
+// ═══════════════════════════════════════════════════════════
+// ALL-SUBJECTS AGE
+// ═══════════════════════════════════════════════════════════
+function selectAge(el) {
+  document.querySelectorAll('#age-row button').forEach(b => {
+    b.classList.remove('btn-navy');
+    b.classList.add('btn-ghost');
+  });
+  el.classList.remove('btn-ghost');
+  el.classList.add('btn-navy');
+  state.allSubjectsAge = parseInt(el.dataset.age);
+}
+
+// ═══════════════════════════════════════════════════════════
+// START QUIZ
+// ═══════════════════════════════════════════════════════════
+function startQuiz(topic, desc, numQ) {
+  lastTopic = topic;
+  lastDesc  = desc;
+  lastNum   = numQ;
+
+  state.topic     = topic;
+  state.topicDesc = desc;
+  state.numQ      = numQ;
+  state.questions = [];
+  state.idx       = 0;
+  state.answers   = {};
+
+  const isAllSubjects = document.getElementById('allsubjects-page').classList.contains('on');
+  state._quizAge = isAllSubjects ? state.allSubjectsAge : state.age;
+
+  showPage('quiz');
+  renderQPicker(topic, desc, numQ);
+}
+
+function renderQPicker(topic, desc, defaultQ) {
+  const tc = getTopicColor(topic);
+  document.getElementById('q-topic-label').textContent = topic;
+  document.getElementById('q-counter').textContent = '';
+  document.getElementById('q-prog').style.width = '0%';
+  document.getElementById('dot-row').innerHTML = '';
+  hideBottomBtns();
+
+  document.getElementById('q-wrap').innerHTML = `
+    <div style="max-width:480px;margin:48px auto;padding:0 24px">
+      <div class="card-lg" style="padding:32px;text-align:center">
+        <div style="font-size:2rem;margin-bottom:10px">${getTopicEmoji(topic)}</div>
+        <div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.15rem;color:var(--navy);margin-bottom:6px">${escHtml(topic)}</div>
+        <div style="font-size:.78rem;color:var(--mu);margin-bottom:28px;line-height:1.5">${escHtml(desc)}</div>
+
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:12px">How many questions?</div>
+        <div id="qpicker-btns" style="display:flex;gap:10px;justify-content:center;margin-bottom:28px">
+          ${[5,10,15].map(n => {
+            const active = n === defaultQ;
+            const label = n===5 ? 'Quick check' : n===10 ? 'Standard' : 'Full session';
+            const cls = 'qpick-btn' + (active ? ' qpick-on' : '');
+            return '<button class="' + cls + '" onclick="selectQCount(this,' + n + ')" data-n="' + n + '" style="flex:1;max-width:100px">'
+              + '<div style="font-family:Fraunces,serif;font-weight:800;font-size:1.5rem;line-height:1">' + n + '</div>'
+              + '<div style="font-size:.68rem;margin-top:4px">' + label + '</div>'
+              + '</button>';
+          }).join('')}
+        </div>
+        <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);margin-bottom:12px">Timer?</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px">
+          <button class="qpick-btn qpick-on" id="t-none" onclick="selectTimer(this,'none')" style="flex:1;max-width:90px">
+            <div style="font-size:1.1rem;margin-bottom:3px">∞</div>
+            <div style="font-size:.65rem">No timer</div>
+          </button>
+          <button class="qpick-btn" id="t-25" onclick="selectTimer(this,'25')" style="flex:1;max-width:90px">
+            <div style="font-size:1.1rem;font-weight:800;margin-bottom:3px">25</div>
+            <div style="font-size:.65rem">minutes</div>
+          </button>
+          <button class="qpick-btn" id="t-10" onclick="selectTimer(this,'10')" style="flex:1;max-width:90px">
+            <div style="font-size:1.1rem;font-weight:800;margin-bottom:3px">10</div>
+            <div style="font-size:.65rem">minutes</div>
+          </button>
+        </div>
+
+        <button class="btn btn-navy btn-lg btn-full" id="qpick-go" onclick="confirmStartQuiz(state.numQ)" style="margin-bottom:4px">
+          Start →
+        </button>
+
+        <div style="font-size:.72rem;color:var(--lite);margin-top:10px">
+          Questions never repeat
+        </div>
+      </div>
+    </div>`;
+}
+
+function selectQCount(el, n) {
+  state.numQ = n;
+  // Only toggle within the question count group
+  el.parentElement.querySelectorAll('.qpick-btn').forEach(b => b.classList.remove('qpick-on'));
+  el.classList.add('qpick-on');
+}
+
+function selectTimer(el, mode) {
+  state.timerMode = mode;
+  // Only toggle within the timer group
+  el.parentElement.querySelectorAll('.qpick-btn').forEach(b => b.classList.remove('qpick-on'));
+  el.classList.add('qpick-on');
+}
+
+function confirmStartQuiz(numQ) {
+  state.numQ = numQ;
+  lastNum = numQ;
+  trackEvent('test_start', { topic: state.topic, tier: state.tier, numQ: numQ });
+  // Clear any previous timer
+  if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+  renderLoading();
+  loadQuestions(state.topic, state.topicDesc, numQ, state._quizAge);
+}
+
+async function loadQuestions(topic, topicDesc, numQ, age) {
+  const usedArr = Array.from(USED_IDS).slice(-60);
+
+  // Build a rich system prompt for UK Maths topics
+  const isLitUK = topic.includes('Life in the UK');
+  const isMathsTopic = !isLitUK && (topic.includes(':') || topic.includes('Maths') || topic.includes('Number') ||
+    topic.includes('Algebra') || topic.includes('Geometry') || topic.includes('Statistics') ||
+    topic.includes('Probability') || topic.includes('Combinatorics') || topic.includes('Logic') ||
+    topic.includes('Mathematics'));
+
+  const difficultyMap = {
+    Explorer:   'Primary school level, ages 7-10. Simple, concrete, accessible.',
+    Challenger: 'UKMT Junior Mathematical Challenge level, ages 11-13. Accessible but requires real thinking, multi-step for some.',
+    Olympian:   'UKMT Intermediate Mathematical Challenge level, ages 14-16. Multi-step reasoning required, some lateral thinking.',
+    Champion:   'UKMT Senior Mathematical Challenge / BMO level, ages 17+. Olympiad depth, proof-based thinking, elegant solutions.',
+  };
+  const difficulty = difficultyMap[state.tier] || difficultyMap['Challenger'];
+
+  const topicInstruction = isLitUK
+    ? `TOPIC: ${topic}. Generate official-format Life in the UK test questions about: ${topicDesc}.
+CRITICAL: ALL questions MUST be type "mcq" with exactly 4 options. No short_answer or true_false.
+Base questions strictly on the official Life in the UK handbook content.
+Questions should test factual knowledge as required by the real test.
+Options should be plausible but only one clearly correct per the official handbook.
+Keep language clear and accessible for adult learners.`
+    : isMathsTopic
+    ? `TOPIC: ${topic}. DESCRIPTION: ${topicDesc}.
+Generate ONLY questions specifically about this topic and its subtopics.
+UKMT philosophy: questions should REWARD REASONING AND THINKING, not just recall.
+Questions should be accessible yet still challenge students who think carefully.
+Prefer multi-step problems where the student must combine ideas.
+Avoid straightforward "what is 3×4?" questions — instead ask questions where the path to the answer requires genuine thought.`
+    : `TOPIC: ${topic}. Generate questions from: ${topicDesc}.
+IMPORTANT: You MUST generate MCQ (multiple choice) questions with exactly 4 options for ALL questions in this topic.
+Do NOT generate short_answer or true_false questions for this topic — only type "mcq" with 4 distinct options.
+Each option should be plausible but only one correct. Make distractors realistic and educational.`;
+
+  const body = {
+    age,
+    category: isMathsTopic ? 'Mathematics' : topic.split(':')[0].trim(),
+    numQuestions: numQ,
+    sessionId: SID,
+    usedQuestionIds: usedArr,
+    _topicOverride: topic,
+    _topicDesc: topicDesc,
+    _tier: state.tier,
+    _systemExtra: topicInstruction,
+    _difficulty: difficulty,
+  };
+
+  try {
+    const res = await fetch('/api/generate-quiz', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    state.questions = data.questions || [];
+    if (!state.questions.length) throw new Error('No questions returned');
+    // Normalise question types to lowercase so rendering is consistent
+    state.questions.forEach(q => {
+      if (q.type) q.type = q.type.toLowerCase().replace(/[_\/\-\s]+/g, '');
+      // 'mcq','trueFalse','trueFalse','shortAnswer' -> 'mcq','truefalse','shortanswer'
+      USED_IDS.add(q.question_id);
+    });
+    renderQuestion(0);
+  } catch(err) {
+    renderError(err.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// QUIZ RENDERING
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════════════════════
+function startTimer() {
+  const el = document.getElementById('timer-display');
+  const txt = document.getElementById('timer-text');
+  if (!el || !txt) return;
+
+  if (state.timerMode === 'none') {
+    el.style.display = 'none';
+    return;
+  }
+
+  const mins = parseInt(state.timerMode);
+  state.timerSecsLeft = mins * 60;
+  el.style.display = 'flex';
+  el.classList.remove('urgent');
+  updateTimerDisplay();
+
+  state.timerInterval = setInterval(() => {
+    state.timerSecsLeft--;
+    updateTimerDisplay();
+    if (state.timerSecsLeft <= 60) el.classList.add('urgent');
+    if (state.timerSecsLeft <= 0) {
+      clearInterval(state.timerInterval);
+      state.timerInterval = null;
+      timeUp();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const txt = document.getElementById('timer-text');
+  if (!txt) return;
+  const m = Math.floor(Math.max(0, state.timerSecsLeft) / 60);
+  const s = Math.max(0, state.timerSecsLeft) % 60;
+  txt.textContent = m + ':' + String(s).padStart(2, '0');
+}
+
+function stopTimer() {
+  if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+  const el = document.getElementById('timer-display');
+  if (el) el.style.display = 'none';
+}
+
+function timeUp() {
+  // Auto-submit any unanswered question then go to results
+  if (state.questions.length === 0) return;
+  // Mark unanswered questions as skipped
+  state.questions.forEach((q, i) => {
+    if (!state.answers[i]) {
+      state.answers[i] = { chosen: '(no answer - time up)', correct: false };
+    }
+  });
+  // Show a brief "Time's up!" flash then results
+  const wrap = document.getElementById('q-wrap');
+  if (wrap) {
+    wrap.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;padding:80px 24px;flex-direction:column;gap:14px;text-align:center">'
+      + '<div style="font-size:2.5rem">&#x23F0;</div>'
+      + '<div style="font-family:Fraunces,serif;font-weight:700;font-size:1.2rem;color:var(--navy)">Time&#39;s up!</div>'
+      + '<div style="font-size:.82rem;color:var(--mu)">Taking you to your results&#8230;</div>'
+      + '</div>';
+  }
+  hideBottomBtns();
+  setTimeout(() => showResults(), 1800);
+}
+
+const LOADING_FACTS = [
+  "π has been calculated to over 100 trillion decimal places.",
+  "Every even number > 2 is the sum of two primes (Goldbach's conjecture).",
+  "The Fibonacci sequence appears in sunflowers, shells and galaxies.",
+  "There are infinitely many prime numbers — Euclid proved this around 300 BC.",
+  "Zero is the only number that is neither positive nor negative.",
+  "The word 'algebra' comes from the Arabic al-jabr, meaning 'reunion of broken parts'.",
+  "A Platonic solid has faces that are all the same regular polygon — there are exactly 5.",
+];
+function renderLoading() {
+  const fact = LOADING_FACTS[Math.floor(Math.random() * LOADING_FACTS.length)];
+  document.getElementById('q-wrap').innerHTML = `
+    <div style="display:flex;justify-content:center;align-items:center;padding:80px 24px;flex-direction:column;gap:18px;text-align:center">
+      <div style="font-size:2rem;animation:floatY 2s ease-in-out infinite">🧮</div>
+      <div class="spin"></div>
+      <div style="font-size:.8rem;color:var(--mu);max-width:280px;line-height:1.65;font-style:italic">${fact}</div>
+    </div>`;
+  hideBottomBtns();
+}
+
+function renderError(msg) {
+  document.getElementById('q-wrap').innerHTML = `
+    <div class="card" style="padding:32px;text-align:center;margin:20px 0">
+      <div style="font-size:2rem;margin-bottom:12px">⚠️</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;color:var(--navy);margin-bottom:8px">
+        Couldn't load questions
+      </div>
+      <div style="font-size:.82rem;color:var(--mu);margin-bottom:20px">${msg}</div>
+      <button class="btn btn-navy" onclick="goHome()">Back to Topics</button>
+    </div>`;
+}
+
+function renderQuestion(idx) {
+  // Start timer on first question only
+  if (idx === 0 && state.timerMode !== 'none') startTimer();
+
+  state.idx = idx;
+  const q = state.questions[idx];
+  const total = state.questions.length;
+
+  // Update header
+  document.getElementById('q-topic-label').textContent = state.topic;
+  document.getElementById('q-counter').textContent = `${idx+1} / ${total}`;
+  document.getElementById('q-prog').style.width = `${((idx+1)/total)*100}%`;
+
+  // Dots
+  const dotRow = document.getElementById('dot-row');
+  dotRow.innerHTML = state.questions.map((_, i) => {
+    const ans = state.answers[i];
+    let cls = i === idx ? 'cur' : ans ? (ans.correct ? 'ok' : 'bad') : '';
+    return `<div class="dot ${cls}"></div>`;
+  }).join('');
+
+  // Build topic colour for this pillar
+  const tc = getTopicColor(state.topic);
+
+  // Render question card
+  const isAnswered = state.answers[idx] !== undefined;
+  const chosen = isAnswered ? state.answers[idx].chosen : null;
+  const correct = q.correct_answer;
+  const wasCorrect = isAnswered && state.answers[idx].correct;
+
+  // Determine question type (normalised to lowercase, underscores removed)
+  const qtype = (q.type || 'shortanswer').toLowerCase().replace(/[_\/\-\s]+/g, '');
+  const isMCQ = qtype === 'mcq' && q.options && q.options.length >= 2;
+  const isTF  = qtype === 'truefalse' || qtype === 'tf';
+
+  // Store options globally so onclick handlers can reference by index (avoids quoting issues)
+  window._qopts = (isMCQ ? q.options : (isTF ? (q.options && q.options.length >= 2 ? q.options : ['True','False']) : []));
+
+  // Use 2x2 grid only when all 4 options are short enough to sit side-by-side
+  const allShort = window._qopts.length === 4 && window._qopts.every(function(o){ return (o||'').length <= 42; });
+  const gridClass = 'mcq-grid' + (allShort ? '' : ' single-col');
+
+  // Multi-answer support
+  const isMulti = !!(q.multiple_correct) || !!(q.correct_options && q.correct_options.length > 1);
+  const correctSet = isMulti
+    ? new Set((q.correct_options || []).map(s => s.trim().toLowerCase()))
+    : null;
+
+  function makeOptBtn(opt, oi, letters) {
+    const letter = letters[oi] || String(oi+1);
+    if (isMulti) {
+      // Checkbox-style multi-select
+      const isInCorrect = correctSet.has(opt.trim().toLowerCase());
+      let cls = 'opt opt-check';
+      let tick = '';
+      if (isAnswered) {
+        const chosenSet = new Set((state.answers[idx].chosen || []).map(s => s.trim().toLowerCase()));
+        const wasChosen = chosenSet.has(opt.trim().toLowerCase());
+        if (isInCorrect) { cls += ' cor'; tick = ' <span class="opt-tick">&#10003;</span>'; }
+        else if (wasChosen) { cls += ' wrg'; tick = ' <span class="opt-tick">&#10007;</span>'; }
+        else { cls += ' dim'; }
+      } else {
+        // Check if already selected in pending state
+        const pending = state._multiPending || [];
+        if (pending.includes(oi)) cls += ' sel';
+      }
+      const role = 'checkbox';
+      const checked = isAnswered
+        ? (correctSet.has(opt.trim().toLowerCase()) ? 'true' : 'false')
+        : ((state._multiPending || []).includes(oi) ? 'true' : 'false');
+      return '<button class="' + cls + '" role="' + role + '" aria-checked="' + checked + '" '
+        + (isAnswered ? 'disabled' : '') + ' onclick="toggleMultiOpt(' + oi + ')" tabindex="0">'
+        + '<span class="opt-letter opt-checkbox">' + (((state._multiPending||[]).includes(oi) && !isAnswered) ? '&#10003;' : letter) + '</span>'
+        + '<span class="opt-text">' + escHtml(opt) + '</span>'
+        + tick + '</button>';
+    } else {
+      // Single-answer radio style
+      let cls = 'opt';
+      let tick = '';
+      if (isAnswered) {
+        if (opt === correct) { cls += ' cor'; tick = ' <span class="opt-tick">&#10003;</span>'; }
+        else if (opt === chosen && opt !== correct) { cls += ' wrg'; tick = ' <span class="opt-tick">&#10007;</span>'; }
+        else { cls += ' dim'; }
+      }
+      return '<button class="' + cls + '" role="radio" aria-checked="' + (opt === chosen ? 'true' : 'false') + '" '
+        + (isAnswered ? 'disabled' : '') + ' onclick="answerByIndex(' + oi + ')" tabindex="0">'
+        + '<span class="opt-letter">' + letter + '</span>'
+        + '<span class="opt-text">' + escHtml(opt) + '</span>'
+        + tick + '</button>';
+    }
+  }
+
+  let optionsHtml = '';
+  if (isMCQ) {
+    const multiHint = isMulti
+      ? '<div class="multi-hint" role="note">&#9745; Select all that apply</div>'
+      : '';
+    const submitBtn = (isMulti && !isAnswered)
+      ? '<button class="btn btn-navy" style="margin-top:12px;width:100%" onclick="submitMulti()">Confirm Answers</button>'
+      : '';
+    optionsHtml = multiHint
+      + '<div class="' + gridClass + '" role="group" aria-label="' + (isMulti ? 'Multiple choice — select all correct' : 'Single choice') + '">'
+      + q.options.map((opt, oi) => makeOptBtn(opt, oi, ['A','B','C','D'])).join('')
+      + '</div>' + submitBtn;
+  } else if (isTF) {
+    const tfOpts = window._qopts;
+    optionsHtml = '<div class="mcq-grid single-col">'
+      + tfOpts.map((opt, oi) => makeOptBtn(opt, oi, ['A','B'])).join('')
+      + '</div>';
+  } else {
+    // Short answer fallback (maths only)
+    if (!isAnswered) {
+      optionsHtml = '<div style="display:flex;gap:8px">'
+        + '<input id="sa-input" class="card" style="flex:1;padding:12px 16px;border-radius:11px;font-size:.9rem;border:2px solid var(--bdr2);outline:none" '
+        + 'placeholder="Type your answer...">'
+        + '<button class="btn btn-navy" onclick="submitSA()">Submit</button>'
+        + '</div>';
+    } else {
+      const cls = wasCorrect ? 'opt cor' : 'opt wrg';
+      optionsHtml = '<div class="' + cls + '">' + escHtml(chosen)
+        + (wasCorrect ? ' <span class="opt-tick">&#10003;</span>' : ' <span class="opt-tick">&#10007;</span>') + '</div>';
+    }
+  }
+
+  // Feedback section
+  let feedbackHtml = '';
+  if (isAnswered) {
+    const fb = wasCorrect
+      ? `<div class="feedback-box ok"><div class="feedback-label">✓ Correct</div><div class="feedback-txt">${escHtml(q.explanation)}</div></div>`
+      : `<div class="feedback-box bad"><div class="feedback-label">✗ Incorrect — correct answer: ${escHtml(correct)}</div><div class="feedback-txt">${escHtml(q.explanation)}</div></div>`;
+    feedbackHtml = fb;
+  }
+
+  document.getElementById('q-wrap').innerHTML = `
+    <div class="q-card rise" style="--tc:${tc.tc};--tcb:${tc.tcb}">
+      <div class="q-category-badge">${escHtml(state.topic)}</div>
+      <div class="q-text">${escHtml(q.question_text)}</div>
+      <div class="options">${optionsHtml}</div>
+    </div>
+    ${feedbackHtml}
+    <div id="ai-zone"></div>
+  `;
+
+  // Focus short answer input
+  if (!isAnswered && qtype === 'shortanswer') {
+    setTimeout(() => {
+      const inp = document.getElementById('sa-input');
+      if (inp) {
+        inp.focus();
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitSA(); });
+      }
+    }, 50);
+  }
+
+  // Bottom buttons
+  updateBottomBtns(isAnswered, idx, total);
+}
+
+function updateBottomBtns(answered, idx, total) {
+  const btnHint    = document.getElementById('btn-hint');
+  const btnWhy     = document.getElementById('btn-why');
+  const btnLesson  = document.getElementById('btn-lesson');
+  const btnNext    = document.getElementById('btn-next');
+  const btnResults = document.getElementById('btn-results');
+
+  const btnWorked  = document.getElementById('btn-worked');
+  btnHint.style.display    = !answered ? 'inline-flex' : 'none';
+  btnWhy.style.display     = (answered && !state.answers[idx]?.correct) ? 'inline-flex' : 'none';
+  btnWorked.style.display  = (answered && !state.answers[idx]?.correct) ? 'inline-flex' : 'none';
+  btnLesson.style.display  = answered ? 'inline-flex' : 'none';
+  btnNext.style.display    = (answered && idx < total - 1) ? 'inline-flex' : 'none';
+  btnResults.style.display = (answered && idx === total - 1) ? 'inline-flex' : 'none';
+}
+
+function hideBottomBtns() {
+  ['btn-hint','btn-why','btn-worked','btn-lesson','btn-next','btn-results']
+    .forEach(id => { document.getElementById(id).style.display = 'none'; });
+}
+
+// ═══════════════════════════════════════════════════════════
+// ANSWERING
+// ═══════════════════════════════════════════════════════════
+function answerByIndex(oi) {
+  const chosen = (window._qopts || [])[oi];
+  if (chosen === undefined) return;
+  answer(chosen);
+}
+
+function answer(chosen) {
+  const q = state.questions[state.idx];
+  const correct = chosen.trim().toLowerCase() === (q.correct_answer||'').trim().toLowerCase();
+  state.answers[state.idx] = { chosen, correct };
+  state._multiPending = [];
+  renderQuestion(state.idx);
+}
+
+// ═══════════════════════════════════════════════════════════
+// QUESTION INDEX, FLAG, SKIP
+// ═══════════════════════════════════════════════════════════
+function renderIndexBar() {
+  var bar = document.getElementById('q-index-bar');
+  if (!bar || !state.questions || state.questions.length < 2) {
+    if (bar) bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = 'flex';
+  var html = '';
+  for (var i = 0; i < state.questions.length; i++) {
+    var cls = 'q-index-btn';
+    if (i === state.idx) cls += ' qi-current';
+    if (state.answers[i]) cls += ' qi-answered';
+    if ((state._flagged || {})[i]) cls += ' qi-flagged';
+    html += '<button class="' + cls + '" onclick="jumpToQ(' + i + ')" '
+      + 'aria-label="Question ' + (i+1) + '" title="Question ' + (i+1) + '">'
+      + (i+1) + '</button>';
+  }
+  bar.innerHTML = html;
+}
+
+function jumpToQ(i) {
+  if (i < 0 || i >= state.questions.length) return;
+  state.idx = i;
+  renderQuestion(i);
+}
+
+function toggleFlag() {
+  if (!state._flagged) state._flagged = {};
+  state._flagged[state.idx] = !state._flagged[state.idx];
+  var btn = document.getElementById('btn-flag');
+  if (btn) {
+    btn.classList.toggle('flagged', !!state._flagged[state.idx]);
+    btn.innerHTML = state._flagged[state.idx] ? '⚑ Flagged' : '⚑ Flag';
+  }
+  renderIndexBar();
+}
+
+function skipQ() {
+  if (!state.answers[state.idx]) {
+    state.answers[state.idx] = { chosen: null, correct: false, skipped: true };
+  }
+  if (state.idx < state.questions.length - 1) {
+    nextQ();
+  } else {
+    showResults();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// KEYBOARD NAVIGATION — press A/B/C/D or 1/2/3/4 to answer
+// ═══════════════════════════════════════════════════════════
+document.addEventListener('keydown', function(e) {
+  // Don't intercept if user is typing in an input/textarea
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  var page = document.querySelector('.page.on');
+  if (!page || page.id !== 'quiz-page') return;
+  if (state.answers[state.idx]) return; // already answered
+
+  var keyMap = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
+  var key = e.key.toLowerCase();
+  if (key in keyMap) {
+    var opts = window._qopts || [];
+    var oi = keyMap[key];
+    if (oi < opts.length) {
+      e.preventDefault();
+      answerByIndex(oi);
+    }
+  }
+  // Enter/Space = Next when answered
+  if ((e.key === 'Enter' || e.key === ' ') && state.answers[state.idx]) {
+    e.preventDefault();
+    var btnNext = document.getElementById('btn-next');
+    var btnRes = document.getElementById('btn-results');
+    if (btnNext && btnNext.style.display !== 'none') nextQ();
+    else if (btnRes && btnRes.style.display !== 'none') showResults();
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// SWIPE NAVIGATION (mobile)
+// ═══════════════════════════════════════════════════════════
+(function() {
+  var tx = 0, ty = 0;
+  document.addEventListener('touchstart', function(e) {
+    var page = document.querySelector('.page.on');
+    if (!page || page.id !== 'quiz-page') return;
+    tx = e.touches[0].clientX;
+    ty = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    var page = document.querySelector('.page.on');
+    if (!page || page.id !== 'quiz-page') return;
+    var dx = e.changedTouches[0].clientX - tx;
+    var dy = e.changedTouches[0].clientY - ty;
+    // Only horizontal swipes longer than 60px and not mostly vertical
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
+    // Only act after question is answered (prevent accidental skip)
+    if (!state.answers[state.idx]) return;
+    if (dx < 0) {
+      // Swipe left = Next
+      var btnNext = document.getElementById('btn-next');
+      var btnRes  = document.getElementById('btn-results');
+      if (btnNext && btnNext.style.display !== 'none') nextQ();
+      else if (btnRes && btnRes.style.display !== 'none') showResults();
+    } else {
+      // Swipe right = Prev (if index > 0)
+      if (state.idx > 0) jumpToQ(state.idx - 1);
+    }
+  }, { passive: true });
+})();
+
+// Multi-answer checkbox toggle
+function toggleMultiOpt(oi) {
+  if (!state._multiPending) state._multiPending = [];
+  const idx = state._multiPending.indexOf(oi);
+  if (idx === -1) state._multiPending.push(oi);
+  else state._multiPending.splice(idx, 1);
+  renderQuestion(state.idx);
+}
+
+// Submit multi-answer selection
+function submitMulti() {
+  const q = state.questions[state.idx];
+  const pending = state._multiPending || [];
+  const opts = window._qopts || [];
+  const chosenTexts = pending.map(i => opts[i]).filter(Boolean);
+  const correctSet = new Set((q.correct_options || []).map(s => s.trim().toLowerCase()));
+  const chosenSet = new Set(chosenTexts.map(s => s.trim().toLowerCase()));
+  // Correct only if chosen set exactly matches correct set
+  const correct = correctSet.size === chosenSet.size && [...correctSet].every(v => chosenSet.has(v));
+  state.answers[state.idx] = { chosen: chosenTexts, correct };
+  state._multiPending = [];
+  renderQuestion(state.idx);
+}
+
+// ═══════════════════════════════════════════════════════════
+// THEME MANAGEMENT
+// ═══════════════════════════════════════════════════════════
+const THEME_ICONS = { light: '&#9788;', dark: '&#9790;', system: '&#9788;' };
+let _themeMode = localStorage.getItem('theme_preference') || 'system';
+
+function applyTheme(mode) {
+  _themeMode = mode;
+  localStorage.setItem('theme_preference', mode);
+  const html = document.documentElement;
+  if (mode === 'dark') html.setAttribute('data-theme', 'dark');
+  else if (mode === 'light') html.setAttribute('data-theme', 'light');
+  else html.removeAttribute('data-theme');
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.innerHTML = THEME_ICONS[mode] || THEME_ICONS.system;
+  const lbl = document.getElementById('theme-label');
+  const labelMap = { light: 'Day', dark: 'Night', system: 'Auto' };
+  if (lbl) lbl.textContent = labelMap[mode] || 'Auto';
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme:dark)').matches);
+    meta.setAttribute('content', isDark ? '#0f1117' : '#f6f3ee');
+  }
+}
+
+function cycleTheme() {
+  // Simple toggle: light <-> dark only (no 'system' to avoid OS dark mode surprises)
+  applyTheme(_themeMode === 'dark' ? 'light' : 'dark');
+}
+
+// ═══════════════════════════════════════════════════════════
+// DONATE
+// ═══════════════════════════════════════════════════════════
+
+function openDonate() {
+  document.getElementById('donate-modal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDonate(e) {
+  if (e && e.target !== document.getElementById('donate-modal')) return;
+  document.getElementById('donate-modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+// Donate handled via Ko-fi / Buy Me a Coffee links in the modal — no server needed.
+
+// ═══════════════════════════════════════════════════════════
+// FEEDBACK
+// ═══════════════════════════════════════════════════════════
+let _starRating = 0;
+
+function openFeedback() {
+  _starRating = 0;
+  document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('feedback-text').value = '';
+  document.getElementById('feedback-email').value = '';
+  document.getElementById('feedback-submit-btn').textContent = 'Send Feedback';
+  document.getElementById('feedback-modal').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFeedback(e) {
+  if (e && e.target !== document.getElementById('feedback-modal')) return;
+  document.getElementById('feedback-modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function setStar(n) {
+  _starRating = n;
+  document.querySelectorAll('.star-btn').forEach((b, i) => b.classList.toggle('on', i < n));
+}
+
+async function submitFeedback() {
+  // Simple rate limit: 1 submission per 30 seconds
+  var lastFb = parseInt(localStorage.getItem('gq_last_feedback') || '0');
+  if (Date.now() - lastFb < 30000) {
+    alert('Please wait a moment before sending another message.');
+    return;
+  }
+  const text = document.getElementById('feedback-text').value.trim();
+  const email = document.getElementById('feedback-email').value.trim();
+  if (!text) { document.getElementById('feedback-text').focus(); return; }
+  localStorage.setItem('gq_last_feedback', Date.now());
+  const btn = document.getElementById('feedback-submit-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: _starRating, text, email, page: state.topic || 'home', ts: new Date().toISOString() })
+    });
+    trackEvent('feedback_submit', { rating: _starRating, page: state.topic || 'home' });
+    btn.textContent = '&#10003; Sent! Thank you';
+    setTimeout(() => closeFeedback(), 1800);
+  } catch(err) {
+    btn.textContent = 'Send Feedback';
+    btn.disabled = false;
+  }
+}
+
+function submitSA() {
+  const input = document.getElementById('sa-input');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+  answer(val);
+}
+
+function nextQ() {
+  if (state.idx < state.questions.length - 1) {
+    renderQuestion(state.idx + 1);
+    window.scrollTo(0, 0);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// AI HELPERS
+// ═══════════════════════════════════════════════════════════
+async function callAI(prompt, system) {
+  try {
+    const r = await fetch('/api/generate-quiz', {
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({_direct:true,_prompt:prompt,_system:system})
+    });
+    const d = await r.json();
+    return d.text || null;
+  } catch{ return null; }
+}
+
+async function fetchHint() {
+  const q = state.questions[state.idx];
+  const btn = document.getElementById('btn-hint');
+  btn.disabled = true;
+  btn.textContent = '⟳ …';
+  const zone = document.getElementById('ai-zone');
+  zone.innerHTML = '<div class="ai-panel"><div class="ai-label">Hint</div><div class="spin" style="width:20px;height:20px;border-width:2px"></div></div>';
+  const hint = await callAI(
+    `Student age ${state.age}, tier ${state.tier}. Question: "${q.question_text}". Give ONE hint (max 15 words) that helps them think — do NOT give the answer.`,
+    'You give one helpful, concise hint without revealing the answer.'
+  );
+  zone.innerHTML = hint
+    ? `<div class="ai-panel"><div class="ai-label">💡 Hint</div>${escHtml(hint)}</div>`
+    : '';
+  btn.style.display = 'none';
+}
+
+async function fetchWhy() {
+  const q = state.questions[state.idx];
+  const ans = state.answers[state.idx];
+  const btn = document.getElementById('btn-why');
+  btn.disabled = true; btn.textContent = '⟳ …';
+  const zone = document.getElementById('ai-zone');
+  zone.innerHTML = '<div class="ai-panel"><div class="ai-label">Why wrong?</div><div class="spin" style="width:20px;height:20px;border-width:2px"></div></div>';
+  const why = await callAI(
+    `Question: "${q.question_text}". Correct answer: "${q.correct_answer}". Student answered: "${ans.chosen}". In 2 kind sentences, explain why they were wrong and what to remember.`,
+    'You are a kind, encouraging maths teacher.'
+  );
+  zone.innerHTML = why
+    ? `<div class="ai-panel"><div class="ai-label">🔍 Why wrong?</div>${escHtml(why)}</div>`
+    : '';
+  btn.style.display = 'none';
+}
+
+async function fetchLesson() {
+  const q = state.questions[state.idx];
+  const btn = document.getElementById('btn-lesson');
+  btn.disabled = true; btn.textContent = '⟳ …';
+  const zone = document.getElementById('ai-zone');
+  zone.innerHTML = '<div class="ai-panel"><div class="ai-label">Deep dive</div><div class="spin" style="width:20px;height:20px;border-width:2px"></div></div>';
+  const lesson = await callAI(
+    `Topic: ${state.topic}. Question: "${q.question_text}". Correct: "${q.correct_answer}". Give a 80-word mini-lesson for age ${state.age} on the key concept. Use plain text.`,
+    'You are an expert maths tutor. Write a concise, clear mini-lesson.'
+  );
+  zone.innerHTML = lesson
+    ? `<div class="ai-panel"><div class="ai-label">📚 Mini Lesson — ${escHtml(state.topic)}</div>${escHtml(lesson)}</div>`
+    : '';
+  btn.style.display = 'none';
+}
+
+async function fetchWorked() {
+  const q = state.questions[state.idx];
+  const btn = document.getElementById('btn-worked');
+  btn.disabled = true; btn.textContent = '⟳ …';
+  const zone = document.getElementById('ai-zone');
+  zone.innerHTML = '<div class="worked-panel"><div class="ai-label">✏️ Worked Example</div><div class="spin" style="width:20px;height:20px;border-width:2px"></div></div>';
+  const worked = await callAI(
+    'Topic: ' + state.topic + '. Question: "' + q.question_text + '". Correct answer: "' + q.correct_answer + '". Age ' + state.age + ', tier ' + state.tier + '. Write a clear step-by-step worked solution. Number each step. Use plain text, no LaTeX. Keep it concise — max 5 steps.',
+    'You are an expert maths teacher. Write a numbered step-by-step worked solution that a student can follow. Plain text only, no symbols like \\( or $.'
+  );
+  if (worked) {
+    // Format numbered steps nicely
+    const lines = worked.split('\n').filter(l => l.trim());
+    let html = '<div class="ai-label">✏️ Worked Example — ' + escHtml(state.topic) + '</div>';
+    lines.forEach(line => {
+      const stepMatch = line.match(/^(\d+[.)]?)\s*(.+)/);
+      if (stepMatch) {
+        html += '<div class="worked-step"><div class="step-num">' + stepMatch[1].replace('.','').replace(')','') + '</div><div>' + escHtml(stepMatch[2]) + '</div></div>';
+      } else if (line.trim()) {
+        html += '<div style="margin-bottom:6px">' + escHtml(line) + '</div>';
+      }
+    });
+    zone.innerHTML = '<div class="worked-panel">' + html + '</div>';
+  } else {
+    zone.innerHTML = '';
+  }
+  btn.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════════
+function showResults() {
+  stopTimer();
+  try {
+    var tot = state.questions.length;
+    var cor = Object.values(state.answers).filter(function(a){ return a.correct; }).length;
+    var pct = tot ? Math.round(cor/tot*100) : 0;
+    trackEvent('test_complete', { topic: state.topic, tier: state.tier, score: cor, total: tot, pct: pct });
+    // Show donate CTA on every 3rd completed quiz (not intrusive)
+    var completedCount = parseInt(localStorage.getItem('gq_completed') || '0') + 1;
+    localStorage.setItem('gq_completed', completedCount);
+    var donateCta = document.getElementById('res-donate-cta');
+    if (donateCta) donateCta.style.display = (completedCount % 3 === 0) ? 'block' : 'none';
+  } catch(_) {}
+  const total = state.questions.length;
+  const score = Object.values(state.answers).filter(a => a.correct).length;
+  const pct = Math.round((score/total)*100);
+
+  document.getElementById('res-topic').textContent = state.topic;
+  document.getElementById('res-tier').textContent = `${TIER_ICONS[state.tier]} ${state.tier} level · ${state.age} year age group`;
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-frac').textContent = `${score}/${total}`;
+
+  // Medal
+  const { emoji, name, bg, msg } = getMedal(pct);
+  document.getElementById('medal-emoji').textContent = emoji;
+  document.getElementById('medal-name').textContent = name;
+  document.getElementById('medal-sub').textContent = msg;
+  document.getElementById('medal-banner').style.background = bg;
+
+  // Score ring colour
+  const ring = document.getElementById('score-ring');
+  ring.style.borderColor = pct >= 85 ? '#c8912a' : pct >= 65 ? '#94a3b8' : pct >= 50 ? '#c2410c' : '#9ca3af';
+
+  // Question review list
+  const list = document.getElementById('result-q-list');
+  list.innerHTML = state.questions.map((q, i) => {
+    const ans = state.answers[i];
+    const ok  = ans?.correct;
+    return `
+      <div class="rq ${ok?'':'bad-q'}" id="rq-${i}">
+        <div class="rq-head" onclick="toggleRQ(${i})">
+          <span class="rq-icon">${ok ? '✅' : '❌'}</span>
+          <span class="rq-txt">${i+1}. ${escHtml(q.question_text.substring(0,80))}${q.question_text.length>80?'…':''}</span>
+          <span class="rq-chevron">›</span>
+        </div>
+        <div class="rq-body">
+          <div class="rq-ans">✓ ${escHtml(q.correct_answer)}</div>
+          ${ans && !ok ? `<div style="color:var(--bad);font-size:.78rem;margin-bottom:6px">Your answer: ${escHtml(ans.chosen)}</div>` : ''}
+          <div class="rq-exp">${escHtml(q.explanation)}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  showPage('results');
+  fetchMotiv(score, total);
+}
+
+function toggleRQ(i) {
+  document.getElementById(`rq-${i}`).classList.toggle('open');
+}
+
+function getMedal(pct) {
+  if (pct >= 85) return { emoji:'🥇', name:'Gold', bg:'#fffbeb', msg:'Outstanding — UKMT Gold standard!' };
+  if (pct >= 65) return { emoji:'🥈', name:'Silver', bg:'#f8fafc', msg:'Strong performance — keep building on this.' };
+  if (pct >= 50) return { emoji:'🥉', name:'Bronze', bg:'#fff7ed', msg:'Good effort — review the questions you missed.' };
+  return { emoji:'📘', name:'Keep Practising', bg:'#f8fafc', msg:'Every practice session makes you stronger.' };
+}
+
+async function fetchMotiv(score, total) {
+  const box = document.getElementById('motiv-box');
+  const txt = document.getElementById('motiv-txt');
+  box.style.display = 'block';
+  txt.innerHTML = '<div class="spin" style="width:18px;height:18px;border-width:2px;display:inline-block"></div>';
+  const m = await callAI(
+    `Student scored ${score}/${total} in ${state.topic} at ${state.tier} level. One encouraging sentence (max 20 words) with an emoji.`,
+    'You are an enthusiastic maths coach. Be specific and encouraging.'
+  );
+  txt.textContent = m || `Great work on ${state.topic}! Keep practising to improve.`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// LEADERBOARD
+// ═══════════════════════════════════════════════════════════
+async function submitLeaderboard() {
+  const nameEl = document.getElementById('lb-name-input');
+  const msg = document.getElementById('lb-submit-msg');
+  const btn = document.getElementById('lb-submit-btn');
+  const name = nameEl.value.trim();
+  if (!name) { nameEl.focus(); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⟳ Submitting...';
+  msg.style.display = 'none';
+
+  const total = state.questions.length;
+  const score = Object.values(state.answers).filter(a => a.correct).length;
+  const pct = Math.round((score / total) * 100);
+
+  try {
+    const r = await fetch('/api/leaderboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'submit', name, topic: state.topic, tier: state.tier, score, total, pct })
+    });
+    const d = await r.json();
+    if (d.ok) {
+      msg.style.display = 'block';
+      msg.style.color = 'var(--ok)';
+      msg.textContent = 'Score submitted! You ranked #' + d.rank + ' of ' + d.total + ' on this topic.';
+      btn.textContent = 'Submitted ✓';
+      nameEl.disabled = true;
+    } else {
+      throw new Error(d.error || 'Failed');
+    }
+  } catch (err) {
+    msg.style.display = 'block';
+    msg.style.color = 'var(--bad)';
+    msg.textContent = 'Could not submit: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = 'Retry';
+  }
+}
+
+async function openLeaderboard() {
+  const modal = document.getElementById('lb-modal');
+  const body = document.getElementById('lb-modal-body');
+  const topicEl = document.getElementById('lb-modal-topic');
+  topicEl.textContent = 'Top scores for: ' + state.topic;
+  body.innerHTML = '<div class="lb-empty">Loading...</div>';
+  modal.classList.add('on');
+  document.body.style.overflow = 'hidden';
+
+  try {
+    const r = await fetch('/api/leaderboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get', topic: state.topic })
+    });
+    const d = await r.json();
+    const entries = d.entries || [];
+
+    if (!entries.length) {
+      body.innerHTML = '<div class="lb-empty">No scores yet for this topic.<br>Be the first to submit!</div>';
+      return;
+    }
+
+    const myName = document.getElementById('lb-name-input').value.trim();
+    const total = state.questions.length;
+    const myScore = Object.values(state.answers).filter(a => a.correct).length;
+    const myPct = Math.round((myScore / total) * 100);
+
+    const medals = ['🥇','🥈','🥉'];
+    body.innerHTML = entries.map((e, i) => {
+      const isMe = myName && e.name === myName && e.pct === myPct;
+      const rankDisplay = i < 3 ? medals[i] : '#' + (i + 1);
+      return '<div class="lb-row' + (isMe ? ' me' : '') + '">'
+        + '<div class="lb-rank">' + rankDisplay + '</div>'
+        + '<div class="lb-name">' + escHtml(e.name) + '</div>'
+        + '<div class="lb-tier">' + escHtml(e.tier) + ' · ' + escHtml(e.date) + '</div>'
+        + '<div class="lb-pct">' + e.score + '/' + e.total + '</div>'
+        + '</div>';
+    }).join('');
+  } catch {
+    body.innerHTML = '<div class="lb-empty">Could not load leaderboard.</div>';
+  }
+}
+
+function closeLbModal(e) {
+  if (e && e.target !== document.getElementById('lb-modal')) return;
+  document.getElementById('lb-modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════════════════════
+// LIFE IN THE UK — CHAPTER ACCORDION
+// ═══════════════════════════════════════════════════════════
+function toggleLitukChap(n) {
+  const chap = document.getElementById('lc-' + n);
+  if (!chap) return;
+  const isOpen = chap.classList.contains('open');
+  // Close all first
+  document.querySelectorAll('.lituk-chap').forEach(c => c.classList.remove('open'));
+  // Open clicked one if it wasn't already open
+  if (!isOpen) chap.classList.add('open');
+}
+
+// Legacy alias in case any old panel refs remain
+function toggleStudyPanel(n) { toggleLitukChap(n); }
+
+// ═══════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════
+function getTopicEmoji(topic) {
+  const t = topic.toLowerCase();
+  if (t.includes('number') || t.includes('arithmetic') || t.includes('prime') || t.includes('fraction') || t.includes('percentage') || t.includes('ratio') || t.includes('sequence') || t.includes('power')) return '🔢';
+  if (t.includes('algebra') || t.includes('equation') || t.includes('quadratic') || t.includes('inequality') || t.includes('graph') || t.includes('nth')) return '🔡';
+  if (t.includes('geometry') || t.includes('angle') || t.includes('circle') || t.includes('pythagoras') || t.includes('trig') || t.includes('vector') || t.includes('transform') || t.includes('volume') || t.includes('area')) return '📐';
+  if (t.includes('statistic') || t.includes('probability') || t.includes('mean') || t.includes('chart') || t.includes('frequency') || t.includes('venn') || t.includes('tree')) return '📊';
+  if (t.includes('combinatoric') || t.includes('logic') || t.includes('counting') || t.includes('permutation') || t.includes('pigeonhole') || t.includes('ukmt')) return '🧩';
+  if (t.includes('science')) return '⚗️';
+  if (t.includes('english')) return '📖';
+  if (t.includes('computer')) return '💻';
+  if (t.includes('achiever')) return '🏆';
+  return '🧮';
+}
+
+function getTopicColor(topic) {
+  const t = topic.toLowerCase();
+  if (t.includes('number') || t.includes('arithmetic')) return { tc:'#1d4ed8', tcb:'#dbeafe' };
+  if (t.includes('algebra'))   return { tc:'#7e22ce', tcb:'#f3e8ff' };
+  if (t.includes('geometry') || t.includes('measures')) return { tc:'#0d9488', tcb:'#ccfbf1' };
+  if (t.includes('statistics') || t.includes('probability')) return { tc:'#be185d', tcb:'#fce7f3' };
+  if (t.includes('combinatorics') || t.includes('logic')) return { tc:'#c2410c', tcb:'#ffedd5' };
+  if (t.includes('science'))   return { tc:'#16a34a', tcb:'#dcfce7' };
+  if (t.includes('english'))   return { tc:'#d97706', tcb:'#fef3c7' };
+  if (t.includes('computer'))  return { tc:'#7c3aed', tcb:'#ede9fe' };
+  return { tc:'#374151', tcb:'#f1f5f9' };
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+// Keyboard: Escape closes modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('tier-modal').classList.remove('on');
+    document.body.style.overflow = '';
+  }
+});
+
+// Apply saved theme on load — default to LIGHT
+applyTheme(localStorage.getItem('theme_preference') || 'light');
+
+// Init
+updateNavTierPill();
+</script>
+<!-- ══ DONATE MODAL ══════════════════════════════════════════ -->
+<div class="overlay" id="donate-modal" onclick="closeDonate(event)" role="dialog" aria-modal="true" aria-label="Support Genius Quest">
+  <div class="modal-box" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div style="font-size:1.5rem;margin-bottom:4px">&#9829;</div>
+        <div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;color:#fff">Support Genius Quest</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.6);margin-top:2px">Help keep it free for every student</div>
+      </div>
+      <button class="modal-close" onclick="closeDonate()" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:12px;padding:16px;background:var(--sur2);border-radius:12px;border:1.5px solid var(--bdr2);margin-bottom:20px">
+        <div style="font-size:2.2rem;line-height:1">&#127861;</div>
+        <div>
+          <div style="font-weight:700;color:var(--navy);font-size:.92rem;margin-bottom:3px">Genius Quest is free and ad-free</div>
+          <div style="font-size:.78rem;color:var(--mu);line-height:1.55">A small contribution keeps the AI running and new topics coming. Every penny goes directly to server costs.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+        <a href="https://ko-fi.com/P5P61VKVJP" target="_blank" rel="noopener"
+           class="btn btn-navy"
+           style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px"
+           onclick="trackEvent('donate_click',{platform:'kofi'})">
+          <span style="font-size:1.1rem">&#9749;</span> Ko-fi
+        </a>
+        <a href="https://www.buymeacoffee.com/geniusquest" target="_blank" rel="noopener"
+           style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px;background:#FFDD00;color:#000;border-radius:var(--r);font-weight:700;font-size:.85rem"
+           onclick="trackEvent('donate_click',{platform:'bmac'})">
+          <span style="font-size:1.1rem">&#9749;</span> Buy Me a Coffee
+        </a>
+      </div>
+      <div style="border-top:1.5px solid var(--bdr2);padding-top:14px;text-align:center">
+        <div style="font-size:.72rem;color:var(--mu);margin-bottom:10px">Or share with someone who would benefit</div>
+        <button class="btn btn-ghost btn-full" onclick="shareApp()" style="font-size:.82rem">&#128279; Share Genius Quest</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK BUTTON ════════════════════════════════════════ -->
+<button class="feedback-fab" onclick="openFeedback()" aria-label="Send feedback" title="Send feedback">
+  &#128172;
+</button>
+
+<!-- ══ FEEDBACK MODAL ════════════════════════════════════════ -->
+<div class="overlay" id="feedback-modal" onclick="closeFeedback(event)" role="dialog" aria-modal="true" aria-label="Send feedback">
+  <div class="modal-box" style="max-width:440px" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div style="font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;color:#fff">Share your feedback</div>
+        <div style="font-size:.73rem;color:rgba(255,255,255,.6);margin-top:2px">We read every message</div>
+      </div>
+      <button class="modal-close" onclick="closeFeedback()" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:8px">Rating</div>
+        <div id="star-row" style="display:flex;gap:6px" role="group" aria-label="Star rating">
+          <button class="star-btn" onclick="setStar(1)" aria-label="1 star">&#9733;</button>
+          <button class="star-btn" onclick="setStar(2)" aria-label="2 stars">&#9733;</button>
+          <button class="star-btn" onclick="setStar(3)" aria-label="3 stars">&#9733;</button>
+          <button class="star-btn" onclick="setStar(4)" aria-label="4 stars">&#9733;</button>
+          <button class="star-btn" onclick="setStar(5)" aria-label="5 stars">&#9733;</button>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <textarea id="feedback-text" placeholder="What do you think? Any bugs or ideas?" rows="4"
+          style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--bdr2);
+                 background:var(--sur);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.85rem;
+                 resize:vertical;outline:none;line-height:1.5"
+          aria-label="Feedback message"></textarea>
+      </div>
+      <div style="margin-bottom:16px">
+        <input id="feedback-email" type="email" placeholder="Email (optional)" 
+          style="width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid var(--bdr2);
+                 background:var(--sur);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none"
+          aria-label="Email address (optional)">
+      </div>
+      <button class="btn btn-navy btn-full" onclick="submitFeedback()" id="feedback-submit-btn">
+        Send Feedback
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ CRITICAL OVERRIDES - DO NOT REMOVE ═══ -->
+<style id="critical-overrides">
+/* Force all inactive pages hidden */
+.page { display: none !important; pointer-events: none !important; }
+.page.on { display: block !important; pointer-events: auto !important; }
+/* Force nav above everything */
+#nav { z-index: 9999 !important; position: sticky !important; top: 0 !important; }
+nav#nav * { pointer-events: auto !important; }
+.nav-tab { cursor: pointer !important; pointer-events: auto !important; }
+/* Hide nav-tabs on nothing - always show */
+.nav-tabs { display: flex !important; }
+</style>
+<script id="critical-js">
+// CRITICAL: Ensure showPage works on load
+(function() {
+  // Simple Day/Night toggle - no system mode
+  window._themeMode = localStorage.getItem('gq_theme') || 'light';
+  function applySimpleTheme(mode) {
+    window._themeMode = mode;
+    localStorage.setItem('gq_theme', mode);
+    var html = document.documentElement;
+    if (mode === 'dark') {
+      html.setAttribute('data-theme', 'dark');
+    } else {
+      html.removeAttribute('data-theme');
+    }
+    var icon = document.getElementById('theme-icon');
+    var label = document.getElementById('theme-label');
+    if (icon) icon.textContent = mode === 'dark' ? '☾' : '☼';
+    if (label) label.textContent = mode === 'dark' ? 'Night' : 'Day';
+  }
+  // Override cycleTheme globally
+  window.cycleTheme = function() {
+    applySimpleTheme(window._themeMode === 'dark' ? 'light' : 'dark');
+  };
+  // Apply on load
+  applySimpleTheme(window._themeMode);
+
+  // Override showPage to ensure it works
+  window.showPage = function(name) {
+    document.querySelectorAll('.page').forEach(function(p) {
+      p.classList.remove('on');
+    });
+    var target = document.getElementById(name + '-page');
+    if (target) target.classList.add('on');
+    document.querySelectorAll('.nav-tab').forEach(function(t) {
+      t.classList.remove('on');
+    });
+    var tabMap = { home: 'tab-maths', allsubjects: 'tab-all', lituk: 'tab-lituk' };
+    var tab = document.getElementById(tabMap[name]);
+    if (tab) tab.classList.add('on');
+    try { window.trackEvent('page_view', { page: name }); } catch(e) {}
+    window.scrollTo(0, 0);
+  };
+})();
+</script>
+<!-- ═══ END CRITICAL OVERRIDES ═══ -->
+
+</body>
+</html>
