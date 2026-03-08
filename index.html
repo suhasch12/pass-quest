@@ -113,10 +113,11 @@ body::before{
 
 /* ─── Nav ─────────────────────────────────────────────────── */
 #nav{
-  position:sticky;top:0;z-index:200;
+  position:sticky;top:0;z-index:9999;
   background:rgba(246,243,238,.92);
   backdrop-filter:blur(14px);
   border-bottom:1.5px solid var(--bdr2);
+  isolation:isolate;
   padding:0 24px;
 }
 .nav-inner{
@@ -169,8 +170,8 @@ body::before{
 
 /* ─── Page wrapper ───────────────────────────────────────── */
 #app{ position:relative;z-index:1 }
-.page{ display:none }
-.page.on{ display:block }
+.page{ display:none; pointer-events:none }
+.page.on{ display:block; pointer-events:auto }
 
 /* ─── Shared layout ──────────────────────────────────────── */
 .wrap{
@@ -1554,8 +1555,9 @@ h1.page-title em{
   <div class="section-label">Question Review</div>
   <div class="result-q-list" id="result-q-list"></div>
 
-</div>
-</div>
+</div><!-- /results-wrap -->
+
+</div><!-- /results-page -->
 
 </div><!-- /app -->
 
