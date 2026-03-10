@@ -1,0 +1,40 @@
+{
+  "name": "PassQuest — UK Exam Practice",
+  "short_name": "PassQuest",
+  "description": "Free UK exam practice: Driving Theory, Life in the UK, Maths and more. AI-powered, ad-free.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#17253f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "en-GB",
+  "shortcuts": [
+    {
+      "name": "Driving Theory",
+      "short_name": "Driving",
+      "description": "Start a DVSA mock test",
+      "url": "/?page=driving"
+    },
+    {
+      "name": "Life in the UK",
+      "short_name": "LitUK",
+      "description": "Practise citizenship test questions",
+      "url": "/?page=lituk"
+    }
+  ]
+}
