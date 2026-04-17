@@ -1,0 +1,401 @@
+/* ═══════════════════════════════════════════════════════════
+   PASSQUEST PREMIUM UI v2 — Drop-in CSS patch
+   Add this file as: <link rel="stylesheet" href="/pq-premium.css">
+   OR paste entire contents inside a <style> block in index.html
+   just before the closing </style> tag of the existing <style>
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Glassmorphism system tokens ─────────────────────────── */
+:root {
+  --glass-bg:      rgba(255,255,255,0.72);
+  --glass-border:  rgba(255,255,255,0.55);
+  --glass-shadow:  0 8px 32px rgba(30,58,138,.10);
+  --glass-blur:    blur(18px);
+  --glow-navy:     0 0 0 4px rgba(30,58,138,.18), 0 4px 24px rgba(30,58,138,.28);
+  --glow-gold:     0 0 0 4px rgba(245,158,11,.18), 0 4px 20px rgba(245,158,11,.32);
+  --card-lift:     0 16px 48px rgba(30,58,138,.14);
+  --transition-smooth: all .22s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"] {
+  --glass-bg:      rgba(20,24,41,0.82);
+  --glass-border:  rgba(255,255,255,0.08);
+  --glass-shadow:  0 8px 32px rgba(0,0,0,.35);
+  --glow-navy:     0 0 0 4px rgba(147,180,255,.18), 0 4px 24px rgba(147,180,255,.22);
+  --card-lift:     0 16px 48px rgba(0,0,0,.4);
+}
+
+/* ── Glassmorphism card upgrade ──────────────────────────── */
+.card-glass {
+  background:   var(--glass-bg) !important;
+  border:       1.5px solid var(--glass-border) !important;
+  box-shadow:   var(--glass-shadow) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--rlg);
+  transition: var(--transition-smooth);
+}
+.card-glass:hover {
+  transform:   translateY(-5px);
+  box-shadow:  var(--card-lift) !important;
+}
+
+/* Apply glass to topic cards ─────────────────────────────── */
+.topic-card {
+  background:      var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--glass-border) !important;
+  transition: var(--transition-smooth);
+}
+.topic-card:hover {
+  transform:  translateY(-5px) !important;
+  box-shadow: var(--card-lift) !important;
+  border-color: var(--tc, var(--navy)) !important;
+}
+
+/* Apply glass to feat-cards ─────────────────────────────── */
+.feat-card {
+  background:      var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--glass-border) !important;
+  transition: var(--transition-smooth);
+}
+.feat-card:hover {
+  transform:  translateY(-5px) !important;
+  box-shadow: var(--card-lift) !important;
+}
+
+/* Apply glass to path-cards ─────────────────────────────── */
+.path-card {
+  background:      var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--glass-border) !important;
+  transition: var(--transition-smooth);
+}
+.path-card:hover {
+  transform:  translateY(-5px) !important;
+  box-shadow: var(--card-lift) !important;
+}
+
+/* ── Micro-interactions: all buttons ─────────────────────── */
+.btn,
+.btn-hero-primary,
+.btn-footer-cta,
+.tc-go,
+.dt-hero-cta {
+  transition: var(--transition-smooth) !important;
+}
+.btn:active:not(:disabled),
+.btn-hero-primary:active,
+.btn-footer-cta:active,
+.tc-go:active,
+.dt-hero-cta:active {
+  transform: scale(0.95) !important;
+}
+
+/* ── Primary hero CTA glow ───────────────────────────────── */
+.btn-hero-primary {
+  box-shadow: var(--glow-navy) !important;
+}
+.btn-hero-primary:hover:not(:disabled) {
+  box-shadow: 0 0 0 5px rgba(30,58,138,.22), 0 8px 32px rgba(30,58,138,.40) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* Gold CTA glow */
+.btn-gold, .btn-footer-cta {
+  box-shadow: var(--glow-gold) !important;
+}
+.btn-gold:hover:not(:disabled),
+.btn-footer-cta:hover {
+  box-shadow: 0 0 0 5px rgba(245,158,11,.22), 0 8px 28px rgba(245,158,11,.42) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* ── Scrolling trust banner ──────────────────────────────── */
+.trust-scroll-strip {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+  border-top:    1px solid rgba(30,58,138,.08);
+  border-bottom: 1px solid rgba(30,58,138,.08);
+  padding: 10px 0;
+  margin: 0 0 0 0;
+}
+[data-theme="dark"] .trust-scroll-strip {
+  background: linear-gradient(135deg, #141829 0%, #1a1e30 100%);
+  border-color: rgba(147,180,255,.08);
+}
+.trust-scroll-inner {
+  display: flex;
+  gap: 48px;
+  white-space: nowrap;
+  width: max-content;
+  animation: trust-scroll 28s linear infinite;
+}
+.trust-scroll-inner:hover { animation-play-state: paused; }
+@keyframes trust-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.trust-scroll-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: .03em;
+  padding: 2px 16px 2px 0;
+  border-right: 1px solid rgba(30,58,138,.15);
+}
+[data-theme="dark"] .trust-scroll-item { color: #a5b4fc; border-color: rgba(165,180,252,.15); }
+.trust-scroll-item:last-child { border-right: none; }
+.trust-scroll-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold); flex-shrink: 0;
+}
+
+/* ── Upgraded testimonial cards ──────────────────────────── */
+.t-card-v2 {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+.t-card-v2::before {
+  content: '"';
+  position: absolute;
+  top: -8px; right: 16px;
+  font-size: 5rem;
+  font-family: 'Fraunces', serif;
+  color: var(--navy);
+  opacity: .06;
+  line-height: 1;
+  pointer-events: none;
+}
+.t-card-v2:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-lift);
+}
+.t-stars-v2 {
+  display: flex;
+  gap: 3px;
+}
+.t-star-svg {
+  width: 15px; height: 15px;
+  fill: #f59e0b;
+  filter: drop-shadow(0 0 3px rgba(245,158,11,.4));
+}
+.t-avatar-grad {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+/* gradient palette for avatars */
+.av-gr-1 { background: linear-gradient(135deg,#1E3A8A,#6366f1); }
+.av-gr-2 { background: linear-gradient(135deg,#0d9488,#22c55e); }
+.av-gr-3 { background: linear-gradient(135deg,#be185d,#f59e0b); }
+.av-gr-4 { background: linear-gradient(135deg,#7e22ce,#3b82f6); }
+.av-gr-5 { background: linear-gradient(135deg,#c2410c,#f59e0b); }
+.av-gr-6 { background: linear-gradient(135deg,#0f172a,#1e3a8a); }
+
+/* ── Hero visual anchor SVG wrapper ─────────────────────── */
+.hero-visual-wrap {
+  position: relative;
+  margin-top: 32px;
+  border-radius: var(--rlg);
+  overflow: hidden;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 60%, #f5f3ff 100%);
+  border: 1.5px solid rgba(30,58,138,.08);
+  padding: 28px 28px 0 28px;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  min-height: 160px;
+}
+[data-theme="dark"] .hero-visual-wrap {
+  background: linear-gradient(135deg, #141829 0%, #1a1e30 60%, #1c1530 100%);
+  border-color: rgba(147,180,255,.1);
+}
+.hero-visual-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  padding-bottom: 28px;
+}
+.hero-vis-stat {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+  min-width: 160px;
+  box-shadow: var(--glass-shadow);
+  animation: float-stat 3s ease-in-out infinite;
+}
+.hero-vis-stat:nth-child(2) { animation-delay: .8s; }
+.hero-vis-stat:nth-child(3) { animation-delay: 1.6s; }
+@keyframes float-stat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+.hvs-label { font-size: .65rem; font-weight: 700; color: var(--mu); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+.hvs-val   { font-family: 'Fraunces',serif; font-size: 1.3rem; font-weight: 800; color: var(--navy); line-height: 1; }
+.hvs-sub   { font-size: .68rem; color: var(--mu); margin-top: 2px; }
+[data-theme="dark"] .hvs-val { color: #a5b4fc; }
+
+.hero-vis-illustration {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+/* ── Personalised welcome-back hero ─────────────────────── */
+.hero-returning {
+  display: none;
+}
+.hero-returning.show {
+  display: block;
+}
+.hero-returning-banner {
+  background: linear-gradient(135deg, #1E3A8A 0%, #1e40af 60%, #2d3561 100%);
+  border-radius: var(--rlg);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.hero-returning-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 90% 10%, rgba(245,158,11,.2), transparent 60%),
+              radial-gradient(ellipse at 10% 90%, rgba(99,102,241,.15), transparent 50%);
+  pointer-events: none;
+}
+.hrb-inner {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.hrb-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg,#f59e0b,#fbbf24);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces',serif; font-size: 1.5rem; font-weight: 800;
+  color: #000; flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,.25);
+}
+.hrb-text { flex: 1; }
+.hrb-greeting { font-family: 'Fraunces',serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+.hrb-sub { font-size: .82rem; opacity: .75; margin-bottom: 10px; }
+.hrb-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.hrb-pill {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: .72rem; font-weight: 700;
+  display: flex; align-items: center; gap: 5px;
+}
+.hrb-cta {
+  background: #f59e0b; color: #000; border: none; border-radius: 10px;
+  padding: 10px 20px; font-weight: 800; font-size: .88rem;
+  cursor: pointer; transition: var(--transition-smooth); flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(245,158,11,.4);
+}
+.hrb-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,158,11,.5); }
+
+/* ── Hero section first-visit text fade-in ───────────────── */
+.hero-first-visit { animation: rise .5s ease both; }
+
+/* ── Nav glass on scroll ─────────────────────────────────── */
+#nav.scrolled {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  box-shadow: 0 2px 20px rgba(30,58,138,.08) !important;
+}
+
+/* ── Chip hover improvements ─────────────────────────────── */
+.chip {
+  transition: var(--transition-smooth) !important;
+}
+.chip:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 10px rgba(37,99,235,.15) !important;
+}
+
+/* ── Section label animated underline ───────────────────── */
+.section-label {
+  position: relative;
+}
+
+/* ── Trust banner (old one) upgrade ─────────────────────── */
+.trust-banner {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: 1.5px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  transition: var(--transition-smooth);
+}
+.trust-banner:hover {
+  box-shadow: var(--card-lift) !important;
+}
+.trust-logo-chip {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  transition: var(--transition-smooth) !important;
+}
+.trust-logo-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30,58,138,.12) !important;
+}
+
+/* ── Footer CTA glass upgrade ────────────────────────────── */
+.footer-cta {
+  position: relative;
+  overflow: hidden;
+}
+.footer-cta::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 20% 80%, rgba(245,158,11,.15), transparent 50%),
+              radial-gradient(ellipse at 80% 20%, rgba(99,102,241,.1), transparent 50%);
+  pointer-events: none;
+}
+
+/* ── Driving page hero glass ─────────────────────────────── */
+.dt-hero {
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+}
+
+/* ── Responsive tweaks ───────────────────────────────────── */
+@media (max-width: 600px) {
+  .hero-visual-wrap { min-height: 120px; padding: 20px 20px 0; }
+  .hero-vis-stat { min-width: 130px; }
+  .hrb-inner { flex-direction: column; align-items: flex-start; }
+  .hrb-cta { width: 100%; text-align: center; }
+}
